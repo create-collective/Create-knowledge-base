@@ -1,0 +1,116 @@
+site_name: Create knowledge base
+site_description: Hardware, wire protocol, firmware, storage, recovery and host software of the Naya Create split keyboard, from measurement, static analysis and public filings.
+site_author: Create-knowledge-base contributors
+repo_url: https://github.com/traviswye/Create-knowledge-base
+repo_name: Create-knowledge-base
+edit_uri: edit/main/docs/
+copyright: Pages CC BY 4.0; code snippets MIT. Naya Create is a product of Naya B.V.; this site is independent community research.
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - assets/tags.css
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Product:
+      - Overview: product/overview.md
+      - Manuals: product/manuals.md
+  - Hardware:
+      - Board inventory: hardware/index.md
+      - The keyboard half: hardware/half.md
+      - Module dock: hardware/dock.md
+      - Tune: hardware/tune.md
+      - Touch: hardware/touch.md
+      - Track: hardware/track.md
+      - Speedlink dongle: hardware/dongle.md
+      - Power and batteries: hardware/power.md
+      - Layout and positions: hardware/layout.md
+      - Regulatory records: hardware/regulatory.md
+      - Parts list: hardware/parts.md
+  - Connectivity:
+      - USB: connectivity/usb.md
+      - Bluetooth: connectivity/bluetooth.md
+      - Split link: connectivity/split-link.md
+  - Wire protocol:
+      - Transport: protocol/transport.md
+      - Command map: protocol/commands.md
+      - Keymap: protocol/keymap.md
+      - Layers: protocol/layers.md
+      - LEDs: protocol/led.md
+      - Settings and timing: protocol/settings.md
+      - Modules: protocol/modules.md
+      - Module fields: protocol/module-fields.md
+      - Differences by firmware: protocol/firmware-differences.md
+  - Firmware:
+      - Images: firmware/images.md
+      - Bootloader: firmware/bootloader.md
+      - Versions: firmware/versions.md
+      - Flashing: firmware/flashing.md
+      - Module firmware: firmware/modules.md
+      - ZMK: firmware/zmk.md
+  - Storage:
+      - Flash layout: storage/flash-layout.md
+      - Factory reset: storage/factory-reset.md
+  - Recovery: recovery.md
+  - Troubleshooting: troubleshooting.md
+  - Host software:
+      - NayaFlow and NayaCore: software/nayaflow.md
+      - App data: software/app-data.md
+      - History: software/history.md
+      - Disassembly: software/disassembly.md
+  - Tools:
+      - Overview: tools/index.md
+      - Python recipes: tools/recipes-python.md
+      - JavaScript recipes: tools/recipes-js.md
+      - Platforms: tools/platforms.md
+  - Open questions: open-questions.md
+  - Glossary: glossary.md
+  - About: about.md
