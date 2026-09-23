@@ -13,6 +13,7 @@ batteries.
     - Ratings: each half 5 V DC 1.5 A; module bases 5 V 500 mA; dongle 5 V 30 mA.
     - `fe/1006` reads the half's cell in mV; `de/100b` reads the module's cell in mV; `de/1009` reads the module cell and its charging rail in 0.1 mV.
     - NayaFlow's module percentage is `(clamp(mV, 3300, 4200) - 3300) * 100 / 900`, truncated, then clamped to 1-100 %: 9 mV per point.
+    - Replacing a worn cell: specs, fit criteria, safety and where to buy are on [Battery replacement](batteries.md).
 
 ## The power model
 
@@ -62,7 +63,8 @@ The filed units are pre-production, so retail capacities are not confirmed
 (its "Touch FH202030 1000 mAh" is the Tune's pack, its "Track FH364046 700 mAh" the Touch's cell, and its
 separate cylindrical "ICR" 300 mAh cell is one of the Track's two pouch cells)[^kb-hardware][^kb-exhibits].
 Cell makers are not identified (label prefixes `FH` and `QS` only); module retail boxes carry a UN 3480
-lithium-ion battery label <span class="tag doc">DOC</span>[^wb-naya].
+lithium-ion battery label <span class="tag doc">DOC</span>[^wb-naya]. For decoded sizes, connectors, thermistors and replacement
+cells, see [Battery replacement](batteries.md).
 
 ## Ratings and supply rules
 

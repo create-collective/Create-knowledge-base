@@ -24,3 +24,7 @@
 [data-md-color-scheme="slate"] .md-typeset .tag.inferred { color: #e3b341; }
 [data-md-color-scheme="slate"] .md-typeset .tag.reported { color: #ff9492; }
 [data-md-color-scheme="slate"] .md-typeset .tag.open     { color: #ff7b72; background: rgba(255, 123, 114, 0.1); }
+
+/* FCC exhibit thumbnails in tables (hardware pages): keep the width set in the Markdown
+   instead of shrinking to the column, so a part stays recognizable; the table scrolls. */
+.md-typeset td > a.glightbox > img { max-width: none; }

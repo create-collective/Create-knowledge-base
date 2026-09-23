@@ -27,7 +27,8 @@
   },
   "source_shorthand": "'CRL IP3 p20 = CRR IP2 p17': FCC ID, exhibit, lab attachment page; module photos are shared between the two filings",
   "versions": "Pre-production samples received 2025-06-20; keyboard firmware seen on our boards 3.28.7, 3.35.4, 3.41.0; module firmware 2.1.2, 2.3.3 (the wire form adds a leading 0.)",
-  "legibility": "[clear], [partial] or [illegible] after every marking; a 'candidate' is reasoning, never a part number"
+  "legibility": "[clear], [partial] or [illegible] after every marking; a 'candidate' is reasoning, never a part number",
+  "image": "Relative path (from this file) to a scrubbed JPEG crop of an FCC exhibit photo: images/fcc/parts/<id>.jpg for a part crop, images/fcc/boards/<board>.jpg when the row has no crop of its own, images/fcc/batteries/<pack>.jpg for battery rows; null when there is nothing to photograph. image_source cites the exhibit photo the crop was cut from."
  },
  "exhibits": [
   {
@@ -275,140 +276,160 @@
    "board": "Left half mainboard",
    "name": "`Create_L_KB_20250220_V13`",
    "marking": "`Create_L_KB_20250220_V13` / `T=1.0MM`, circled `L`, on both faces [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/half-mainboard-left-components.jpg"
   },
   {
    "id": "HM-02",
    "board": "Right half mainboard",
    "name": "`Create_R_KB_20250221_V13`",
    "marking": "`Create_R_KB_20250221_V13` / `T=1.0MM`, circled `R` [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/half-mainboard-right.jpg"
   },
   {
    "id": "WG-01",
    "board": "Left wing board",
    "name": "`Create_L_Wing_20250206_V11`",
    "marking": "`Create_L_Wing_20250206_V11` / `T=1.0MM` [clear]; separate stamp `25 15` [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/wing-board-left.jpg"
   },
   {
    "id": "WG-02",
    "board": "Right wing board",
    "name": "`Create_R_Wing_20250206_V11` (middle INFERRED)",
    "marking": "`Create_R` ... `0250206_V11`, `1.0MM`; `_Wing_2` hidden under a QR label; fiducial `MARK3` beside [partial]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/wing-board-right.jpg"
   },
   {
    "id": "DK-01",
    "board": "Left dock (thumb-key) board",
    "name": "`Create_L_Dock_20241120_V09`",
    "marking": "`Create_L_Dock_20241120_V09` / `T=1.0MM`, circled `L`, struck-through `Pb` (lead-free) circle [clear]",
-   "verdict": "corrected"
+   "verdict": "corrected",
+   "image": "../images/fcc/boards/dock-board-left.jpg"
   },
   {
    "id": "DK-02",
    "board": "Right dock board",
    "name": "`Create_R_Dock_20241120_V09`",
    "marking": "`Create_R_Dock_20241120_V09` / `T=1.0MM`, circled `R`, `MARK5`, `MARK6`, Pb-free circle [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/dock-board-right.jpg"
   },
   {
    "id": "PD-01",
    "board": "Left pogo board",
    "name": "`Create_L_PogoPin_20250109_V10`",
    "marking": "`Create_L_PogoPin` / `20250109_V10`, `T=0.6MM`, circled `L`, Pb-free circle, QR label [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/pogo-board-left.jpg"
   },
   {
    "id": "DG-01",
    "board": "Dongle board",
    "name": "`B0K17_Dongle_20241106_V01`",
    "marking": "Silkscreen `B0K17_Dongle` / `20241106_V01` [clear]; report text layer spells the second character as digit zero (U+0030)",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/dongle-board-front.jpg"
   },
   {
    "id": "TUM-01",
    "board": "Tune main board (ring)",
    "name": "`Tune_MB_20250227_V09`, part no. `408-06032-000`",
    "marking": "`Tune_MB_20250227_V09` / `408-06032-000` / `T=0.8mm` on both faces, Pb-free circle, stamp `25 12`, chevron fab logo [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/tune-main-board-front.jpg"
   },
   {
    "id": "TUX-01",
    "board": "Tune touch/LED disc",
    "name": "`Tune_touch 20240926 V00`",
    "marking": "`Tune_touch` / `20240926` / `V00` (lower-case 'touch'), chevron logo, gold edge ring [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/tune-touch-disc.jpg"
   },
   {
    "id": "TCM-01",
    "board": "Touch main board",
    "name": "`Touch_MB_20250227_V10`, part no. `408-06025-000`",
    "marking": "`Touch_MB_20250227_V10` / `408-06025-000` / `T=1.0MM` on three lines, Pb-free, chevron logo [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/touch-main-board.jpg"
   },
   {
    "id": "TCX-01",
    "board": "Touch sensor board",
    "name": "`Touch_touch_20250106_V02`",
    "marking": "`Touch_touch_20250106_V02`, stamp `25 12`, chevron logo [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/touch-sensor-board.jpg"
   },
   {
    "id": "TCX-08",
    "board": "Touch pogo board",
    "name": "`Touch_Pogo_Pin_<date>_V0x` (INFERRED from the Track name)",
    "marking": "`Tou`...`in` / `20`...`V0?` (middle under a 2D sticker); stamp `25 10`; Pb-free, chevron logo [partial]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/touch-pogo-board.jpg"
   },
   {
    "id": "TKM-01",
    "board": "Track main board (ring)",
    "name": "`Track_MB_20250305_V13`, part no. `408-06028-000`",
    "marking": "`408-06028-000` / `Track_MB_20250305_V13` / `T=1.0MM`, Pb-free, stamp `25 15`, chevron logo [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/track-main-board-front.jpg"
   },
   {
    "id": "TKX-01a",
    "board": "Track sensor board, left",
    "name": "`SensorL_20241125_V09`",
    "marking": "`SensorL_20241125_V09`, circled `L` [clear]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/track-sensor-boards.jpg"
   },
   {
    "id": "TKX-01b",
    "board": "Track sensor board, right",
    "name": "`SensorR_20241125_V09`",
    "marking": "`SensorR_20241125_V09`, circled `R`, Pb-free [clear; R glyph faint]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/track-sensor-boards.jpg"
   },
   {
    "id": "TKX-05",
    "board": "Track pogo board",
    "name": "`Track_Pogo_Pin_20241122_V08`",
    "marking": "`Track_Pogo_Pin_20241122_V08`, Pb-free; date stamp `25 1?` [name clear; stamp partial]",
-   "verdict": "corrected"
+   "verdict": "corrected",
+   "image": "../images/fcc/boards/track-pogo-interposer.jpg"
   },
   {
    "id": "TKX-09",
    "board": "Track dock interposer board",
    "name": "no name visible",
    "marking": "`J11` 4-pin male header (`GND`, `RX`, `TX` + 1 unlabeled pin); `J4` 4-pin header (`ON`, `5V`, `GND` + 1 unlabeled); `BOOT1` pad; `C39`, `C47`, `C51`, `C52`, `D40`, `D44` (partial), `D75`; QR sticker [clear except where marked]",
-   "verdict": "confirmed"
+   "verdict": "confirmed",
+   "image": "../images/fcc/boards/track-pogo-interposer.jpg"
   },
   {
    "id": "U-PD-02",
    "board": "Right pogo board name",
    "name": null,
    "marking": "Circled `R`, Pb mark, `GND_4`, `BOOT_2`, `5V_1`, `RX_2`; name under a QR sticker; `Cr` / `Pin` / `10` fragments very low confidence; edge text `?0010`",
-   "verdict": "unverifiable"
+   "verdict": "unverifiable",
+   "image": "../images/fcc/boards/pogo-board-right.jpg"
   },
   {
    "id": "U-TUX-16",
    "board": "T-shaped sub-board",
    "name": null,
    "marking": "Green PCB about 10 x 7-9 mm; metal frame about 9.3 x 3.7 mm with a white 'pill' about 3.3 x 1 mm at one end of a slot; 6 pads on the crossbar; about 1.2-1.5 mm unmarked IC; no board name",
-   "verdict": "unverifiable"
+   "verdict": "unverifiable",
+   "image": "../images/fcc/boards/tune-sub-board.jpg"
   }
  ],
  "part_number_index": [
@@ -573,7 +594,9 @@
    "verdict_note": "Grant date confirmed on FCC EAS (2026-09-23); this ID has two grant lines, 2402-2480 and 2404-2480 MHz",
    "tag": "DOC",
    "source": "CRL BLE p1, p10; CRL SRD p1; grant date and grant lines from FCC EAS (read 2026-09-23)",
-   "notes": "The SRD report BTL-FCCP-2-2506C291 carries the same FCC ID: it is a second 15.247 report inside this grant, not a second grant. Report R01 issued 2025-08-27, after the grant (R00 was superseded for the antenna gain). The left half's RF-exposure report is BTL-FCCP-3-2506C291 R00 (LB-24)."
+   "notes": "The SRD report BTL-FCCP-2-2506C291 carries the same FCC ID: it is a second 15.247 report inside this grant, not a second grant. Report R01 issued 2025-08-27, after the grant (R00 was superseded for the antenna gain). The left half's RF-exposure report is BTL-FCCP-3-2506C291 R00 (LB-24).",
+   "image": "../images/fcc/parts/lb-02a.jpg",
+   "image_source": "CRL LLOC p1: FC mark and 'FCC ID: 2BQ4V0825CRL' (left label artwork, rotated upright)"
   },
   {
    "id": "LB-02b",
@@ -587,7 +610,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR BLE p1, p10; CRR LBL; CRR MPE p1; grant date and grant lines from FCC EAS (read 2026-09-23)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/lb-02b.jpg",
+   "image_source": "CRR LBL p1: FC mark and 'FCC ID: 2BQ4V0825CRR' (right label artwork, rotated upright)"
   },
   {
    "id": "LB-02c",
@@ -601,7 +626,9 @@
    "verdict_note": "PHY corrected 2026-09-23: the dongle report tests 2 Mbps only (was '1M / 2M / 125k')",
    "tag": "DOC",
    "source": "DG RF p1, p10, p11 (EUT table and test modes: 2 Mbps only); grant date and grant lines from FCC EAS (read 2026-09-23)",
-   "notes": "SAR report BTL-FCC SAR-1-2506C290 R00 (LB-23); ISED 34320-0825DG."
+   "notes": "SAR report BTL-FCC SAR-1-2506C290 R00 (LB-23); ISED 34320-0825DG.",
+   "image": "../images/fcc/parts/lb-02c.jpg",
+   "image_source": "DG LBL p1: 'FCC ID: 2BQ4V0825DG' and 'IC: 34320-0825DG'"
   },
   {
    "id": "LB-01",
@@ -615,7 +642,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRL BLE p1, p10; CRR BLE p1; CRR UM1 p1; CRR UM5 p1",
-   "notes": "The left label reads HVIN `NAYA-800-1(NAYA-CREATE) L` (LB-20); ISED lists both HVINs with the side suffix."
+   "notes": "The left label reads HVIN `NAYA-800-1(NAYA-CREATE) L` (LB-20); ISED lists both HVINs with the side suffix.",
+   "image": "../images/fcc/parts/lb-01.jpg",
+   "image_source": "CRR LBL p1: the Model Name and HVIN line, split in two for size"
   },
   {
    "id": "DG-17a",
@@ -629,7 +658,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG RF p1, p10; CRR UM1 p2",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-17a.jpg",
+   "image_source": "DG LBL p1: 'Wireless dongle' and 'Model Name: NAYA-100-1(Dongle)'"
   },
   {
    "id": "LB-04",
@@ -643,7 +674,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRR UM5 p2 (IC statements, no number); CRL LLOC p1; DG LBL; ISED REL (read 2026-09-23)",
-   "notes": "All three numbers are on their label artwork (CRR LBL, CRL LLOC p1, DG LBL) and on the ISED Radio Equipment List for company 34320 (approved 2025-09-11 CRL, 2025-09-08 CRR and DG)."
+   "notes": "All three numbers are on their label artwork (CRR LBL, CRL LLOC p1, DG LBL) and on the ISED Radio Equipment List for company 34320 (approved 2025-09-11 CRL, 2025-09-08 CRR and DG).",
+   "image": "../images/fcc/parts/lb-04.jpg",
+   "image_source": "CRR LBL p1, CRL LLOC p1 and DG LBL p1: the three IC numbers stacked"
   },
   {
    "id": "LB-05",
@@ -657,7 +690,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRL EP p2; CRR EP p2-p3; CRL LLOC p1; DG LBL",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/lb-05.jpg",
+   "image_source": "CRR LBL p1: KC mark and R-R-NBv-0825CRR"
   },
   {
    "id": "LB-06",
@@ -671,7 +706,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (format decode from public MIC guides)",
    "source": "CRR LBL; CRL LLOC p1; DG LBL",
-   "notes": "The two numbers are consecutive (one batch, INFERRED). The dongle label carries only an `XXX-XXXXX` placeholder. The certification body behind code 219 is not identified."
+   "notes": "The two numbers are consecutive (one batch, INFERRED). The dongle label carries only an `XXX-XXXXX` placeholder. The certification body behind code 219 is not identified.",
+   "image": "../images/fcc/parts/lb-06.jpg",
+   "image_source": "CRR LBL p1 (219-257016, top) and CRL LLOC p1 (219-257017, bottom): Giteki mark and boxed R"
   },
   {
    "id": "LB-07",
@@ -685,7 +722,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (registrant-level number)",
    "source": "CRR LBL; CRL LLOC p1",
-   "notes": "The same number appears on unrelated Taiwan-market products, so it most likely identifies the importer/registrant, not this product (INFERRED). On the left label as on the right; not on the dongle label."
+   "notes": "The same number appears on unrelated Taiwan-market products, so it most likely identifies the importer/registrant, not this product (INFERRED). On the left label as on the right; not on the dongle label.",
+   "image": "../images/fcc/parts/lb-07.jpg",
+   "image_source": "CRR LBL p1: BSMI mark, R45625, RoHS"
   },
   {
    "id": "LB-08",
@@ -699,7 +738,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRR LBL; CRL LLOC p1",
-   "notes": "On both half labels and on the dongle label."
+   "notes": "On both half labels and on the dongle label.",
+   "image": "../images/fcc/parts/lb-08.jpg",
+   "image_source": "CRR LBL p1: NCC-style mark with the 17-character placeholder"
   },
   {
    "id": "LB-09",
@@ -713,7 +754,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRL EP p2; CRR EP p2-p3; CRL LLOC p1",
-   "notes": "An earlier text search reported CE and UKCA as not found: the marks are vector graphics, invisible to a text search. The dongle label has CE and WEEE, no UKCA."
+   "notes": "An earlier text search reported CE and UKCA as not found: the marks are vector graphics, invisible to a text search. The dongle label has CE and WEEE, no UKCA.",
+   "image": "../images/fcc/parts/lb-09.jpg",
+   "image_source": "CRR LBL p1: UKCA, the N energy mark, CE, WEEE bin"
   },
   {
    "id": "LB-10",
@@ -727,7 +770,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (shape identification)",
    "source": "CRR LBL; CRL EP p2; CRR EP p3; CRL LLOC p1",
-   "notes": "On both half labels; not on the dongle label."
+   "notes": "On both half labels; not on the dongle label.",
+   "image": "../images/fcc/parts/lb-10.jpg",
+   "image_source": "CRR LBL p1: RCM triangle and VCCI box"
   },
   {
    "id": "LB-11",
@@ -741,7 +786,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRL LLOC p1",
-   "notes": "Both marks on both half labels; the dongle label has the c-UL mark only."
+   "notes": "Both marks on both half labels; the dongle label has the c-UL mark only.",
+   "image": "../images/fcc/parts/lb-11.jpg",
+   "image_source": "CRR LBL p1: c-UL Energy Verified mark (top) and c + N-in-ellipse ENERGY VERIFIED mark (bottom)"
   },
   {
    "id": "LB-12",
@@ -755,7 +802,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRR EP p3; CRL LLOC p1",
-   "notes": "The photographed sample probably carried an earlier engraving (INFERRED). On the left body plate as on the right; not on the dongle label (it is in the manual)."
+   "notes": "The photographed sample probably carried an earlier engraving (INFERRED). On the left body plate as on the right; not on the dongle label (it is in the manual).",
+   "image": "../images/fcc/parts/lb-12.jpg",
+   "image_source": "CRR LBL p1: the 6-line Part 15 statement on the body-plate artwork"
   },
   {
    "id": "LB-13",
@@ -769,7 +818,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL; CRL LLOC p1",
-   "notes": "The left label gives the same rating."
+   "notes": "The left label gives the same rating.",
+   "image": "../images/fcc/parts/lb-13.jpg",
+   "image_source": "CRR LBL p1 (top) and CRL LLOC p1 (bottom): Rating 5V 1.5A"
   },
   {
    "id": "LB-14",
@@ -783,7 +834,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (meaning)",
    "source": "CRR UM1 p3, p5; CRL UM1 p3, p5",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-15",
@@ -797,7 +850,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR LBL (exhibit R15)",
-   "notes": "The serial-number field value is not reproduced. The left filing's 'Label Location' exhibit holds both sheets (CRL LLOC p1 left, p2 right; p2 equals the CRR exhibit)."
+   "notes": "The serial-number field value is not reproduced. The left filing's 'Label Location' exhibit holds both sheets (CRL LLOC p1 left, p2 right; p2 equals the CRR exhibit).",
+   "image": "../images/fcc/parts/lb-15.jpg",
+   "image_source": "CRR LBL p1: the whole 1:1 engraving sheet with its dimensions"
   },
   {
    "id": "LB-16",
@@ -811,7 +866,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR BLE p1, p8; CRL BLE p1; DG RF p1",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-17",
@@ -825,7 +882,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM5 p1; CRL UM3 p5",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-18",
@@ -839,7 +898,9 @@
    "verdict_note": "",
    "tag": "STATIC (NayaCore 6.11.0); MEASURED (`0x0064`, `0x00C8`, `0x006F` on keyboard firmware 3.41.0, generation A)",
    "source": "STATIC: NayaCore 6.11.0 PID table (vendor host binary); measured on one pair of halves, keyboard firmware 3.41.0, generation A, by 2026-09-16",
-   "notes": "`0x00D3` and the DFU pair are STATIC only (not yet seen on hardware)."
+   "notes": "`0x00D3` and the DFU pair are STATIC only (not yet seen on hardware).",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "DG-17b",
@@ -853,7 +914,9 @@
    "verdict_note": "",
    "tag": "MEASURED (one dongle, 2026-09-11); INFERRED (bcdDevice 0x0307 read as dongle firmware 3.07)",
    "source": "measured on one dongle: USB enumeration capture, 2026-09-11",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-19",
@@ -867,7 +930,9 @@
    "verdict_note": "Dongle power setting corrected 2026-09-23 from the DG RF p11 text layer (middle channel 7, not 8)",
    "tag": "DOC; INFERRED (meaning of the installer name)",
    "source": "CRL BLE p10, p13; CRL SRD p10, p12; DG RF p10, p11",
-   "notes": "No keyboard firmware version is printed anywhere in the filings; samples were pre-production units received by the lab on 2025-06-20. The dongle's SAR sample also ran `Naya_Temp_Flash_Pair.exe`; its continuous transmission came from '2.4G SRD engineering testing software installed on the DUT' (DG SAR p7, p23)."
+   "notes": "No keyboard firmware version is printed anywhere in the filings; samples were pre-production units received by the lab on 2025-06-20. The dongle's SAR sample also ran `Naya_Temp_Flash_Pair.exe`; its continuous transmission came from '2.4G SRD engineering testing software installed on the DUT' (DG SAR p7, p23).",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-20",
@@ -881,7 +946,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC",
    "source": "CRL LLOC p1",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/label-left-half.jpg",
+   "image_source": "board view: CRL LLOC p1"
   },
   {
    "id": "LB-21",
@@ -895,7 +962,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC; INFERRED (1:1 scale from the USB-A shell width; placement)",
    "source": "DG LBL; DG EP p2-p3",
-   "notes": "The photographed sample carries no engraving; where on the dongle the label goes is not stated."
+   "notes": "The photographed sample carries no engraving; where on the dongle the label goes is not stated.",
+   "image": "../images/fcc/boards/label-dongle.jpg",
+   "image_source": "board view: DG LBL p1"
   },
   {
    "id": "LB-22",
@@ -909,7 +978,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC; INFERRED (permanent)",
    "source": "CL (CRL, CRR, DG)",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-23",
@@ -923,7 +994,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC",
    "source": "DG SAR p1, p7, p22-p26; DG SAR-D",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "LB-24",
@@ -937,7 +1010,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC; INFERRED (reproduced with 5 mm and unrounded mW)",
    "source": "CRL MPE p1-p4",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "HM-01",
@@ -951,7 +1026,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p8, p9; declared HW version CRL BLE p10, CRL SRD p10, CRR BLE p10, CRR SRD p10, CRR MPE p1",
-   "notes": "naya-create-kb's exhibit page calls this board V11; both faces read V13 (V11 is the wing)."
+   "notes": "naya-create-kb's exhibit page calls this board V11; both faces read V13 (V11 is the wing).",
+   "image": "../images/fcc/parts/hm-01.jpg",
+   "image_source": "CRL IP1 p8, upper photo (switch-side silkscreen)"
   },
   {
    "id": "HM-02",
@@ -965,7 +1042,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR IP1 p6; CRL BLE p10 (the SRD report prints `Create_R_KB20250221_V13`)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hm-02.jpg",
+   "image_source": "CRR IP1 p6, lower photo"
   },
   {
    "id": "WG-01",
@@ -979,7 +1058,9 @@
    "verdict_note": "Stamp now read in full (was `25 ?5`)",
    "tag": "DOC; INFERRED (stamp = fab year 25, week 15)",
    "source": "CRL IP1 p11, p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/wg-01.jpg",
+   "image_source": "CRL IP1 p12, upper photo (rotated to read upright)"
   },
   {
    "id": "WG-02",
@@ -993,7 +1074,9 @@
    "verdict_note": "",
    "tag": "DOC (legible part); INFERRED (hidden part, from the left twin)",
    "source": "CRR IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/wg-02.jpg",
+   "image_source": "CRR IP1 p9, upper photo (rotated)"
   },
   {
    "id": "DK-01",
@@ -1007,7 +1090,9 @@
    "verdict_note": "No separate 'UL-like' mark: that was the Pb-free circle seen at low resolution",
    "tag": "DOC",
    "source": "CRL IP2 p16; CRL IP1 p5, p7 (low resolution)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-01.jpg",
+   "image_source": "CRL IP2 p16, upper photo (rotated 180 degrees): name, T=1.0MM, circled L, Pb-free mark"
   },
   {
    "id": "DK-02",
@@ -1021,7 +1106,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR IP1 p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-02.jpg",
+   "image_source": "CRR IP1 p12, upper photo: name, T=1.0MM, circled R, Pb-free mark"
   },
   {
    "id": "PD-01",
@@ -1035,7 +1122,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p15; CRL IP1 p5, p7",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-01.jpg",
+   "image_source": "CRL IP2 p15, lower photo (rotated): Create_L_PogoPin / 20250109_V10, T=0.6MM, circled L"
   },
   {
    "id": "DG-01",
@@ -1049,7 +1138,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG IP p4, p5; DG RF p10",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-01.jpg",
+   "image_source": "DG IP p5, upper photo (rotated upright)"
   },
   {
    "id": "TUM-01",
@@ -1063,7 +1154,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (stamp = 2025 week 12)",
    "source": "CRL IP2 p18; CRL IP3 p19, p21 = CRR IP2 p15-p16; CRR IP3 p18",
-   "notes": "`408-060xx-000` is one numbering series with the Touch (`06025`) and Track (`06028`) main boards (INFERRED)."
+   "notes": "`408-060xx-000` is one numbering series with the Touch (`06025`) and Track (`06028`) main boards (INFERRED).",
+   "image": "../images/fcc/parts/tum-01.jpg",
+   "image_source": "CRL IP3 p19, lower photo (= CRR IP2 p16), rotated upright"
   },
   {
    "id": "TUX-01",
@@ -1077,7 +1170,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p18; CRL IP3 p22; CRL IP4 p23 = CRR IP2 p15; CRR IP3 p19-p20",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-01.jpg",
+   "image_source": "CRL IP4 p23, upper photo (= CRR IP3 p20), rotated upright"
   },
   {
    "id": "TCM-01",
@@ -1091,7 +1186,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size)",
    "source": "CRL IP4 p28; CRL IP5 p29-p31 = CRR IP4 p25-p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-01.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCX-01",
@@ -1105,7 +1202,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p28; CRL IP6 p35-p36 = CRR IP4 p25; CRR IP5 p32-p33",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-01.jpg",
+   "image_source": "CRL IP6 p35, upper photo (= CRR IP5 p32 upper)"
   },
   {
    "id": "TCX-08",
@@ -1119,7 +1218,9 @@
    "verdict_note": "Only the fragments are confirmed",
    "tag": "DOC (fragments); INFERRED (full name)",
    "source": "CRL IP4 p28; CRL IP5 p32 = CRR IP4 p25; CRR IP5 p29",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-08.jpg",
+   "image_source": "CRL IP5 p32, upper photo (= CRR IP5 p29 upper)"
   },
   {
    "id": "TKM-01",
@@ -1133,7 +1234,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size, stamp = 2025 week 15)",
    "source": "CRL IP7 p44-p46 = CRR IP6 p41; CRR IP7 p42-p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-01.jpg",
+   "image_source": "CRL IP7 p45, upper photo (= CRR IP7 p42)"
   },
   {
    "id": "TKX-01a",
@@ -1147,7 +1250,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (function)",
    "source": "CRL IP6 p38-p39 = CRR IP6 p35-p36",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-01a.jpg",
+   "image_source": "CRL IP6 p39, lower photo (= CRR IP6 p36)"
   },
   {
    "id": "TKX-01b",
@@ -1161,7 +1266,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (function)",
    "source": "CRL IP6 p38-p39 = CRR IP6 p35-p36",
-   "notes": "Two sensor boards, not four: each is photographed front and back."
+   "notes": "Two sensor boards, not four: each is photographed front and back.",
+   "image": "../images/fcc/parts/tkx-01b.jpg",
+   "image_source": "CRL IP6 p39, lower photo (= CRR IP6 p36)"
   },
   {
    "id": "TKX-05",
@@ -1175,7 +1282,9 @@
    "verdict_note": "Revision V08 confirmed on three views; the stamp's `14` reading is not confirmed (U-TKX-05b)",
    "tag": "DOC",
    "source": "CRL IP6 p38, p40 = CRR IP6 p35, p37; CRL IP6 p37 = CRR IP5 p34 (in the base)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-05.jpg",
+   "image_source": "CRL IP6 p40, lower photo (= CRR IP6 p37)"
   },
   {
    "id": "TKX-09",
@@ -1189,7 +1298,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP6 p40 = CRR IP6 p37 (upper photo)",
-   "notes": "A dark SOT/DFN part sits in the lower row; its `U41` refdes is not legible (U-TKX-09b)."
+   "notes": "A dark SOT/DFN part sits in the lower row; its `U41` refdes is not legible (U-TKX-09b).",
+   "image": "../images/fcc/parts/tkx-09.jpg",
+   "image_source": "CRL IP6 p40, upper photo (= CRR IP6 p37)"
   },
   {
    "id": "HM-04",
@@ -1203,7 +1314,9 @@
    "verdict_note": "Identity rests on package code CKAA, conducted power and native USB with no second MCU, not on line 1; one verification pass read line 1 as `N52840` after gamma correction",
    "tag": "DOC (marking; CKAA = nRF52840 WLCSP per distributor listings); INFERRED (D0 = Revision 2)",
    "source": "CRL IP1 p10 (two close-ups), p7, p9; CRR IP1 p8; transmit data CRL BLE p13, CRR BLE p13",
-   "notes": "Build code D0 matches Nordic's Revision 2 pattern; Revision 3 (hardened APPROTECT) uses Fx0 (INFERRED from Nordic DevZone; confirm in Nordic's revision document, OQ-05). Same lot `2301ME` as the dongle. Conducted peak 8.2-9.3 dBm at power setting 8 is above an nRF52811's +4 dBm (INFERRED)."
+   "notes": "Build code D0 matches Nordic's Revision 2 pattern; Revision 3 (hardened APPROTECT) uses Fx0 (INFERRED from Nordic DevZone; confirm in Nordic's revision document, OQ-05). Same lot `2301ME` as the dongle. Conducted peak 8.2-9.3 dBm at power setting 8 is above an nRF52811's +4 dBm (INFERRED).",
+   "image": "../images/fcc/parts/hm-04.jpg",
+   "image_source": "CRL IP1 p10, upper photo (left half; rotated 32 degrees so the marking reads level)"
   },
   {
    "id": "HM-07",
@@ -1217,7 +1330,9 @@
    "verdict_note": "",
    "tag": "DOC (marking); INFERRED (size)",
    "source": "CRL IP1 p10, p7; CRR IP1 p8",
-   "notes": "Same marking on the dongle (DG-06)."
+   "notes": "Same marking on the dongle (DG-06).",
+   "image": "../images/fcc/parts/hm-07.jpg",
+   "image_source": "CRR IP1 p8, upper photo (right half; shows the Y1 refdes; rotated 25 degrees)"
   },
   {
    "id": "HM-09",
@@ -1231,7 +1346,9 @@
    "verdict_note": "Maker and package confirmed; part number unverifiable",
    "tag": "DOC",
    "source": "CRR IP1 p8; CRL IP1 p9",
-   "notes": "Part number and capacity unverifiable (U-HM-09b, U-HM-10). The package is leadless, so a SOIC-8 clip does not fit; only the Winbond wordmark is confirmed (no W25Q suffix, no capacity)."
+   "notes": "Part number and capacity unverifiable (U-HM-09b, U-HM-10). The package is leadless, so a SOIC-8 clip does not fit; only the Winbond wordmark is confirmed (no W25Q suffix, no capacity).",
+   "image": "../images/fcc/parts/hm-09.jpg",
+   "image_source": "CRR IP1 p8, lower photo (right half; rotated so the winbond wordmark reads upright)"
   },
   {
    "id": "HM-11",
@@ -1245,7 +1362,9 @@
    "verdict_note": "Right-half SIO digits now legible (were `SIO?` x2)",
    "tag": "DOC",
    "source": "CRL IP1 p9; CRR IP1 p8",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hm-11.jpg",
+   "image_source": "CRR IP1 p8, lower photo (right half; rotated 180 degrees)"
   },
   {
    "id": "HM-12",
@@ -1259,7 +1378,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL ANT p1 (table), p4 (drawing); CRR ANT; CRL IP1 p7; CRR EP p3; CRL BLE p11; CRR BLE p11; CRR MPE p4; CRL MPE p4",
-   "notes": "Sits behind the black end cap (EN-06; the vendor confirms the cap is the RF window). The spec's 'Directivity' column equals minus efficiency in dB (spreadsheet error). The R01 reports file 0.8 dBi (the 2400 MHz maximum); the left half's MPE report R00, never revised, files 0.59 dBi (the 2460 MHz value), and the right half's superseded R00 most likely did too (INFERRED)."
+   "notes": "Sits behind the black end cap (EN-06; the vendor confirms the cap is the RF window). The spec's 'Directivity' column equals minus efficiency in dB (spreadsheet error). The R01 reports file 0.8 dBi (the 2400 MHz maximum); the left half's MPE report R00, never revised, files 0.59 dBi (the 2460 MHz value), and the right half's superseded R00 most likely did too (INFERRED).",
+   "image": "../images/fcc/parts/hm-12.jpg",
+   "image_source": "CRL IP1 p7, lower photo (left half, with the lab's 'Ant.' callout)"
   },
   {
    "id": "HM-13",
@@ -1273,7 +1394,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p6, p7, p9; CRR IP1 p8; CRL EP p4; CRR EP p4; CRR UM1 p6",
-   "notes": "16-pin vs 24-pin class not resolvable (U-HM-13b)."
+   "notes": "16-pin vs 24-pin class not resolvable (U-HM-13b).",
+   "image": "../images/fcc/parts/hm-13.jpg",
+   "image_source": "CRR IP1 p8, upper photo (right half; shows the SMT leg row)"
   },
   {
    "id": "HM-14",
@@ -1287,7 +1410,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p7, p9; CRR IP1 p8",
-   "notes": "A re-view of the right-half crop (2026-09-23) also shows a `D+` label and one beginning `US` on the right, so both halves most likely carry the same debug and USB test-pad set; `D-` is still not seen on either."
+   "notes": "A re-view of the right-half crop (2026-09-23) also shows a `D+` label and one beginning `US` on the right, so both halves most likely carry the same debug and USB test-pad set; `D-` is still not seen on either.",
+   "image": "../images/fcc/parts/hm-14.jpg",
+   "image_source": "CRL IP1 p7, lower photo (left half)"
   },
   {
    "id": "HM-15",
@@ -1301,7 +1426,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p9; CRR IP1 p7 (switch through a window, no refdes)",
-   "notes": "The silkscreen `RST_NORDIC` names the SoC vendor."
+   "notes": "The silkscreen `RST_NORDIC` names the SoC vendor.",
+   "image": "../images/fcc/parts/hm-15.jpg",
+   "image_source": "CRL IP1 p9, upper photo (left half; rotated 180 degrees)"
   },
   {
    "id": "HM-16",
@@ -1315,7 +1442,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p7, p9, p10; CRR IP1 p8",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hm-16.jpg",
+   "image_source": "CRR IP1 p8, upper photo (right half)"
   },
   {
    "id": "HP-01",
@@ -1329,7 +1458,9 @@
    "verdict_note": "Value is a direct decode of the printed EIA code (was tagged INFERRED)",
    "tag": "DOC",
    "source": "CRL IP1 p9",
-   "notes": "The IC is U-HP-01b."
+   "notes": "The IC is U-HP-01b.",
+   "image": "../images/fcc/parts/hp-01.jpg",
+   "image_source": "CRL IP1 p9, upper photo (rotated 180 degrees)"
   },
   {
    "id": "HP-02",
@@ -1343,7 +1474,9 @@
    "verdict_note": "Value decoded from the printed code",
    "tag": "DOC",
    "source": "CRL IP1 p9",
-   "notes": "U10 is U-HP-02b."
+   "notes": "U10 is U-HP-02b.",
+   "image": "../images/fcc/parts/hp-02.jpg",
+   "image_source": "CRL IP1 p9, upper photo (rotated 180 degrees)"
   },
   {
    "id": "HP-05",
@@ -1357,7 +1490,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-05.jpg",
+   "image_source": "CRL IP1 p9, upper photo (rotated 180 degrees)"
   },
   {
    "id": "HP-09",
@@ -1371,7 +1506,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p8, p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-09.jpg",
+   "image_source": "CRL IP1 p9, upper photo (D34, D36; rotated 180 degrees)"
   },
   {
    "id": "HP-11",
@@ -1385,7 +1522,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (roles)",
    "source": "CRL IP1 p9",
-   "notes": "Full dock net set: PD-13."
+   "notes": "Full dock net set: PD-13.",
+   "image": "../images/fcc/parts/hp-11.jpg",
+   "image_source": "CRL IP1 p9, upper photo (rotated 180 degrees)"
   },
   {
    "id": "HP-12",
@@ -1399,7 +1538,9 @@
    "verdict_note": "Subset re-read (`5V_OFF1`, `MODULE_ON`, `VBUS_5V`); rest uncontradicted",
    "tag": "DOC",
    "source": "CRL IP1 p9; CRR IP1 p8",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-12.jpg",
+   "image_source": "CRL IP1 p9, upper photo (MODULE_ON, 5V_OFF1, SYS_OUT, LED_OFF, BOOT; rotated 180 degrees)"
   },
   {
    "id": "HP-13",
@@ -1413,7 +1554,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p9",
-   "notes": "The dock board continues the scheme (`SR*_2`, `SC8_2`)."
+   "notes": "The dock board continues the scheme (`SR*_2`, `SC8_2`).",
+   "image": "../images/fcc/parts/hp-13.jpg",
+   "image_source": "CRL IP1 p9, upper photo (SR1, SC1, SC3, SC4; rotated 180 degrees)"
   },
   {
    "id": "HP-14",
@@ -1427,7 +1570,9 @@
    "verdict_note": "",
    "tag": "DOC (footprint, pads); INFERRED (WS2812/SK6812 class)",
    "source": "CRL IP1 p8, p9; CRR IP1 p6; CRR UM1 p3",
-   "notes": "LED part numbers: U-LED."
+   "notes": "LED part numbers: U-LED.",
+   "image": "../images/fcc/parts/hp-14.jpg",
+   "image_source": "CRR IP1 p8, upper photo (LED7 on the right mainboard; same footprint on both halves)"
   },
   {
    "id": "HP-15",
@@ -1441,7 +1586,9 @@
    "verdict_note": "",
    "tag": "MEASURED (band-painting pass 2026-09-08; map size on keyboard firmware 3.41.0 and 3.28.7)",
    "source": "measured on one keyboard: LED band-painting pass 2026-09-08; LED map size on keyboard firmware 3.41.0 and 3.28.7",
-   "notes": "Photo count per half: 24 mainboard + 10 wing + 3 dock = 37 key LEDs, plus 7 side-bar LEDs = 44; two halves = 88 = indices 0-87 (INFERRED match). Which physical edge is 74-80 is open (OQ-08)."
+   "notes": "Photo count per half: 24 mainboard + 10 wing + 3 dock = 37 key LEDs, plus 7 side-bar LEDs = 44; two halves = 88 = indices 0-87 (INFERRED match). Which physical edge is 74-80 is open (OQ-08).",
+   "image": "../images/fcc/boards/half-mainboard-left-switch-side.jpg",
+   "image_source": "board view: CRL IP1 p9"
   },
   {
    "id": "HP-16",
@@ -1455,7 +1602,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p8, p9; CRR IP1 p6",
-   "notes": "Socket part: U-EN-02."
+   "notes": "Socket part: U-EN-02.",
+   "image": "../images/fcc/parts/hp-16.jpg",
+   "image_source": "CRR IP1 p8, upper photo (SW7 window with its socket pads)"
   },
   {
    "id": "HP-17",
@@ -1469,7 +1618,9 @@
    "verdict_note": "Way count refined from 'not countable'",
    "tag": "DOC",
    "source": "CRL IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-17.jpg",
+   "image_source": "CRL IP1 p9, upper photo (rotated 180 degrees)"
   },
   {
    "id": "HP-18",
@@ -1483,7 +1634,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (destinations)",
    "source": "CRL IP1 p8, p9; CRR IP1 p6, p7",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-18.jpg",
+   "image_source": "CRL IP1 p9, upper photo (rotated 180 degrees)"
   },
   {
    "id": "HP-19",
@@ -1497,7 +1650,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (function)",
    "source": "CRL IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-19.jpg",
+   "image_source": "CRL IP1 p9, upper photo (gold land and the round boss; rotated 180 degrees)"
   },
   {
    "id": "HP-20",
@@ -1511,7 +1666,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p8, p10; CRR IP1 p7",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/hp-20.jpg",
+   "image_source": "CRL IP1 p10, lower photo (white foam with the cut-out over U2, black film)"
   },
   {
    "id": "WG-03",
@@ -1525,7 +1682,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p12; CRR IP1 p9; CRL EP p4; CRR EP p4; CRR UM1 p5",
-   "notes": "ON/OFF direction not determinable (manual drawings CRR UM1 p5 and UM2 p3 disagree). Candidate part: U-WG-03b."
+   "notes": "ON/OFF direction not determinable (manual drawings CRR UM1 p5 and UM2 p3 disagree). Candidate part: U-WG-03b.",
+   "image": "../images/fcc/parts/wg-03.jpg",
+   "image_source": "CRL IP1 p12, upper photo (left wing; rotated 180 degrees)"
   },
   {
    "id": "WG-04",
@@ -1539,7 +1698,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (class)",
    "source": "CRL IP1 p11, p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/wg-04.jpg",
+   "image_source": "CRL IP1 p12, upper photo (LED42-LED44; rotated 180 degrees)"
   },
   {
    "id": "WG-05",
@@ -1553,7 +1714,9 @@
    "verdict_note": "",
    "tag": "DOC; MEASURED (7 per side in the LED map, 2026-09-08)",
    "source": "CRR IP1 p9; measured on one keyboard (LED map, 7 side-bar indices per half, 2026-09-08)",
-   "notes": "The left wing's face B is under black film."
+   "notes": "The left wing's face B is under black film.",
+   "image": "../images/fcc/parts/wg-05.jpg",
+   "image_source": "CRR IP1 p9, lower photo (right wing face B)"
   },
   {
    "id": "WG-06",
@@ -1567,7 +1730,9 @@
    "verdict_note": "Same designators on both wings (was read as right-wing only)",
    "tag": "DOC",
    "source": "CRL IP1 p11; CRR IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/wg-06.jpg",
+   "image_source": "CRL IP1 p11, upper photo (left wing switch side; SW1, SW2, SW9, SW10, stamp 25 15)"
   },
   {
    "id": "WG-07",
@@ -1581,7 +1746,9 @@
    "verdict_note": "New refdes `J5`",
    "tag": "DOC",
    "source": "CRL IP1 p12; CRR IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/wg-07.jpg",
+   "image_source": "CRL IP1 p12, upper photo (left wing flex into J5)"
   },
   {
    "id": "WG-08",
@@ -1595,7 +1762,9 @@
    "verdict_note": "`R36` not found (Rejected R-40)",
    "tag": "DOC",
    "source": "CRL IP1 p12; CRR IP1 p9",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/wg-08.jpg",
+   "image_source": "CRL IP1 p12, upper photo (R55, R62, R99, TVS44, C33; rotated 180 degrees)"
   },
   {
    "id": "DK-03",
@@ -1609,7 +1778,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (class)",
    "source": "CRL IP2 p16; CRR IP1 p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-03.jpg",
+   "image_source": "CRL IP2 p16, lower photo: the 3 thumb-key LEDs on the LED face (left board)"
   },
   {
    "id": "DK-04",
@@ -1623,7 +1794,9 @@
    "verdict_note": "",
    "tag": "DOC (manual: 'Hot-Swappable Switches', 'sockets'); INFERRED (the metal parts are the sockets)",
    "source": "CRL IP2 p16; CRL IP1 p7; CRR IP1 p12; CRR UM3 p4",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-04.jpg",
+   "image_source": "CRR IP1 p12, lower photo: 3 windows with the 6 socket parts (right board)"
   },
   {
    "id": "DK-05",
@@ -1637,7 +1810,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (role)",
    "source": "CRL IP2 p16; CRR IP1 p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-05.jpg",
+   "image_source": "CRR IP1 p12, upper photo: the three stacked diodes with the TVS31/D31/D37/D25 labels (right board)"
   },
   {
    "id": "DK-06",
@@ -1651,7 +1826,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p16; CRR IP1 p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-06.jpg",
+   "image_source": "CRR IP1 p12, upper photo: TVS9, TVS23, TVS25, TVS28, TVS32 and neighbors (right board)"
   },
   {
    "id": "DK-07",
@@ -1665,7 +1842,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (mating)",
    "source": "CRL IP2 p16; CRR IP1 p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-07.jpg",
+   "image_source": "CRR IP1 p12, upper photo: the J4 end (top) and J7 end (bottom) stacked (right board)"
   },
   {
    "id": "DK-08",
@@ -1679,7 +1858,9 @@
    "verdict_note": "Identity narrowed from 'capacitor or diode'",
    "tag": "DOC; INFERRED (class)",
    "source": "CRR IP1 p12; CRL IP2 p16",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-08.jpg",
+   "image_source": "CRR IP1 p12, upper photo: black polarised part under the + mark (right board)"
   },
   {
    "id": "DK-10",
@@ -1693,7 +1874,9 @@
    "verdict_note": "`MZ_VBAT_1` (not `M2_VBAT_1`) and `LDO_ON_1` resolved",
    "tag": "DOC; INFERRED (roles)",
    "source": "CRL IP2 p16; CRR IP1 p12",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dk-10.jpg",
+   "image_source": "CRL IP2 p16, upper photo (rotated 180 degrees): LDO_ON_1, MZ_VBAT_1, TX_1, GND3, BOOT_1, USB_5V_2 (left board)"
   },
   {
    "id": "PD-03",
@@ -1707,7 +1890,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p15; CRL IP1 p5, p7; CRR IP2 p13; CRR IP1 p5, p6; CRL EP p2-p4; CRR EP p2-p4; CRL BLE p35; CRR BLE p35; CRR UM2 p2",
-   "notes": "Identical count on both halves and on every module (TUM-20, TCX-09, TKX-07)."
+   "notes": "Identical count on both halves and on every module (TUM-20, TCX-09, TKX-07).",
+   "image": "../images/fcc/parts/pd-03.jpg",
+   "image_source": "CRR IP2 p13, upper photo: 8 domed pins in 2 rows of 4 (right pogo board; the left twin is on CRL IP2 p15)"
   },
   {
    "id": "PD-05",
@@ -1721,7 +1906,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p15; CRR IP2 p13",
-   "notes": "Pin-to-signal mapping not resolvable (OQ-09)."
+   "notes": "Pin-to-signal mapping not resolvable (OQ-09).",
+   "image": "../images/fcc/parts/pd-05.jpg",
+   "image_source": "CRR IP2 p13, lower photo: back-face pad labels GND, BOOT_2, 5V_1, IO_ON1, VBAT (right board)"
   },
   {
    "id": "PD-06",
@@ -1735,7 +1922,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (role)",
    "source": "CRL IP2 p15; CRR IP2 p13",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-06.jpg",
+   "image_source": "CRR IP2 p13, upper photo (rotated 180 degrees): D38, D75, D44, D41, D40, D39 (right board)"
   },
   {
    "id": "PD-07",
@@ -1749,7 +1938,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p15; CRR IP2 p13",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-07.jpg",
+   "image_source": "CRL IP2 p15, upper photo: J1 under its printed red-and-white sticker, flex exit (left board)"
   },
   {
    "id": "PD-08",
@@ -1763,7 +1954,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (counts, routing)",
    "source": "CRL IP2 p15; CRL IP1 p5; CRR IP2 p13; CRR IP1 p5, p6",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-08.jpg",
+   "image_source": "CRR IP2 p13, upper photo: black flex with its gold-finger tail (right)"
   },
   {
    "id": "PD-09",
@@ -1777,7 +1970,9 @@
    "verdict_note": "",
    "tag": "DOC; MEASURED (paper-clip test)",
    "source": "CRL IP1 p5; CRR IP1 p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-09.jpg",
+   "image_source": "CRL IP1 p5, upper photo: bay bracket with its 5 rectangular blocks"
   },
   {
    "id": "PD-10",
@@ -1791,7 +1986,9 @@
    "verdict_note": "Count narrowed from 'at least 6' to 'at least 4'",
    "tag": "DOC; MEASURED (paper-clip test)",
    "source": "CRL IP1 p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-10.jpg",
+   "image_source": "CRL IP1 p5, upper photo: black magnet carrier plate with the silver blocks"
   },
   {
    "id": "PD-11",
@@ -1805,7 +2002,9 @@
    "verdict_note": "",
    "tag": "DOC; MEASURED (paper-clip test)",
    "source": "CRL EP p2-p4; CRR EP p2-p3; CRL BLE p35; CRR BLE p35; CRR SRD p34; CRR UM2 p2",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-11.jpg",
+   "image_source": "CRR EP p3, upper photo: the contact block with one light feature above it and one below"
   },
   {
    "id": "PD-12",
@@ -1819,7 +2018,9 @@
    "verdict_note": "Wording refined ('bumps' to 'round features')",
    "tag": "DOC",
    "source": "CRR EP p2, p3; CRR UM2 p2",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/pd-12.jpg",
+   "image_source": "CRR EP p3, upper photo: the dock opening with its straight chord and the contacts"
   },
   {
    "id": "PD-13",
@@ -1833,7 +2034,9 @@
    "verdict_note": "",
    "tag": "DOC (labels); INFERRED (function, direction; pin order unknown)",
    "source": "CRL IP1 p9; CRL IP2 p15; CRR IP1 p12; CRR IP2 p13, p16",
-   "notes": "Fits a module update driven by the half over UART plus `BOOT1` (INFERRED, untested; OQ-09)."
+   "notes": "Fits a module update driven by the half over UART plus `BOOT1` (INFERRED, untested; OQ-09).",
+   "image": "../images/fcc/boards/pogo-board-left.jpg",
+   "image_source": "board view: CRL IP2 p15"
   },
   {
    "id": "EN-01",
@@ -1847,7 +2050,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p3; CRR UM3 p2, p4; CRL UM1 p3; CRL UM2 p4, p6; CRL IP1 p5, p6; CRR IP1 p5",
-   "notes": "74 keys matches NayaFlow 1.25.1's 74 key labels (STATIC)."
+   "notes": "74 keys matches NayaFlow 1.25.1's 74 key labels (STATIC).",
+   "image": "../images/fcc/parts/en-01.jpg",
+   "image_source": "CRL IP1 p6, lower photo: low-profile switches with red stems and clear housings in the plate"
   },
   {
    "id": "EN-03",
@@ -1861,7 +2066,9 @@
    "verdict_note": "",
    "tag": "DOC; STATIC (label scheme)",
    "source": "CRR UM1 p3; CRR UM3 p2; CRL UM1 p3; CRL UM2 p4; STATIC: NayaFlow 1.25.1 key geometry",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-03.jpg",
+   "image_source": "CRL EP p2, upper photo: keycaps with their legends (the row's evidence is the manual; the photo illustrates it)"
   },
   {
    "id": "EN-04",
@@ -1875,7 +2082,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM3 p1, p2; CRL UM2 p3, p4; CRR IP1 p5",
-   "notes": "Which keys carry stabilizers is not stated."
+   "notes": "Which keys carry stabilizers is not stated.",
+   "image": "../images/fcc/parts/en-04.jpg",
+   "image_source": "CRR IP1 p5, lower photo: black wire stabilizer across the wide bottom-row key"
   },
   {
    "id": "EN-05",
@@ -1889,7 +2098,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p3; CRL UM1 p3",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/half-exterior.jpg",
+   "image_source": "board view: CRL EP p2"
   },
   {
    "id": "EN-06",
@@ -1903,7 +2114,9 @@
    "verdict_note": "",
    "tag": "DOC (callout; vendor statement)",
    "source": "CRR EP p3 (vector callout), p4; CRL EP p2-p4; Kickstarter updates 14 (2024-07-24) and 15 (2024-09-03)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-06.jpg",
+   "image_source": "CRR EP p3, upper photo: the lab's 'Ant.' callout pointing at the black end cap (vector callout kept as filed)"
   },
   {
    "id": "EN-07",
@@ -1917,7 +2130,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p3; CRR UM2 p1; CRL UM1 p3; CRR EP p3, p4; CRL EP p3",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-07.jpg",
+   "image_source": "CRR EP p3, lower photo: the two dock-hinge knuckle assemblies on the underside"
   },
   {
    "id": "EN-08",
@@ -1931,7 +2146,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p3; CRL UM1 p3",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/half-exterior.jpg",
+   "image_source": "board view: CRL EP p2"
   },
   {
    "id": "EN-09",
@@ -1945,7 +2162,9 @@
    "verdict_note": "Not 'two hinged sections'",
    "tag": "DOC",
    "source": "CRR IP1 p5; CRL IP1 p5, p6",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-09.jpg",
+   "image_source": "CRL IP1 p5, upper photo: the body and wing switch plates with the butted seam"
   },
   {
    "id": "EN-10",
@@ -1959,7 +2178,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR EP p3, p4; CRR LBL; CRL LLOC p1",
-   "notes": "The count of 12 is carried from the extraction pass. The left sheet shows the same 12 screw symbols."
+   "notes": "The count of 12 is carried from the extraction pass. The left sheet shows the same 12 screw symbols.",
+   "image": "../images/fcc/parts/en-10.jpg",
+   "image_source": "CRL EP p2, lower photo: the screw columns either side of the wing seam"
   },
   {
    "id": "EN-11",
@@ -1973,7 +2194,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (material)",
    "source": "CRR EP p3; CRR LBL; CRL LLOC p1",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-11.jpg",
+   "image_source": "CRL EP p2, lower photo: underside with the raised foot strips"
   },
   {
    "id": "EN-12",
@@ -1987,7 +2210,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR EP p3; CRR LBL; CRL EP p2; CRL LLOC p1",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-12.jpg",
+   "image_source": "CRR EP p3, lower photo: the circled R near the lower dock hinge (faint engraving)"
   },
   {
    "id": "EN-13",
@@ -2001,7 +2226,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR EP p3; CRR LBL; CRL LLOC p1",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-13.jpg",
+   "image_source": "CRL EP p2, lower photo: 'Naya Create.' wordmark and subtext (faint engraving)"
   },
   {
    "id": "EN-14",
@@ -2015,7 +2242,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (per half)",
    "source": "CRR UM1 p3; CRR LBL",
-   "notes": "The sheet does not say per half or per pair."
+   "notes": "The sheet does not say per half or per pair.",
+   "image": "../images/fcc/boards/half-exterior.jpg",
+   "image_source": "board view: CRL EP p2"
   },
   {
    "id": "EN-15",
@@ -2029,7 +2258,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p8; CRL UM1 p8",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/half-exterior.jpg",
+   "image_source": "board view: CRL EP p2"
   },
   {
    "id": "DG-04",
@@ -2043,7 +2274,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (D0 = Revision 2)",
    "source": "DG IP p5; DG RF p10-p11 (power setting 8 / 7 / 8, 8.97 dBm)",
-   "notes": "D0 = Revision 2 (Revision 3 is Fx0), INFERRED from Nordic DevZone."
+   "notes": "D0 = Revision 2 (Revision 3 is Fx0), INFERRED from Nordic DevZone.",
+   "image": "../images/fcc/parts/dg-04.jpg",
+   "image_source": "DG IP p5, lower photo, rotated upright"
   },
   {
    "id": "DG-06",
@@ -2057,7 +2290,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG IP p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-06.jpg",
+   "image_source": "DG IP p5, upper photo, rotated upright"
   },
   {
    "id": "DG-08",
@@ -2071,7 +2306,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (common pad)",
    "source": "DG IP p4, p5",
-   "notes": "MEASURED behavior: green/red during the boot identity, then white (measured on one dongle, 2026-09-11)."
+   "notes": "MEASURED behavior: green/red during the boot identity, then white (measured on one dongle, 2026-09-11).",
+   "image": "../images/fcc/parts/dg-08.jpg",
+   "image_source": "DG IP p5, upper photo, rotated upright"
   },
   {
    "id": "DG-09",
@@ -2085,7 +2322,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG RF p10; DG OTA p1, p2, p8, p13; DG IP p5",
-   "notes": "OTA report BTL-OTA-1-2506C290 R00, tested 2025-07-14. The DG IP p4 'Antenna' callout arrow lands on a USB finger (probably misplaced). The SAR report's drawing puts the single antenna at the far end of the cap (DG-19)."
+   "notes": "OTA report BTL-OTA-1-2506C290 R00, tested 2025-07-14. The DG IP p4 'Antenna' callout arrow lands on a USB finger (probably misplaced). The SAR report's drawing puts the single antenna at the far end of the cap (DG-19).",
+   "image": "../images/fcc/parts/dg-09.jpg",
+   "image_source": "DG IP p5, lower photo (antenna end with meander trace and ANT label)"
   },
   {
    "id": "DG-10",
@@ -2099,7 +2338,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (role)",
    "source": "DG IP p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-10.jpg",
+   "image_source": "DG IP p5, lower photo"
   },
   {
    "id": "DG-11",
@@ -2113,7 +2354,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (role)",
    "source": "DG IP p5",
-   "notes": "The adjacent 4-lead `ESD3` part is U-DG-11b."
+   "notes": "The adjacent 4-lead `ESD3` part is U-DG-11b.",
+   "image": "../images/fcc/parts/dg-11.jpg",
+   "image_source": "DG IP p5, lower photo"
   },
   {
    "id": "DG-13",
@@ -2127,7 +2370,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG IP p4, p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/dongle-board-back.jpg",
+   "image_source": "board view: DG IP p5"
   },
   {
    "id": "DG-14",
@@ -2141,7 +2386,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG IP p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-14.jpg",
+   "image_source": "DG IP p5, lower photo"
   },
   {
    "id": "DG-15",
@@ -2155,7 +2402,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (sizes)",
    "source": "DG IP p4, p5; DG OTA p1; CRR IP7 p44, p45; DG EP p2-p3",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-15.jpg",
+   "image_source": "DG EP p3, upper photo (plug end of the closed dongle)"
   },
   {
    "id": "DG-16",
@@ -2169,7 +2418,9 @@
    "verdict_note": "",
    "tag": "DOC (absence); INFERRED",
    "source": "DG IP p4, p5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/dongle-board-back.jpg",
+   "image_source": "board view: DG IP p5"
   },
   {
    "id": "DG-18",
@@ -2183,7 +2434,9 @@
    "verdict_note": "",
    "tag": "DOC (absence)",
    "source": "CRR IP7 p44, p45; DG OTA p1; DG EP p2-p3",
-   "notes": "The dongle filing's own exterior photos (DG EP p2-p3) show no FCC ID, model or logo anywhere, only a lab tag."
+   "notes": "The dongle filing's own exterior photos (DG EP p2-p3) show no FCC ID, model or logo anywhere, only a lab tag.",
+   "image": "../images/fcc/boards/dongle-exterior.jpg",
+   "image_source": "board view: DG EP p2"
   },
   {
    "id": "DG-19",
@@ -2197,7 +2450,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC",
    "source": "DG SAR p22, p27",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/dg-19.jpg",
+   "image_source": "DG SAR p22, antenna-location figure (lab drawing with a red RF Antenna callout)"
   },
   {
    "id": "TUM-03",
@@ -2211,7 +2466,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (`320` = 2023 week 20)",
    "source": "CRL IP3 p19-p20 = CRR IP2 p16-p17",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-03.jpg",
+   "image_source": "CRL IP3 p20, upper photo (= CRR IP2 p17), rotated upright"
   },
   {
    "id": "TUM-04",
@@ -2225,7 +2482,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p19-p20 = CRR IP2 p16-p17",
-   "notes": "`QI_?X_SCL`/`QI_?X_SDA` pads give the MCU an I2C link to it."
+   "notes": "`QI_?X_SCL`/`QI_?X_SDA` pads give the MCU an I2C link to it.",
+   "image": "../images/fcc/parts/tum-04.jpg",
+   "image_source": "CRL IP3 p20, lower photo (= CRR IP2 p17), rotated; U15 label at left"
   },
   {
    "id": "TUM-05",
@@ -2239,7 +2498,9 @@
    "verdict_note": "",
    "tag": "DOC (marking matches the datasheet marking table)",
    "source": "CRL IP3 p20-p21 = CRR IP2 p17; CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-05.jpg",
+   "image_source": "CRL IP3 p21 (= CRR IP3 p18), rotated upright"
   },
   {
    "id": "TUM-06",
@@ -2253,7 +2514,9 @@
    "verdict_note": "Upgraded from 'probable' to a marking match",
    "tag": "DOC (datasheet marking `01KGH`); INFERRED (role)",
    "source": "CRL IP3 p19-p20 = CRR IP2 p16-p17",
-   "notes": "Role (3.3 V rail from the cell, or 5 V toward the dock) INFERRED."
+   "notes": "Role (3.3 V rail from the cell, or 5 V toward the dock) INFERRED.",
+   "image": "../images/fcc/parts/tum-06.jpg",
+   "image_source": "CRL IP3 p20, upper photo, bottom-left corner (= CRR IP2 p17), rotated"
   },
   {
    "id": "TUM-09",
@@ -2267,7 +2530,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p19 = CRR IP2 p16",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-09.jpg",
+   "image_source": "CRL IP3 p19, lower photo (= CRR IP2 p16); empty square land at the center"
   },
   {
    "id": "TUM-10",
@@ -2281,7 +2546,9 @@
    "verdict_note": "",
    "tag": "DOC (marking); INFERRED (code-to-part)",
    "source": "CRL IP3 p20 = CRR IP2 p17",
-   "notes": "Q1/Q2 are U-TUM-10b."
+   "notes": "Q1/Q2 are U-TUM-10b.",
+   "image": "../images/fcc/parts/tum-10.jpg",
+   "image_source": "CRL IP3 p20, upper photo (= CRR IP2 p17), rotated upright"
   },
   {
    "id": "TUM-11",
@@ -2295,7 +2562,9 @@
    "verdict_note": "",
    "tag": "DOC (marking); INFERRED (code-to-part, role)",
    "source": "CRL IP3 p21 = CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-11.jpg",
+   "image_source": "CRL IP3 p21 (= CRR IP3 p18), rotated upright"
   },
   {
    "id": "TUM-12",
@@ -2309,7 +2578,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (code-to-part)",
    "source": "CRL IP3 p21 = CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-12.jpg",
+   "image_source": "CRL IP3 p21 (= CRR IP3 p18), rotated upright"
   },
   {
    "id": "TUM-14",
@@ -2323,7 +2594,9 @@
    "verdict_note": "Full marking read (was `?07`)",
    "tag": "DOC; INFERRED (voltage code)",
    "source": "CRL IP3 p19, p21 = CRR IP2 p16; CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-14.jpg",
+   "image_source": "CRL IP3 p21 (= CRR IP3 p18), rotated upright"
   },
   {
    "id": "TUM-15",
@@ -2337,7 +2610,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p20 = CRR IP2 p17",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-15.jpg",
+   "image_source": "CRL IP3 p20, upper photo (= CRR IP2 p17), rotated upright"
   },
   {
    "id": "TUM-16",
@@ -2351,7 +2626,9 @@
    "verdict_note": "`R47` settled over the `4R7` alternative",
    "tag": "DOC",
    "source": "CRL IP3 p19, p21 = CRR IP2 p16; CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-16.jpg",
+   "image_source": "CRL IP3 p21 (= CRR IP3 p18): L14 1R0 only; the R47 inductor by U6 is not in this crop"
   },
   {
    "id": "TUM-17",
@@ -2365,7 +2642,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (role)",
    "source": "CRL IP3 p21 = CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-17.jpg",
+   "image_source": "CRL IP3 p21 (= CRR IP3 p18), rotated"
   },
   {
    "id": "TUM-18",
@@ -2379,7 +2658,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p19-p21 = CRR IP2 p16-p17; CRR IP3 p18",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/tune-main-board-front.jpg",
+   "image_source": "board view: CRL IP3 p19"
   },
   {
    "id": "TUM-19",
@@ -2393,7 +2674,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (destinations)",
    "source": "CRL IP2 p18; CRL IP3 p19 = CRR IP2 p15-p16",
-   "notes": "Tan tape covers several connectors."
+   "notes": "Tan tape covers several connectors.",
+   "image": "../images/fcc/parts/tum-19.jpg",
+   "image_source": "CRL IP3 p19, upper photo (= CRR IP2 p16): FPC receptacle, J6 header, J1"
   },
   {
    "id": "TUM-20",
@@ -2407,7 +2690,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p18; CRL IP3 p19 = CRR IP2 p15-p16",
-   "notes": "Corrects an earlier reading of 12 pads (2 x 6)."
+   "notes": "Corrects an earlier reading of 12 pads (2 x 6).",
+   "image": "../images/fcc/parts/tum-20.jpg",
+   "image_source": "CRL IP3 p19, upper photo (= CRR IP2 p16), rotated so the pad labels read"
   },
   {
    "id": "TUM-21",
@@ -2421,7 +2706,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (roles)",
    "source": "CRL IP3 p19 = CRR IP2 p16",
-   "notes": "Consistent with a force-feedback dial (INFERRED)."
+   "notes": "Consistent with a force-feedback dial (INFERRED).",
+   "image": "../images/fcc/parts/tum-21.jpg",
+   "image_source": "CRL IP3 p19, upper photo (= CRR IP2 p16), rotated 180"
   },
   {
    "id": "TUM-22",
@@ -2435,7 +2722,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p19-p20 = CRR IP2 p16-p17",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-22.jpg",
+   "image_source": "CRL IP3 p20, upper photo (= CRR IP2 p17): BOOT0/BOOT1 pads; the partial SWD labels on the back are not in this crop"
   },
   {
    "id": "TUM-23",
@@ -2449,7 +2738,9 @@
    "verdict_note": "Subset re-read; rest corroborated by two readings",
    "tag": "DOC",
    "source": "CRL IP3 p19 = CRR IP2 p16",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-23.jpg",
+   "image_source": "CRL IP3 p19, upper photo (= CRR IP2 p16), rotated 180"
   },
   {
    "id": "TUM-24",
@@ -2463,7 +2754,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p19 = CRR IP2 p16",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tum-24.jpg",
+   "image_source": "CRL IP3 p19, upper photo (= CRR IP2 p16)"
   },
   {
    "id": "TUX-04",
@@ -2477,7 +2770,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (class)",
    "source": "CRL IP3 p22; CRL IP4 p23 = CRR IP3 p19-p20",
-   "notes": "Host side is open (OQ-08): MEASURED 2026-09-08, about 9 indices (88-96) lit with a Tune docked left; MEASURED 2026-09-19 on a donor Tune with module firmware 2.1.2, 88-93 took the host color and 94-111 stayed bright white."
+   "notes": "Host side is open (OQ-08): MEASURED 2026-09-08, about 9 indices (88-96) lit with a Tune docked left; MEASURED 2026-09-19 on a donor Tune with module firmware 2.1.2, 88-93 took the host color and 94-111 stayed bright white.",
+   "image": "../images/fcc/parts/tux-04.jpg",
+   "image_source": "CRL IP4 p23, upper photo (= CRR IP3 p20): LED6 to LED11 with their C/R pairs"
   },
   {
    "id": "TUX-07",
@@ -2491,7 +2786,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p23 = CRR IP3 p20",
-   "notes": "Corrects an earlier '~15-way' estimate."
+   "notes": "Corrects an earlier '~15-way' estimate.",
+   "image": "../images/fcc/parts/tux-07.jpg",
+   "image_source": "CRL IP4 p23, upper photo (= CRR IP3 p20), rotated 180"
   },
   {
    "id": "TUX-08",
@@ -2505,7 +2802,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p23 = CRR IP3 p20",
-   "notes": "Q4/Q8 on the same board: U-TUX-08b."
+   "notes": "Q4/Q8 on the same board: U-TUX-08b.",
+   "image": "../images/fcc/parts/tux-08.jpg",
+   "image_source": "CRL IP4 p23, upper photo (= CRR IP3 p20), rotated"
   },
   {
    "id": "TUX-09",
@@ -2519,7 +2818,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p23 = CRR IP3 p20",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/tune-touch-disc.jpg",
+   "image_source": "board view: CRL IP4 p23"
   },
   {
    "id": "TUX-10",
@@ -2533,7 +2834,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p23 = CRR IP3 p20",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-10.jpg",
+   "image_source": "CRL IP4 p23, upper photo (= CRR IP3 p20), rotated"
   },
   {
    "id": "TUX-11",
@@ -2547,7 +2850,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP3 p22 = CRR IP3 p19",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-11.jpg",
+   "image_source": "CRL IP3 p22, lower photo (= CRR IP3 p19)"
   },
   {
    "id": "TUX-12",
@@ -2561,7 +2866,9 @@
    "verdict_note": "",
    "tag": "DOC (photo; naya.tech marketing)",
    "source": "CRL IP2 p17 = CRR IP2 p14",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-12.jpg",
+   "image_source": "CRL IP2 p17, upper photo (= CRR IP2 p14)"
   },
   {
    "id": "TUX-18",
@@ -2575,7 +2882,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size from the extraction pass)",
    "source": "CRL IP2 p18; CRL IP3 p19 = CRR IP2 p15-p16",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-18.jpg",
+   "image_source": "CRL IP3 p19, upper photo (= CRR IP2 p16)"
   },
   {
    "id": "TUX-19",
@@ -2589,7 +2898,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (magnet vs steel)",
    "source": "CRL IP2 p17-p18 = CRR IP2 p14-p15",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-19.jpg",
+   "image_source": "CRL IP2 p18, upper photo (= CRR IP2 p15)"
   },
   {
    "id": "TUX-21",
@@ -2603,7 +2914,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p17 = CRR IP2 p14",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-21.jpg",
+   "image_source": "CRL IP2 p17, lower photo (= CRR IP2 p14)"
   },
   {
    "id": "TUX-22",
@@ -2617,7 +2930,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP2 p18 = CRR IP2 p15",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tux-22.jpg",
+   "image_source": "CRL IP2 p18, upper photo (= CRR IP2 p15)"
   },
   {
    "id": "TCM-03",
@@ -2631,7 +2946,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p31 = CRR IP5 p28 (label-covered on CRL IP5 p29-p30 = CRR IP4 p26-p27)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-03.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-05",
@@ -2645,7 +2962,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-05.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-06",
@@ -2659,7 +2978,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-06.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-09",
@@ -2673,7 +2994,9 @@
    "verdict_note": "",
    "tag": "DOC (datasheet marking `01KGH`)",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": "Role (3.3 V rail from the cell, or 5 V toward the dock) INFERRED."
+   "notes": "Role (3.3 V rail from the cell, or 5 V toward the dock) INFERRED.",
+   "image": "../images/fcc/parts/tcm-09.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-10",
@@ -2687,7 +3010,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-10.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-12",
@@ -2701,7 +3026,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (code-to-part)",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-12.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-13",
@@ -2715,7 +3042,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-13.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-15",
@@ -2729,7 +3058,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (code decode)",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": "The nearby `+` silkscreen belongs to an adjacent unpopulated footprint."
+   "notes": "The nearby `+` silkscreen belongs to an adjacent unpopulated footprint.",
+   "image": "../images/fcc/parts/tcm-15.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-16",
@@ -2743,7 +3074,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-16.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-17",
@@ -2757,7 +3090,9 @@
    "verdict_note": "`S78` settled over `S7B`",
    "tag": "DOC",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-17.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-18",
@@ -2771,7 +3106,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-18.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-19",
@@ -2785,7 +3122,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (pitch)",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": "Corrects an earlier '~24-way' estimate."
+   "notes": "Corrects an earlier '~24-way' estimate.",
+   "image": "../images/fcc/parts/tcm-19.jpg",
+   "image_source": "CRL IP5 p31, upper photo (= CRR IP5 p28 upper)"
   },
   {
    "id": "TCM-20",
@@ -2799,7 +3138,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (pitch, mating)",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": "Corrects an earlier '~10-way' estimate."
+   "notes": "Corrects an earlier '~10-way' estimate.",
+   "image": "../images/fcc/parts/tcm-20.jpg",
+   "image_source": "CRL IP5 p30, upper photo (= CRR IP4 p27 upper)"
   },
   {
    "id": "TCM-22",
@@ -2813,7 +3154,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (pitch, pinout)",
    "source": "CRL IP5 p31 = CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-22.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-23",
@@ -2827,7 +3170,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-23.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCM-24",
@@ -2841,7 +3186,9 @@
    "verdict_note": "Subset re-read; rest corroborated by two readings",
    "tag": "DOC",
    "source": "CRL IP5 p29-p31 = CRR IP4 p26-p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-24.jpg",
+   "image_source": "CRL IP5 p30, upper photo (= CRR IP4 p27 upper)"
   },
   {
    "id": "TCM-25",
@@ -2855,7 +3202,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP5 p30-p31 = CRR IP4 p27; CRR IP5 p28",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcm-25.jpg",
+   "image_source": "CRL IP5 p31, lower photo (= CRR IP5 p28 lower)"
   },
   {
    "id": "TCX-02",
@@ -2869,7 +3218,9 @@
    "verdict_note": "",
    "tag": "DOC (marking); INFERRED (package)",
    "source": "CRL IP6 p35-p36 = CRR IP5 p32-p33",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-02.jpg",
+   "image_source": "CRL IP6 p36, upper photo (= CRR IP5 p33 upper)"
   },
   {
    "id": "TCX-04",
@@ -2883,7 +3234,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (class); MEASURED (a Touch lights through index 88 or 112 only, 2026-09-10)",
    "source": "CRL IP6 p35 = CRR IP5 p32; measured on one keyboard with one Touch, 2026-09-10 (firmware not recorded with the reading)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-04.jpg",
+   "image_source": "CRL IP6 p35, upper photo (= CRR IP5 p32 upper)"
   },
   {
    "id": "TCX-05",
@@ -2897,7 +3250,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP6 p35 = CRR IP5 p32",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-05.jpg",
+   "image_source": "CRL IP6 p35, upper photo (= CRR IP5 p32 upper)"
   },
   {
    "id": "TCX-06",
@@ -2911,7 +3266,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP6 p35-p36 = CRR IP5 p32-p33",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-06.jpg",
+   "image_source": "CRL IP6 p35, upper photo (= CRR IP5 p32 upper)"
   },
   {
    "id": "TCX-07",
@@ -2925,7 +3282,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP6 p35-p36 = CRR IP5 p32-p33",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-07.jpg",
+   "image_source": "CRL IP6 p36, upper photo (= CRR IP5 p33 upper)"
   },
   {
    "id": "TCX-09",
@@ -2939,7 +3298,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p28; CRL IP5 p32 = CRR IP4 p25; CRR IP5 p29",
-   "notes": "Corrects an earlier '2 x 5' reading."
+   "notes": "Corrects an earlier '2 x 5' reading.",
+   "image": "../images/fcc/parts/tcx-09.jpg",
+   "image_source": "CRL IP5 p32, upper photo (= CRR IP5 p29 upper)"
   },
   {
    "id": "TCX-10",
@@ -2953,7 +3314,9 @@
    "verdict_note": "Three separate SMD parts, not a stacked small board",
    "tag": "DOC",
    "source": "CRL IP4 p28; CRL IP5 p32 = CRR IP4 p25; CRR IP5 p29",
-   "notes": "The round black part beside the block is U-TCX-10b."
+   "notes": "The round black part beside the block is U-TCX-10b.",
+   "image": "../images/fcc/parts/tcx-10.jpg",
+   "image_source": "CRL IP5 p32, lower photo (= CRR IP5 p29 lower)"
   },
   {
    "id": "TCX-11",
@@ -2967,7 +3330,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (pitch)",
    "source": "CRL IP5 p32 = CRR IP5 p29",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-11.jpg",
+   "image_source": "CRL IP5 p32, upper photo (= CRR IP5 p29 upper)"
   },
   {
    "id": "TCX-13",
@@ -2981,7 +3346,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p27 = CRR IP4 p24",
-   "notes": "Relation to the 8 contacts on the pogo board is open (OQ-11)."
+   "notes": "Relation to the 8 contacts on the pogo board is open (OQ-11).",
+   "image": "../images/fcc/parts/tcx-13.jpg",
+   "image_source": "CRL IP4 p27, lower photo (= CRR IP4 p24 lower)"
   },
   {
    "id": "TCX-14",
@@ -2995,7 +3362,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (sizes)",
    "source": "CRL IP4 p28; CRL IP5 p29-p30 = CRR IP4 p25-p27",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-14.jpg",
+   "image_source": "CRL IP5 p30, lower photo (= CRR IP4 p27 lower)"
   },
   {
    "id": "TCX-15",
@@ -3009,7 +3378,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP4 p28 = CRR IP4 p25",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-15.jpg",
+   "image_source": "CRL IP4 p28, upper photo (= CRR IP4 p25 upper)"
   },
   {
    "id": "TCX-16",
@@ -3023,7 +3394,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p27; CRL IP6 p35 = CRR IP4 p24; CRR IP5 p32",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-16.jpg",
+   "image_source": "CRL IP4 p27, upper photo (= CRR IP4 p24 upper)"
   },
   {
    "id": "TCX-17",
@@ -3037,7 +3410,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP4 p28 = CRR IP4 p25",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-17.jpg",
+   "image_source": "CRL IP4 p28, upper photo (= CRR IP4 p25 upper)"
   },
   {
    "id": "TCX-18",
@@ -3051,7 +3426,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP4 p27 = CRR IP4 p24",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-18.jpg",
+   "image_source": "CRL IP4 p27, lower photo (= CRR IP4 p24 lower)"
   },
   {
    "id": "TCX-19",
@@ -3065,7 +3442,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP4 p27 = CRR IP4 p24",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tcx-19.jpg",
+   "image_source": "CRL IP4 p27, lower photo (= CRR IP4 p24 lower)"
   },
   {
    "id": "TKM-03",
@@ -3079,7 +3458,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (`443` = 2024 week 43)",
    "source": "CRL IP7 p45 = CRR IP7 p42 (under a 2D label on CRL IP7 p44 = CRR IP6 p41)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-03.jpg",
+   "image_source": "CRL IP7 p45, lower photo (= CRR IP7 p42)"
   },
   {
    "id": "TKM-05",
@@ -3093,7 +3474,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP7 p46 = CRR IP7 p43",
-   "notes": "Different lot (`245303`) from the Tune and Touch parts (`240801`)."
+   "notes": "Different lot (`245303`) from the Tune and Touch parts (`240801`).",
+   "image": "../images/fcc/parts/tkm-05.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43)"
   },
   {
    "id": "TKM-06",
@@ -3107,7 +3490,9 @@
    "verdict_note": "Third line `S2GPC`, not `S26PC`",
    "tag": "DOC",
    "source": "CRL IP7 p46 = CRR IP7 p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-06.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43)"
   },
   {
    "id": "TKM-07",
@@ -3121,7 +3506,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP7 p45 = CRR IP7 p42",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-07.jpg",
+   "image_source": "CRL IP7 p45, lower photo (= CRR IP7 p42)"
   },
   {
    "id": "TKM-11",
@@ -3135,7 +3522,9 @@
    "verdict_note": "Two different diode families, not one class",
    "tag": "DOC; INFERRED (code-to-part)",
    "source": "CRL IP7 p46 = CRR IP7 p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-11.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43)"
   },
   {
    "id": "TKM-12",
@@ -3149,7 +3538,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP7 p45 = CRR IP7 p42; CRL IP7 p46 = CRR IP7 p43",
-   "notes": "The ESD4 part's own marking is U-TKM-12b."
+   "notes": "The ESD4 part's own marking is U-TKM-12b.",
+   "image": "../images/fcc/parts/tkm-12.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43); shows ESD3, ESD4, ESD6, ESD7"
   },
   {
    "id": "TKM-13",
@@ -3163,7 +3554,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP7 p45 = CRR IP7 p42; CRL IP7 p46 = CRR IP7 p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-13.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43); shows the 1R0 inductor"
   },
   {
    "id": "TKM-15",
@@ -3177,7 +3570,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (role)",
    "source": "CRL IP7 p46 = CRR IP7 p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-15.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43)"
   },
   {
    "id": "TKM-16",
@@ -3191,7 +3586,9 @@
    "verdict_note": "",
    "tag": "DOC; MEASURED (four buttons, bitmask 1/2/4/8, 2026-09-06)",
    "source": "CRL IP7 p45 = CRR IP7 p42; CRL IP7 p46 = CRR IP7 p43; CRR IP6 p41; measured on one Track, 2026-09-06",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-16.jpg",
+   "image_source": "CRL IP7 p46, upper photo (= CRR IP7 p43); shows S2"
   },
   {
    "id": "TKM-17",
@@ -3205,7 +3602,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP7 p45 = CRR IP7 p42",
-   "notes": "One LED on the board supports the 'single dot' reading over the '~15 LEDs' band-pass note (OQ-08)."
+   "notes": "One LED on the board supports the 'single dot' reading over the '~15 LEDs' band-pass note (OQ-08).",
+   "image": "../images/fcc/parts/tkm-17.jpg",
+   "image_source": "CRL IP7 p45, upper photo (= CRR IP7 p42)"
   },
   {
    "id": "TKM-18",
@@ -3219,7 +3618,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (roles)",
    "source": "CRL IP7 p44 = CRR IP6 p41",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-18.jpg",
+   "image_source": "CRL IP7 p44, upper photo (= CRR IP6 p41)"
   },
   {
    "id": "TKM-19",
@@ -3233,7 +3634,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP7 p44 = CRR IP6 p41",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-19.jpg",
+   "image_source": "CRL IP7 p45, upper photo (= CRR IP7 p42)"
   },
   {
    "id": "TKM-20",
@@ -3247,7 +3650,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR IP7 p42, p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-20.jpg",
+   "image_source": "CRL IP7 p45, upper photo (= CRR IP7 p42); the two 1x4 rows beside LED1"
   },
   {
    "id": "TKM-21",
@@ -3261,7 +3666,9 @@
    "verdict_note": "Subset re-read; rest corroborated by two readings",
    "tag": "DOC",
    "source": "CRL IP7 p44 = CRR IP6 p41",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkm-21.jpg",
+   "image_source": "CRL IP7 p44, upper photo (= CRR IP6 p41); lower and left arcs"
   },
   {
    "id": "TKX-04",
@@ -3275,7 +3682,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP6 p39 = CRR IP6 p36",
-   "notes": "The sensor ICs themselves are U-TKX-03."
+   "notes": "The sensor ICs themselves are U-TKX-03.",
+   "image": "../images/fcc/parts/tkx-04.jpg",
+   "image_source": "CRL IP6 p39, upper photo (= CRR IP6 p36); connector side, J3 and ESD parts"
   },
   {
    "id": "TKX-07",
@@ -3289,7 +3698,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (pitch)",
    "source": "CRL IP6 p37, p40 = CRR IP5 p34; CRR IP6 p37",
-   "notes": "Corrects an earlier '2 x 5' reading."
+   "notes": "Corrects an earlier '2 x 5' reading.",
+   "image": "../images/fcc/parts/tkx-07.jpg",
+   "image_source": "CRL IP6 p40, lower photo (= CRR IP6 p37)"
   },
   {
    "id": "TKX-10",
@@ -3303,7 +3714,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size)",
    "source": "CRL IP6 p41 = CRR IP6 p38",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-10.jpg",
+   "image_source": "CRL IP6 p41, upper photo (= CRR IP6 p38)"
   },
   {
    "id": "TKX-11",
@@ -3317,7 +3730,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (sizes)",
    "source": "CRL IP6 p38; CRL IP7 p44, p46 = CRR IP6 p35, p41; CRR IP7 p43",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-11.jpg",
+   "image_source": "CRL IP7 p44, upper photo (= CRR IP6 p41)"
   },
   {
    "id": "TKX-12",
@@ -3331,7 +3746,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP6 p38 = CRR IP6 p35",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-12.jpg",
+   "image_source": "CRL IP6 p38, only photo (= CRR IP6 p35)"
   },
   {
    "id": "TKX-13",
@@ -3345,7 +3762,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP6 p37 = CRR IP5 p34; naya.tech marketing (40 mm ball, 4 buttons)",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-13.jpg",
+   "image_source": "CRL IP6 p37, upper photo (= CRR IP5 p34)"
   },
   {
    "id": "TKX-14",
@@ -3359,7 +3778,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRL IP6 p38 = CRR IP6 p35",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-14.jpg",
+   "image_source": "CRL IP6 p38, only photo (= CRR IP6 p35)"
   },
   {
    "id": "TKX-15",
@@ -3373,7 +3794,9 @@
    "verdict_note": "Only the P/N digits are unverifiable",
    "tag": "DOC",
    "source": "CRL IP6 p37 = CRR IP5 p34",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-15.jpg",
+   "image_source": "CRL IP6 p37, lower photo (= CRR IP5 p34)"
   },
   {
    "id": "TKX-16",
@@ -3387,7 +3810,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP6 p37 = CRR IP5 p34",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-16.jpg",
+   "image_source": "CRL IP6 p37, lower photo (= CRR IP5 p34)"
   },
   {
    "id": "TKX-17",
@@ -3401,7 +3826,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (roles)",
    "source": "CRL IP6 p38 = CRR IP6 p35",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-17.jpg",
+   "image_source": "CRL IP6 p38, only photo (= CRR IP6 p35)"
   },
   {
    "id": "BAT-01",
@@ -3415,7 +3842,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (chemistry, size)",
    "source": "CRL IP2 p13, p14; CRL IP1 p7; CRR IP1 p10, p11; CRL BLE p10; CRL SRD p10; CRR BLE p10; CRR SRD p10; CRR UM1 p4",
-   "notes": "Manual v1.0.6 spec sheet says 'Internal Battery Capacity 45mA' (repeated by naya-create-kb); the cell and the report say 50 mAh (45 is a typo or a minimum, INFERRED)."
+   "notes": "Manual v1.0.6 spec sheet says 'Internal Battery Capacity 45mA' (repeated by naya-create-kb); the cell and the report say 50 mAh (45 is a typo or a minimum, INFERRED).",
+   "image": "../images/fcc/batteries/half.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-02",
@@ -3429,7 +3858,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (pitch, role)",
    "source": "CRL IP2 p14; CRR IP1 p10, p11",
-   "notes": "The mainboard receptacle's pin count is unresolved (U-HP-10)."
+   "notes": "The mainboard receptacle's pin count is unresolved (U-HP-10).",
+   "image": "../images/fcc/batteries/half.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-06",
@@ -3443,7 +3874,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size)",
    "source": "CRL IP2 p18; CRL IP4 p25-p26 = CRR IP2 p15; CRR IP4 p22-p23",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/batteries/tune.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-09",
@@ -3457,7 +3890,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size)",
    "source": "CRL IP5 p33-p34 = CRR IP5 p30-p31",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/batteries/touch.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-10",
@@ -3471,7 +3906,9 @@
    "verdict_note": "Model digit now read (was `FH36404?`)",
    "tag": "DOC",
    "source": "CRL IP4 p28 = CRR IP4 p25",
-   "notes": "Whether a Touch holds one cell or two is open (OQ-20)."
+   "notes": "Whether a Touch holds one cell or two is open (OQ-20).",
+   "image": "../images/fcc/batteries/touch.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-13",
@@ -3485,7 +3922,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (two packs photographed)",
    "source": "CRL IP6 p38; CRL IP7 p42-p43 = CRR IP6 p35, p39-p40",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/batteries/track-pack.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-14",
@@ -3499,7 +3938,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (size)",
    "source": "CRL IP7 p42 = CRR IP6 p39",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/batteries/track-cell.jpg",
+   "image_source": "battery photo (see Battery replacement)"
   },
   {
    "id": "BAT-16",
@@ -3513,7 +3954,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "vendor website (archived); Kickstarter campaign Specs Sheet (2023); Tune, Touch and Track manuals v1.1.0 p2; BAT-06, BAT-09, BAT-13",
-   "notes": "Retail capacities are not confirmed (OQ-21)."
+   "notes": "Retail capacities are not confirmed (OQ-21).",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "BAT-18",
@@ -3527,7 +3970,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "Track: CRL IP6 p37 = CRR IP5 p34; Touch: CRL IP4 p27 = CRR IP4 p24",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/tkx-15.jpg",
+   "image_source": null
   },
   {
    "id": "BAT-19",
@@ -3541,7 +3986,9 @@
    "verdict_note": "",
    "tag": "DOC (parts, pads, manual); INFERRED (topology)",
    "source": "CRR UM1 p4; TUM-05, TUM-06, TUM-11, TCM-06, TCM-09, TKM-06",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "BAT-20",
@@ -3555,7 +4002,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "DG RF p10; DG IP p4, p5; DG LBL",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/boards/label-dongle.jpg",
+   "image_source": "board view: DG LBL p1"
   },
   {
    "id": "ACC-01",
@@ -3569,7 +4018,9 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED",
    "source": "CRR UM1 p2, p6; CRL IP7 p47-p48 = CRR IP7 p46-p47",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/acc-01.jpg",
+   "image_source": "CRL IP7 p47, lower photo (= CRR IP7 p46): jacket print 30V, VW-1, 80 C, STYLE"
   },
   {
    "id": "ACC-02",
@@ -3583,7 +4034,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL BLE p14; CRR BLE p14, p35; CRR SRD p13, p34",
-   "notes": "0.8 m (lab) vs 1 m (retail) unresolved. The CRL setup photos repeat the report photos byte for byte."
+   "notes": "0.8 m (lab) vs 1 m (retail) unresolved. The CRL setup photos repeat the report photos byte for byte.",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "ACC-03",
@@ -3597,7 +4050,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p2, p3; CRL UM1 p2",
-   "notes": "The dongle filing's manual is this same v1.0.6 manual: no dongle pairing procedure or LED description, one troubleshooting line ('Ensure the speedlink dongle is properly seated', UM4 p2)."
+   "notes": "The dongle filing's manual is this same v1.0.6 manual: no dongle pairing procedure or LED description, one troubleshooting line ('Ensure the speedlink dongle is properly seated', UM4 p2).",
+   "image": "../images/fcc/boards/dongle-exterior.jpg",
+   "image_source": "board view: DG EP p2"
   },
   {
    "id": "ACC-04",
@@ -3611,7 +4066,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p2; CRR UM2 p3",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "ACC-05",
@@ -3625,7 +4082,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p2; CRR UM3 p1, p3",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "ACC-06",
@@ -3639,7 +4098,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p2, p3",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/en-01.jpg",
+   "image_source": "see EN-01: CRL IP1 p6, lower photo: low-profile switches with red stems and clear housings in the plate"
   },
   {
    "id": "ACC-07",
@@ -3653,7 +4114,9 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRR UM1 p2; CRR UM2 p3",
-   "notes": ""
+   "notes": "",
+   "image": null,
+   "image_source": null
   },
   {
    "id": "ACC-08",
@@ -3667,7 +4130,9 @@
    "verdict_note": "one extraction pass, no blind re-read",
    "tag": "DOC; INFERRED (connector reading)",
    "source": "DG SAR p24; DG SAR-D photos 2, 3, 5",
-   "notes": ""
+   "notes": "",
+   "image": "../images/fcc/parts/acc-08.jpg",
+   "image_source": "DG SAR p24, auxiliary-equipment photo (USB extension cable on a ruler)"
   }
  ],
  "unconfirmed": [

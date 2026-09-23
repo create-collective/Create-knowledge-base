@@ -37,6 +37,24 @@ module extras without attributing it to a module[^kb-hardware]; the coin motor i
 ## Main board (the ring)
 
 <!-- tune facts 4-14 -->
+<!-- fcc-images:start -->
+
+<div class="grid" markdown>
+
+<figure markdown="span">
+  ![Tune main board (ring), component side, with the Qi coil ferrite](../assets/images/fcc/boards/tune-main-board-front.jpg){ width="560" loading=lazy }
+  <figcaption>Tune main board (ring), component side, with the Qi coil ferrite. FCC ID 2BQ4V0825CRL, Internal Photos 3, page 19, lower photo.</figcaption>
+</figure>
+
+<figure markdown="span">
+  ![Tune main board (ring), contact side, with the Qi coil wired on](../assets/images/fcc/boards/tune-main-board-back.jpg){ width="560" loading=lazy }
+  <figcaption>Tune main board (ring), contact side, with the Qi coil wired on. FCC ID 2BQ4V0825CRL, Internal Photos 3, page 19, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+</div>
+
+<!-- fcc-images:end -->
+
 The main board is `Tune_MB_20250227_V09`, part number `408-06032-000`, 0.8 mm, stamp `25 12`, about
 58-60 mm across with a C-shaped inner island <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP2 p18; CRL IP3 p19, p21[^fcc-crl].
 naya-create-kb names `Tune_Touch_20240926_V00` as the ring; that is the touch disc[^kb-exhibits].
@@ -68,6 +86,15 @@ haptic knob) <span class="tag inferred">INFERRED</span>. The dial ring is a silv
 ## Touch and LED disc
 
 <!-- tune facts 17-19 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Tune touch/LED disc Tune_touch 20240926 V00](../assets/images/fcc/boards/tune-touch-disc.jpg){ width="560" loading=lazy }
+  <figcaption>Tune touch/LED disc Tune_touch 20240926 V00. FCC ID 2BQ4V0825CRL, Internal Photos 4, page 23, upper (only photo). Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The disc is `Tune_touch 20240926 V00`, about 45 mm, bonded under a black glass disc of about 45 mm. It
 carries the touch controller and a ring of 24 side-view RGB LEDs (`LED1`-`LED24`, one data line
 `PAD_LED_IN`, no driver IC). The vendor raised the ring from 8 to 24 LEDs in 2023, with a diffuser
@@ -82,6 +109,15 @@ switched rails `PWRON`, `TOUCH-VDD`, `LED-VDD` <span class="tag doc">DOC</span>.
 ## Unidentified small parts
 
 <!-- tune fact 21 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Tune T-shaped sub-board, two views side by side (U-TUX-16)](../assets/images/fcc/boards/tune-sub-board.jpg){ width="560" loading=lazy }
+  <figcaption>Tune T-shaped sub-board, two views side by side (U-TUX-16). FCC ID 2BQ4V0825CRL, Internal Photos 4, page 24, upper (left) and lower (right), composited.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 A small T-shaped green sub-board (about 10 x 7-9 mm) with a slot, a white "pill" and 6 pads is
 unidentified; a micro slide switch is the leading reading, and it is too small to be a USB-C port. A
 housed round part with a clip and a center screw beside the dock block is also unidentified <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL
@@ -105,6 +141,15 @@ a flat copper spiral on black ferrite, about 30-31 mm, unmarked <span class="tag
 ## Base
 
 <!-- tune fact 25 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Tune base underside: dock pads, marks, base label](../assets/images/fcc/boards/tune-base.jpg){ width="560" loading=lazy }
+  <figcaption>Tune base underside: dock pads, marks, base label. FCC ID 2BQ4V0825CRL, Internal Photos 2, page 17, lower photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The base is a black molded cover about 64 mm across with 6 silver rectangular blocks in rim pockets
 (magnets or steel plates, not determined) and 8 flat gold pads in a recessed 1-2-2-2-1 block; marks
 include CE, the FCC logo, UKCA and WEEE; the label has a `P/N` whose digits are not legible and a

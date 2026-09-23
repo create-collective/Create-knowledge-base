@@ -57,6 +57,7 @@ extra_css:
 
 plugins:
   - search
+  - glightbox
 
 nav:
   - Home: index.md
@@ -72,6 +73,7 @@ nav:
       - Track: hardware/track.md
       - Speedlink dongle: hardware/dongle.md
       - Power and batteries: hardware/power.md
+      - Battery replacement: hardware/batteries.md
       - Layout and positions: hardware/layout.md
       - Regulatory records: hardware/regulatory.md
       - Parts list: hardware/parts.md

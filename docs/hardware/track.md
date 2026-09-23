@@ -29,6 +29,24 @@ for Batch 1 (April 2025) <span class="tag doc">DOC</span>[^ks-17][^ks-18][^ks-20
 ## Main board (the ring)
 
 <!-- track facts 3-11 -->
+<!-- fcc-images:start -->
+
+<div class="grid" markdown>
+
+<figure markdown="span">
+  ![Track main board, component (MCU) side, with the Qi coil's ferrite back](../assets/images/fcc/boards/track-main-board-front.jpg){ width="560" loading=lazy }
+  <figcaption>Track main board, component (MCU) side, with the Qi coil's ferrite back. FCC ID 2BQ4V0825CRL, Internal Photos 7, page 45, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<figure markdown="span">
+  ![Track main board, connector and test-pad side, with the Qi coil face](../assets/images/fcc/boards/track-main-board-back.jpg){ width="560" loading=lazy }
+  <figcaption>Track main board, connector and test-pad side, with the Qi coil face. FCC ID 2BQ4V0825CRL, Internal Photos 7, page 44, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+</div>
+
+<!-- fcc-images:end -->
+
 The main board is `Track_MB_20250305_V13`, part number `408-06028-000`, 1.0 mm, stamp `25 15`, about
 60-66 mm outer diameter with a 40-43 mm opening for the ball (sizes inferred) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP7
 p44-p46[^fcc-crl]. naya-create-kb names the ring `Y08_06025_20250227_V00`, which is the Touch board's
@@ -48,6 +66,15 @@ number with `408` misread[^kb-exhibits].
 ## Sensors
 
 <!-- track facts 12-14 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Track sensor boards SensorR and SensorL: sensor side (top), connector side (bottom)](../assets/images/fcc/boards/track-sensor-boards.jpg){ width="560" loading=lazy }
+  <figcaption>Track sensor boards SensorR and SensorL: sensor side (top), connector side (bottom). FCC ID 2BQ4V0825CRL, Internal Photos 6, page 39, lower (top panel) and upper (bottom panel). Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The two sensor boards are T-shaped, `SensorL_20241125_V09` and `SensorR_20241125_V09` (about 11 x 11 mm),
 each carrying one windowed, unmarked sensor package (`U9`, `U11`) with `SCLK`, `SDIO` and `MOTION` pads:
 an optical motion sensor with a PixArt-style three-wire port is the reading <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP6
@@ -60,6 +87,15 @@ or assumed capacitive sensing; two boards were each photographed front and back 
 ## Motor, ball and dock
 
 <!-- track facts 15-19 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Track pogo board contact face (left) and dock interposer board (right)](../assets/images/fcc/boards/track-pogo-interposer.jpg){ width="560" loading=lazy }
+  <figcaption>Track pogo board contact face (left) and dock interposer board (right). FCC ID 2BQ4V0825CRL, Internal Photos 6, page 40, lower (left panel) and upper (right panel). Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 - **Haptic motor.** A flat coin vibration motor about 7-9 mm, unmarked, on red and blue leads to a white
   2-pin plug (mates `M1`); whether it is an ERM or an LRA is open (the enable net reads `TRACK_?RA_EN`,
   where `LRA_EN` would suggest an LRA). Marketing did not advertise Track haptics <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP6
@@ -93,6 +129,15 @@ See [Power and batteries](power.md).
 ## Base
 
 <!-- track fact 23 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Track opened: body with ball cup, pogo board, harness, cells and Qi coil; base cover with six metal inserts](../assets/images/fcc/boards/track-enclosure.jpg){ width="560" loading=lazy }
+  <figcaption>Track opened: body with ball cup, pogo board, harness, cells and Qi coil; base cover with six metal inserts. FCC ID 2BQ4V0825CRL, Internal Photos 6, page 38, upper (only photo). Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The base is a black teardrop cover with 6 rectangular metal inserts (magnets or steel, not determined),
 a window for the contact block and a round seat for the Qi coil; 8 contacts sit in a 2 x 4 recessed block
 with two flanking round features. The label carries "Designed in the Netherlands", `FCC ID:` and `IC:`

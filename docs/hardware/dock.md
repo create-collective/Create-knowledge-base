@@ -17,6 +17,15 @@ contacts with a supply.
 ## Mechanics
 
 <!-- dock facts 1-4, 32-35, 37 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Left half module bay: magnet carrier plate (top) and bay bracket with the dock and pogo boards mounted (bottom)](../assets/images/fcc/boards/half-module-bay.jpg){ width="560" loading=lazy }
+  <figcaption>Left half module bay: magnet carrier plate (top) and bay bracket with the dock and pogo boards mounted (bottom). FCC ID 2BQ4V0825CRL, Internal Photos 1, page 5, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 Each half has one module bay: a circular through-cutout in the dock section with one straight chord,
 where the contacts sit <span class="tag doc">DOC</span> CRR EP p2, p3[^fcc-crr][^um106]. The half side has an 8-position spring-pin
 (pogo) block: 8 gold domed pins in two staggered rows of four, a black insulator, through-hole, with no
@@ -46,6 +55,15 @@ it describes no contacts or data interface <span class="tag doc">DOC</span>[^wo]
 ## The contact blocks
 
 <!-- dock facts 5-9 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Left pogo board with its flex: contact face (top) and back (bottom)](../assets/images/fcc/boards/pogo-board-left.jpg){ width="560" loading=lazy }
+  <figcaption>Left pogo board with its flex: contact face (top) and back (bottom). FCC ID 2BQ4V0825CRL, Internal Photos 2, page 15, upper and lower, stacked. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 
 | Side | Board | Contacts | Labels as read | Evidence |
 |---|---|---|---|---|

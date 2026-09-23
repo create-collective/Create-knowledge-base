@@ -26,6 +26,15 @@ later moved to 2.5D curved etched glass <span class="tag doc">DOC</span>[^ks-cam
 ## Main board
 
 <!-- touch facts 3-9 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Touch main board, MCU side (close-up)](../assets/images/fcc/boards/touch-main-board.jpg){ width="560" loading=lazy }
+  <figcaption>Touch main board, MCU side (close-up). FCC ID 2BQ4V0825CRL, Internal Photos 5, page 31, lower photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The main board is `Touch_MB_20250227_V10`, part number `408-06025-000`, 1.0 mm, single-sided, round,
 about 44 mm (scaled from the 7 x 7 mm MCU package) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP4 p28; CRL IP5 p29-p31[^fcc-crl] (also
 named by naya-create-kb[^kb-hardware]).
@@ -44,6 +53,15 @@ named by naya-create-kb[^kb-hardware]).
 ## Sensor board
 
 <!-- touch facts 10-14 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Touch sensor board](../assets/images/fcc/boards/touch-sensor-board.jpg){ width="560" loading=lazy }
+  <figcaption>Touch sensor board. FCC ID 2BQ4V0825CRL, Internal Photos 6, page 35, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The sensor board is `Touch_touch_20250106_V02` (stamp `25 12`), teardrop-shaped with a diamond-lattice
 electrode pattern and a gold edge ring <span class="tag doc">DOC</span> CRL IP6 p35-p36[^fcc-crl]. Its touch controller is a Hynitron
 CST3640 (`U1`, line 1 `CST3640`, line 2 partly under an ink dot), a capacitive multi-touch controller on
@@ -58,6 +76,15 @@ INT, RST and LED data <span class="tag doc">DOC</span> CRL IP6 p35.
 ## Pogo board and dock contacts
 
 <!-- touch facts 15-16 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Touch pogo board and flex](../assets/images/fcc/boards/touch-pogo-board.jpg){ width="560" loading=lazy }
+  <figcaption>Touch pogo board and flex. FCC ID 2BQ4V0825CRL, Internal Photos 5, page 32, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The pogo board's name is partly hidden (`Tou`...`in` / `20`...`V0?`, stamp `25 10`), about 11 x 17 mm;
 `J2` holds 8 domed dock contacts in two columns of four labeled `GND`, `VBAT`, `RX`, `…ON`, `BOO…`,
 `GND`; a `J7` FPC and filter parts sit on the back, and an amber flex of 13-14 conductors runs to main
@@ -68,6 +95,15 @@ contacts through a slot, although the pogo board has 8; why is not known <span c
 ## Battery, coil and enclosure
 
 <!-- touch facts 17-21 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Touch opened: main board in its carrier ring; housing with cell and pogo board](../assets/images/fcc/boards/touch-enclosure.jpg){ width="560" loading=lazy }
+  <figcaption>Touch opened: main board in its carrier ring; housing with cell and pogo board. FCC ID 2BQ4V0825CRL, Internal Photos 4, page 28, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 - **Battery.** `FH364046`, 3.7 V 700 mAh 2.59 Wh pouch (about 3.6 x 40 x 46 mm by its size code,
   inferred), dated `20250611`, three wires to `J3`, a protection board under yellow tape. A second
   700 mAh cell, `FH364045` (dated `20241201`), appears in the teardown layout photo; whether a Touch holds

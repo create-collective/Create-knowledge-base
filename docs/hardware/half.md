@@ -17,6 +17,24 @@ one statement covers both unless it says otherwise.
 ## Sections and boards
 
 <!-- half facts 1-2 -->
+<!-- fcc-images:start -->
+
+<div class="grid" markdown>
+
+<figure markdown="span">
+  ![Left half boards laid out: mainboard, wing, pogo board with flex, dock board, cell](../assets/images/fcc/boards/half-boards-layout.jpg){ width="560" loading=lazy }
+  <figcaption>Left half boards laid out: mainboard, wing, pogo board with flex, dock board, cell. FCC ID 2BQ4V0825CRL, Internal Photos 1, page 7, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<figure markdown="span">
+  ![Left half mainboard (Create_L_KB_20250220_V13), component side](../assets/images/fcc/boards/half-mainboard-left-components.jpg){ width="560" loading=lazy }
+  <figcaption>Left half mainboard (Create_L_KB_20250220_V13), component side. FCC ID 2BQ4V0825CRL, Internal Photos 1, page 9, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+</div>
+
+<!-- fcc-images:end -->
+
 A half has three hinged sections (body, wing, dock) and four boards: the mainboard under the body, a
 wing board, a dock (thumb-key) board and a small pogo board carrying the dock contacts
 <span class="tag doc">DOC</span>[^fcc-crl][^um106]. The mainboards are `Create_L_KB_20250220_V13` (left) and
@@ -163,6 +181,15 @@ p8, p9; CRR IP1 p6, p7.
 ## Wing board, light bar and power switch
 
 <!-- half facts 30-33 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Left wing board (Create_L_Wing_20250206_V11), component side](../assets/images/fcc/boards/wing-board-left.jpg){ width="560" loading=lazy }
+  <figcaption>Left wing board (Create_L_Wing_20250206_V11), component side. FCC ID 2BQ4V0825CRL, Internal Photos 1, page 12, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The wing boards are `Create_L_Wing_20250206_V11` and `Create_R_Wing_20250206_V11` (right middle
 hidden), 1.0 mm, with 10 key positions carrying the same designators on both wings (`SW1`, `SW2`,
 `SW9`, `SW10`, `SW16`, `SW17`, `SW23`, `SW24`, `SW32`, `SW33`) and 10 per-key LEDs (`LED36`-`LED45`)
@@ -184,6 +211,24 @@ naya-create-kb's statement that a flip on USB is not a reset[^kb-power]; see
 ## Dock (thumb-key) board and pogo board
 
 <!-- half facts 34-36 -->
+<!-- fcc-images:start -->
+
+<div class="grid" markdown>
+
+<figure markdown="span">
+  ![Left dock (thumb-key) board, component face](../assets/images/fcc/boards/dock-board-left.jpg){ width="560" loading=lazy }
+  <figcaption>Left dock (thumb-key) board, component face. FCC ID 2BQ4V0825CRL, Internal Photos 2, page 16, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<figure markdown="span">
+  ![Left pogo board with its flex: contact face (top) and back (bottom)](../assets/images/fcc/boards/pogo-board-left.jpg){ width="560" loading=lazy }
+  <figcaption>Left pogo board with its flex: contact face (top) and back (bottom). FCC ID 2BQ4V0825CRL, Internal Photos 2, page 15, upper and lower, stacked. Identifying marks removed.</figcaption>
+</figure>
+
+</div>
+
+<!-- fcc-images:end -->
+
 The dock boards are `Create_L_Dock_20241120_V09` and `Create_R_Dock_20241120_V09`, 1.0 mm, about
 47 x 21 mm (inferred), under the module bay. Each carries 3 hot-swap thumb-key positions, 3
 addressable LEDs, one diode per key (`D25`, `D31`, `D37`), TVS parts on every line and two FPC
@@ -226,6 +271,15 @@ say which keys. NayaFlow draws two tall inner keys (`LH1`, `RH1`) and two wide s
 ## Enclosure
 
 <!-- half facts 44-50, 56 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Left half exterior, top view with the empty module bay and its 8 contacts](../assets/images/fcc/boards/half-exterior.jpg){ width="560" loading=lazy }
+  <figcaption>Left half exterior, top view with the empty module bay and its 8 contacts. FCC ID 2BQ4V0825CRL, External Photos, page 2, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 - **Materials.** Body, dock and wing are "Aerospace Grade Aluminum" (the alloy is not stated); the
   dock's underside plate is black, material unknown; a black non-metal end cap carries the USB-C port
   <span class="tag doc">DOC</span>[^um106][^fcc-crr]. naya-create-kb's "Aluminum + polycarbonate" body is not the manual's
@@ -254,6 +308,15 @@ say which keys. NayaFlow draws two tall inner keys (`LH1`, `RH1`) and two wide s
 ## Magnets
 
 <!-- half facts 51-55 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Left half module bay: magnet carrier plate (top) and bay bracket with the dock and pogo boards mounted (bottom)](../assets/images/fcc/boards/half-module-bay.jpg){ width="560" loading=lazy }
+  <figcaption>Left half module bay: magnet carrier plate (top) and bay bracket with the dock and pogo boards mounted (bottom). FCC ID 2BQ4V0825CRL, Internal Photos 1, page 5, upper photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 Each half's module bay holds 6 magnets, one on either side of the contact block and 4 more spaced
 around the circular bay (a steel paper clip is attracted at those 6 points), so the half side is
 magnetized, not a plain steel strike plate <span class="tag measured">MEASURED</span> (owner's board, 2026-09-23). Mapped onto the FCC photos:

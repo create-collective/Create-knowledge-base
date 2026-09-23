@@ -16,6 +16,15 @@ and answers none of the halves' commands.
 ## What it is
 
 <!-- dongle facts 1-2, 29, 35 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Speedlink dongle, closed (metal USB-A shell, black cap)](../assets/images/fcc/boards/dongle-exterior.jpg){ width="560" loading=lazy }
+  <figcaption>Speedlink dongle, closed (metal USB-A shell, black cap). FCC ID 2BQ4V0825DG, External Photos, page 2, lower photo. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 The Speedlink dongle is a small USB-A receiver in the Create's box: model `NAYA-100-1(Dongle)`,
 equipment "Wireless dongle", FCC ID 2BQ4V0825DG (granted 2025-09-03), ISED 34320-0825DG (approved
 2025-09-08) <span class="tag doc">DOC</span> DG test report p1, p10[^fcc-dg][^um106][^eas][^ised]. The manual's spec sheet says
@@ -32,6 +41,24 @@ receiver dongle" started in 2024-11. No vendor text says a working dongle mode s
 ## The board
 
 <!-- dongle facts 3-13 -->
+<!-- fcc-images:start -->
+
+<div class="grid" markdown>
+
+<figure markdown="span">
+  ![Speedlink dongle board, front (USB contacts, board name, Y1, LED1)](../assets/images/fcc/boards/dongle-board-front.jpg){ width="560" loading=lazy }
+  <figcaption>Speedlink dongle board, front (USB contacts, board name, Y1, LED1). FCC ID 2BQ4V0825DG, Internal Photos, page 5, upper photo.</figcaption>
+</figure>
+
+<figure markdown="span">
+  ![Speedlink dongle board, back (nRF52840 U1, antenna end, test pads)](../assets/images/fcc/boards/dongle-board-back.jpg){ width="560" loading=lazy }
+  <figcaption>Speedlink dongle board, back (nRF52840 U1, antenna end, test pads). FCC ID 2BQ4V0825DG, Internal Photos, page 5, lower photo.</figcaption>
+</figure>
+
+</div>
+
+<!-- fcc-images:end -->
+
 
 | Item | What the photos show | Evidence |
 |---|---|---|
@@ -57,6 +84,15 @@ misplaced <span class="tag doc">DOC</span> DG SAR p22, p27; DG IP p4.
 ## Power, label and RF exposure
 
 <!-- dongle facts 14-17, 33 -->
+<!-- fcc-images:start -->
+
+<figure markdown="span">
+  ![Speedlink dongle label artwork](../assets/images/fcc/boards/label-dongle.jpg){ width="560" loading=lazy }
+  <figcaption>Speedlink dongle label artwork. FCC ID 2BQ4V0825DG, Label, page 1, vector artwork. Identifying marks removed.</figcaption>
+</figure>
+
+<!-- fcc-images:end -->
+
 - **Power.** Bus-powered, "Supplied from USB port", DC 5 V, rated 5 V DC 30 mA on its label artwork; no
   cell <span class="tag doc">DOC</span> DG RF report p10; DG LBL[^fcc-dg].
 - **Radio as filed.** 15.247 DTS, 2402-2480 MHz GFSK, tested at 2 Mbps only, maximum output 8.97 dBm
