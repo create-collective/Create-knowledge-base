@@ -182,6 +182,106 @@ dongle or Naya Connect listing <span class="tag doc">DOC</span>[^sig]. The contr
 nRF52 family, not Nordic's SoftDevice; it does not separate nRF52811 from nRF52840 and, being a reused
 design, does not date the shipped stack <span class="tag inferred">INFERRED</span>.
 
+## Every FCC exhibit
+
+The full exhibit lists of all three filings, as the FCC's Equipment Authorization System shows them
+(checked 2026-09-27). Every exhibit is public; none is held back beyond the three permanently
+confidential documents named above. Each link opens the FCC's own copy in a browser (the FCC refuses
+scripted downloads, so open them by hand). Exhibit ids are the FCC's; the same ids appear in
+fccid.io's page addresses. <span class="tag doc">DOC</span>
+
+### 2BQ4V0825CRL (left half, 22 exhibits)
+
+[Exhibit list on apps.fcc.gov](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=N&application_id=jIWCdeXJEqFicUI5GRjHhQ%3D%3D&fcc_id=2BQ4V0825CRL)
+
+| Exhibit | Type | FCC attachment |
+|---|---|---|
+| [US AGENT Letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611340) | Attestation Statements | `8611340` |
+| [Attestation Statements 2.911 d 5](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611341) | Attestation Statements | `8611341` |
+| [Authority Letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611289) | Cover Letter(s) | `8611289` |
+| [Confidentiality Letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611290) | Cover Letter(s) | `8611290` |
+| [External Photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611334) | External Photos | `8611334` |
+| [Label Location](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611291) | ID Label/Location Info | `8611291` |
+| [Internal Photos_1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611295) | Internal Photos | `8611295` |
+| [Internal Photos_2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611296) | Internal Photos | `8611296` |
+| [Internal Photos_3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611297) | Internal Photos | `8611297` |
+| [Internal Photos_4](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611298) | Internal Photos | `8611298` |
+| [Internal Photos_5](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611331) | Internal Photos | `8611331` |
+| [Internal Photos_6](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611332) | Internal Photos | `8611332` |
+| [Internal Photos_7](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611333) | Internal Photos | `8611333` |
+| [MPE Report](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611339) | RF Exposure Info | `8611339` |
+| [Antenna Specification](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611342) | Test Report | `8611342` |
+| [BLE Test Report_1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8620606) | Test Report | `8620606` |
+| [BLE Test Report_2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8620604) | Test Report | `8620604` |
+| [SRD Test Report](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8620605) | Test Report | `8620605` |
+| [Test Setup Photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611335) | Test Setup Photos | `8611335` |
+| [User Manual_1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611292) | Users Manual | `8611292` |
+| [User Manual_2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611293) | Users Manual | `8611293` |
+| [User Manual_3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611294) | Users Manual | `8611294` |
+
+### 2BQ4V0825CRR (right half, 24 exhibits)
+
+[Exhibit list on apps.fcc.gov](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=N&application_id=cBLDdNl2gRWC4RpJ20egKA%3D%3D&fcc_id=2BQ4V0825CRR)
+
+| Exhibit | Type | FCC attachment |
+|---|---|---|
+| [Attestation Section 2.911(d)(5)(i)&(ii)](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621869) | Attestation Statements | `8621869` |
+| [US Agent letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621870) | Attestation Statements | `8621870` |
+| [confidentiality letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621871) | Cover Letter(s) | `8621871` |
+| [POA letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621872) | Cover Letter(s) | `8621872` |
+| [external Photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621879) | External Photos | `8621879` |
+| [label](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621878) | ID Label/Location Info | `8621878` |
+| [Internal photos 01](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621887) | Internal Photos | `8621887` |
+| [Internal photos 02](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621888) | Internal Photos | `8621888` |
+| [Internal photos 03](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621889) | Internal Photos | `8621889` |
+| [Internal photos 04](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621890) | Internal Photos | `8621890` |
+| [Internal photos 05](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621891) | Internal Photos | `8621891` |
+| [Internal photos 06](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621892) | Internal Photos | `8621892` |
+| [Internal photos 07](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621893) | Internal Photos | `8621893` |
+| [RF exposure report](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621877) | RF Exposure Info | `8621877` |
+| [antenna specification](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621873) | Test Report | `8621873` |
+| [BLE test report 01](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621874) | Test Report | `8621874` |
+| [BLE test report 02](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621875) | Test Report | `8621875` |
+| [SRD 2.4G test report](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621876) | Test Report | `8621876` |
+| [test setup photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621880) | Test Setup Photos | `8621880` |
+| [User manual 01](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621882) | Users Manual | `8621882` |
+| [User manual 02](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621883) | Users Manual | `8621883` |
+| [User manual 03](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621884) | Users Manual | `8621884` |
+| [User manual 04](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621885) | Users Manual | `8621885` |
+| [User manual 05](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621886) | Users Manual | `8621886` |
+
+### 2BQ4V0825DG (Speedlink dongle, 25 exhibits)
+
+[Exhibit list on apps.fcc.gov](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=N&application_id=egYdoL8uID%2BougMlzBctwg%3D%3D&fcc_id=2BQ4V0825DG)
+
+| Exhibit | Type | FCC attachment |
+|---|---|---|
+| [Attestation Section 2.911(d)(5)(i)&(ii)](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635702) | Attestation Statements | `8635702` |
+| [US Agent letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635703) | Attestation Statements | `8635703` |
+| [confidentiality letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635704) | Cover Letter(s) | `8635704` |
+| [POA letter](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635705) | Cover Letter(s) | `8635705` |
+| [External photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635708) | External Photos | `8635708` |
+| [label](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635706) | ID Label/Location Info | `8635706` |
+| [Internal photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635707) | Internal Photos | `8635707` |
+| [SAR test report](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635758) | RF Exposure Info | `8635758` |
+| [SAR Appendix A. SAR Plots of System Verification](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635759) | RF Exposure Info | `8635759` |
+| [SAR Appendix B. SAR Plots of SAR Measurement](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635760) | RF Exposure Info | `8635760` |
+| [SAR Appendix C. Calibration Certificate_1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635761) | RF Exposure Info | `8635761` |
+| [SAR Appendix C. Calibration Certificate_2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635762) | RF Exposure Info | `8635762` |
+| [SAR Appendix C. Calibration Certificate_3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635763) | RF Exposure Info | `8635763` |
+| [SAR Appendix C. Calibration Certificate_4](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635764) | RF Exposure Info | `8635764` |
+| [SAR Appendix C. Calibration Certificate_5](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635765) | RF Exposure Info | `8635765` |
+| [SAR Appendix C. Calibration Certificate_6](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635766) | RF Exposure Info | `8635766` |
+| [antenna specification](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635756) | Test Report | `8635756` |
+| [RF test report](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635757) | Test Report | `8635757` |
+| [Test setup photos](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635709) | Test Setup Photos | `8635709` |
+| [SAR Appendix D. Photographs of the Test Set-Up](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635767) | Test Setup Photos | `8635767` |
+| [User manual part1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635710) | Users Manual | `8635710` |
+| [User manual part2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635711) | Users Manual | `8635711` |
+| [User manual part3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635712) | Users Manual | `8635712` |
+| [User manual part4](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635713) | Users Manual | `8635713` |
+| [User manual part5](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635714) | Users Manual | `8635714` |
+
 ## How to cite an FCC photo
 
 <!-- regulatory facts 36-38 -->

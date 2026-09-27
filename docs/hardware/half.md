@@ -14,6 +14,10 @@ one statement covers both unless it says otherwise.
     - SWD pads are labeled at the USB-C corner; the debug-lock state is unknown.
     - Each module bay holds 6 magnets (measured); the halves also attach to each other magnetically.
 
+
+!!! info "Manual"
+    [Create user manual v1.1.0](../assets/manuals/naya-create-user-manual-v1.1.0.pdf) and [v1.1.1](../assets/manuals/naya-create-user-manual-v1.1.1.pdf) (PDF); every version is listed on [Manuals](../product/manuals.md).
+
 ## Sections and boards
 
 <!-- half facts 1-2 -->

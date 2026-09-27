@@ -14,6 +14,10 @@ are the same images as right-filing pages 24-33, a pre-production sample receive
     - Dock address `0x10` left, `0x11` right; it lights through the first index of its bay's LED block.
     - NayaCore refuses double-tap bindings for the Touch.
 
+
+!!! info "Manual"
+    [Touch user manual v1.1.0](../assets/manuals/naya-touch-user-manual-v1.1.0.pdf) (PDF); every version is listed on [Manuals](../product/manuals.md).
+
 ## What it is
 
 <!-- touch facts 1-2 -->

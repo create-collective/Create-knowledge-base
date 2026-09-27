@@ -15,6 +15,10 @@ pages 14-23 (`CRL IP2 p17` = `CRR IP2 p14`), a pre-production sample received 20
     - Filed battery 1000 mAh; the manual and website say 1500 mAh.
     - Dock address `0x40` left, `0x41` right.
 
+
+!!! info "Manual"
+    [Tune user manual v1.1.0](../assets/manuals/naya-tune-user-manual-v1.1.0.pdf) (PDF); every version is listed on [Manuals](../product/manuals.md).
+
 ## What it is
 
 <!-- tune facts 1-3 -->

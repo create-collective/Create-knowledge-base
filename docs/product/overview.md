@@ -20,6 +20,10 @@ Tags on this site say how each fact is known (MEASURED, STATIC, DOC, INFERRED, R
 the [home page](../index.md) for the legend. Firmware versions are written 3.41.0 and 2.3.3 here; the
 wire form is explained on [Firmware versions](../firmware/versions.md).
 
+
+!!! info "Manual"
+    [Create](../assets/manuals/naya-create-user-manual-v1.1.0.pdf), [Touch](../assets/manuals/naya-touch-user-manual-v1.1.0.pdf), [Tune](../assets/manuals/naya-tune-user-manual-v1.1.0.pdf) and [Track](../assets/manuals/naya-track-user-manual-v1.1.0.pdf) user manuals v1.1.0 (PDF); every version is listed on [Manuals](../product/manuals.md).
+
 ## What the Create is
 
 <!-- overview facts 1-3, 5-6, 50, 64-65 -->

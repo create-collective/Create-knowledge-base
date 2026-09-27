@@ -2,8 +2,9 @@
 
 Naya published a user manual for the Create and one for each module; this page lists every known
 version, says where to find it, and records what each states about the hardware, where the manuals
-disagree with each other, and where they disagree with the filed hardware. The manuals are cited
-by version and page and never republished. The one thing to know: the FCC copy is version 1.0.6,
+disagree with each other, and where they disagree with the filed hardware. Copies of the vendor PDFs are kept on
+this site for download, because the vendor's help center and web site are gone; facts are cited by
+version and page. The one thing to know: the FCC copy is version 1.0.6,
 written for beta testers, and several of its defaults (pairing key, host slots, thumb keys) changed
 in version 1.1.0.
 
@@ -18,21 +19,21 @@ in version 1.1.0.
 
 <!-- manuals facts 1-5, 55-56 -->
 
-| Manual | Pages | Date | Where | Text layer | Evidence |
-|---|---|---|---|---|---|
-| Create, "User Manual Version 1.0.6" | 5 PDF parts | PDFs created 2025-08-18 | FCC ID 2BQ4V0825CRR, user manual exhibits 1-5[^fcc-crr] | yes | <span class="tag doc">DOC</span> |
-| Create v1.0.6, image-only copy | 3 PDF parts | exported about a week later | FCC ID 2BQ4V0825CRL, user manual exhibits 1-3[^fcc-crl] | no | <span class="tag doc">DOC</span> |
-| Create v1.0.6, dongle filing | 5 PDF parts | same files | FCC ID 2BQ4V0825DG; byte-identical to the right-half copy, so the dongle has no manual of its own[^fcc-dg] | yes | <span class="tag doc">DOC</span> (hashes compared 2026-09-23) |
-| Create, "User Manual Version 1.1.0" | 27 | PDF modified 2025-11-10 | vendor PDF `Naya_Create_UserManual.pdf` on its shop CDN[^man-c] | yes | <span class="tag doc">DOC</span> |
-| Touch, Tune, Track, "User Manual Version 1.1.0" | 9, 8, 8 | 2025 | vendor PDFs `Naya_Touch_UserManual.pdf`, `Naya_Tune_UserManual.pdf`, `Track_UserManual_100_...pdf` on the same CDN[^man-to][^man-tu][^man-tr] | yes | <span class="tag doc">DOC</span> |
-| Create, "Version 1.1.1" (`User_Manual-create-1.1.1.pdf`) | 27 | 2026 | the vendor's help center, which no longer resolves; no public archive found | n/a | <span class="tag doc">DOC</span> |
+| Manual | Pages | Date | Where | Text layer | Download | Evidence |
+|---|---|---|---|---|---|---|
+| Create, "User Manual Version 1.0.6" | 5 PDF parts | PDFs created 2025-08-18 | FCC ID 2BQ4V0825CRR, user manual exhibits 1-5[^fcc-crr] | yes | FCC parts [1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621882), [2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621883), [3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621884), [4](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621885), [5](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8621886) | <span class="tag doc">DOC</span> |
+| Create v1.0.6, image-only copy | 3 PDF parts | exported about a week later | FCC ID 2BQ4V0825CRL, user manual exhibits 1-3[^fcc-crl] | no | FCC parts [1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611292), [2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611293), [3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8611294) | <span class="tag doc">DOC</span> |
+| Create v1.0.6, dongle filing | 5 PDF parts | same files | FCC ID 2BQ4V0825DG; byte-identical to the right-half copy, so the dongle has no manual of its own[^fcc-dg] | yes | FCC parts [1](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635710), [2](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635711), [3](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635712), [4](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635713), [5](https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8635714) | <span class="tag doc">DOC</span> (hashes compared 2026-09-23) |
+| Create, "User Manual Version 1.1.0" | 27 | PDF modified 2025-11-10 | vendor PDF `Naya_Create_UserManual.pdf` on its shop CDN[^man-c] | yes | [PDF](../assets/manuals/naya-create-user-manual-v1.1.0.pdf) ([original](https://cdn.shopify.com/s/files/1/0667/1663/1351/files/Naya_Create_UserManual.pdf)) | <span class="tag doc">DOC</span> |
+| Touch, Tune, Track, "User Manual Version 1.1.0" | 9, 8, 8 | 2025 | vendor PDFs `Naya_Touch_UserManual.pdf`, `Naya_Tune_UserManual.pdf`, `Track_UserManual_100_...pdf` on the same CDN[^man-to][^man-tu][^man-tr] | yes | [Touch](../assets/manuals/naya-touch-user-manual-v1.1.0.pdf), [Tune](../assets/manuals/naya-tune-user-manual-v1.1.0.pdf), [Track](../assets/manuals/naya-track-user-manual-v1.1.0.pdf) ([originals](https://cdn.shopify.com/s/files/1/0667/1663/1351/files/Naya_Touch_UserManual.pdf)) | <span class="tag doc">DOC</span> |
+| Create, "Version 1.1.1" (`User_Manual-create-1.1.1.pdf`) | 27 | 2026 | the vendor's help center, which no longer resolves; no public archive found | no (image only) | [PDF](../assets/manuals/naya-create-user-manual-v1.1.1.pdf) (the only surviving copy) | <span class="tag doc">DOC</span> |
 
 v1.0.6 is addressed to beta testers ("As a beta tester your unit might have outdated firmware, please
 use Naya Flow to update it") <span class="tag doc">DOC</span>[^um106]. The left-half copy differs from the right-half copy only in
-that its box list omits the dongle's model line <span class="tag doc">DOC</span>[^fcc-crl]. The four v1.1.0 PDFs answered HTTP 200 on
-2026-09-23 at `https://cdn.shopify.com/s/files/1/0667/1663/1351/files/` plus the file names above;
-no Wayback capture of them existed on that date, so this site gives the address as text rather than a
-link <span class="tag doc">DOC</span> <span class="tag measured">MEASURED</span>. The vendor's help center no longer resolves and the naya.tech domain no longer serves
+that its box list omits the dongle's model line <span class="tag doc">DOC</span>[^fcc-crl]. The four v1.1.0 PDFs are the vendor's original files from its shop CDN, which still served them on
+2026-09-27; the copies here are the same documents, losslessly recompressed. The Create v1.1.1 manual
+survives only as a copy saved from the help center before it closed (image only, no text layer); it is
+kept here because no public archive holds it <span class="tag doc">DOC</span> <span class="tag measured">MEASURED</span>. The vendor's help center no longer resolves and the naya.tech domain no longer serves
 Naya's material (it returned HTTP 402 from at least 2026-09-17), so this site links archived copies
 only <span class="tag measured">MEASURED</span> (access checks 2026-09-17 and 2026-09-23). Third-party copies of the v1.0.6 FCC manual parts
 exist on aggregator sites such as manuals.plus; our copies match those files byte for byte by hash

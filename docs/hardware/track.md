@@ -15,6 +15,10 @@ received 2025-06-20.
     - Dock address `0x20` left, `0x21` right; buttons arrive as mouse buttons 1, 2, 4 and 8.
     - `press` exists for buttons 1-3 only.
 
+
+!!! info "Manual"
+    [Track user manual v1.1.0](../assets/manuals/naya-track-user-manual-v1.1.0.pdf) (PDF); every version is listed on [Manuals](../product/manuals.md).
+
 ## What it is
 
 <!-- track facts 1-2, 34 -->
