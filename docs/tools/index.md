@@ -8,8 +8,8 @@ its bootloader, and each was measured only on the firmware versions named below.
 !!! note "At a glance"
     - Quit NayaFlow completely before running any other tool: one program owns a port at a time.
     - Read `fe/1002` on both halves before any recipe; the halves can run different firmware.
-    - OpenFlow is the full configurator (link at release); nayactl is a read-mostly command line; Create
-      Companion maps module gestures per app; nayaHistory archives every release and firmware image.
+    - [OpenFlow](https://github.com/create-collective/openflow/releases) is the full configurator; nayactl is a read-mostly command line; Create
+      Companion maps module gestures per app; create-legacy-firmware archives every release and firmware image.
     - The never-send list lives on [Troubleshooting](../troubleshooting.md); it is not repeated here.
 
 ## Golden rules
@@ -36,16 +36,16 @@ its bootloader, and each was measured only on the firmware versions named below.
 
 | Tool | What it does | Platforms | License | Measured on | Limits |
 |---|---|---|---|---|---|
-| OpenFlow (link at release) | Configurator and NayaFlow rebuild: keymaps with up to four behaviors per key, LED maps, modules, settings, Bluetooth slots, firmware flashing of the vendor's images, read-only bootloader probe | Windows, macOS (arm64, Intel), Linux | open source (link at release) | keyboard 3.28.7, 3.35.4, 3.41.0 | recovery operations and pairing repair ship switched off; Linux untested with a keyboard |
+| [OpenFlow](https://github.com/create-collective/openflow/releases) | Configurator and NayaFlow rebuild: keymaps with up to four behaviors per key, LED maps, modules, settings, Bluetooth slots, firmware flashing of the vendor's images, read-only bootloader probe | Windows, macOS (arm64, Intel), Linux | open source | keyboard 3.28.7, 3.35.4, 3.41.0 | recovery operations and pairing repair ship switched off; Linux untested with a keyboard |
 | nayactl | Command line: status, module, Bluetooth and LED reads, key-scan listen, raw frames | Linux, macOS, Windows | Apache-2.0 | 3.30.1, 3.41.0 | no REMAP read or write, no flashing (details below) |
 | Create Companion | Maps module gestures (sent as F13-F24) to per-app actions on the host | Windows, macOS | MIT | module 2.3.3 | needs one module flash first |
-| nayaHistory | Archive of every stable NayaFlow release and the firmware images carved from them; flashing procedure | any | Apache-2.0 (its own files) | 3.35.4 and 3.41.0 (flashes of 2026-09-20) | installers kept out of git |
+| create-legacy-firmware | Archive of every stable NayaFlow release and the firmware images carved from them; flashing procedure | any | Apache-2.0 (its own files) | 3.35.4 and 3.41.0 (flashes of 2026-09-20) | installers kept out of git |
 | createflow-dongle | Open firmware and flasher turning an nRF52840 stick into a Bluetooth-to-USB bridge | macOS, Windows, Ubuntu 24.04 (flasher) | Apache-2.0 | keyboard 3.41 | fixed report map; no configuration over Bluetooth |
 | naya-create-kb | Community knowledge base with a Python toolkit and a web client | macOS | no license file | 3.41.0 on macOS | see its toolkit list below |
 
 Which tool for which job: read the state of a board (nayactl `status`, OpenFlow, the
 [Python recipes](recipes-python.md)); change the keymap or LEDs (OpenFlow, NayaFlow); flash firmware
-(OpenFlow with the images from nayaHistory, or NayaFlow's bundled image); recover a parked half (see
+(OpenFlow with the images from create-legacy-firmware, or NayaFlow's bundled image); recover a parked half (see
 [Recovery](../recovery.md)); bridge Bluetooth to USB (createflow-dongle); per-app actions for modules
 (Create Companion).
 
@@ -55,7 +55,7 @@ OpenFlow is an open-source configurator for the Naya Create and an independent r
 an Electron shell, a React (Vite) renderer and a Python FastAPI backend on a vendored nayactl, over
 USB CDC. It keeps NayaFlow's process split and HTTP contract (the same route and SSE names, default
 port 3001, the renderer's fallback), so NayaFlow's `user-data.db` imports directly
-<span class="tag static">STATIC</span> (OpenFlow, link at release).
+<span class="tag static">STATIC</span> ([OpenFlow](https://github.com/create-collective/openflow/releases)).
 
 | Fact | Evidence |
 |---|---|
@@ -64,7 +64,7 @@ port 3001, the renderer's fallback), so NayaFlow's `user-data.db` imports direct
 | It splits every write into at most two frames on record boundaries, which keeps firmware 3.28.7 from wedging. | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> (donor board, 3.28.7, 2026-09-19) |
 | `/rpc/release-device` and `/rpc/reconnect-device` free and retake the ports without a USB re-enumeration, so NayaFlow or a script can use the keyboard while OpenFlow runs (the NayaFlow side is not yet verified). | <span class="tag measured">MEASURED</span> (donor board, 2026-09-19) <span class="tag static">STATIC</span> |
 | Its single-file probe (`naya-probe.py`, pyserial only, read-only) lists Naya PIDs, reads versions and bond tables (and the partner's version through the left half; it does not show Bluetooth reads through that route, because they answer for the half you are plugged into), reads both slots of a half in MCUboot and names them against the firmware catalog's hashes, captures the bootloader console, and writes JSON. It sends no reset, upload or pairing command. | <span class="tag static">STATIC</span> |
-| It ships a firmware catalog of 63 images across the 25 stable releases (26 keyboard images, 6 module bundles, 30 `.sfb` files, 1 dial image) with sizes and hashes; the images themselves come from nayaHistory. | <span class="tag static">STATIC</span> |
+| It ships a firmware catalog of 63 images across the 25 stable releases (26 keyboard images, 6 module bundles, 30 `.sfb` files, 1 dial image) with sizes and hashes; the images themselves come from create-legacy-firmware. | <span class="tag static">STATIC</span> |
 | Reference data: `app-shortcuts.json` (150 applications, 19 853 chords, merged from ShortcutMapper (MIT) and the Create Companion catalog; every chord checked by OpenFlow's encoder), `shortcut-dictionary.json` (95 entries: 79 captured from a real NayaFlow flash, 13 computed, 3 from the encoder), `action-chords.json` (610), `nayaflow-action-names.json` (860), key geometry as NayaFlow 1.25.1 draws it, NayaCore vocabularies, stock module profiles. | <span class="tag doc">DOC</span> |
 | Module-profile exchange format `openflow.module-profile` v1: `moduleType` required (TOUCH, TRACK, TUNE, FLOAT), `bindings` keyed by gesture id, axis pairs written `"<kind> - <minus> - <plus>"`, optional `split` with `-` (left, up, counter-clockwise) and `+` (right, down, clockwise) halves, `variant`; importing always creates a new profile. | <span class="tag doc">DOC</span> |
 | It logs every device exchange (category, subcommand, payload prefix, port, time, result) in a 500-entry ring plus daily files kept 14 days; its bug report strips hardware ids, Bluetooth addresses, USB serials and UUIDs by default and shows the payload before sending. | <span class="tag static">STATIC</span> |
@@ -124,9 +124,9 @@ the host <span class="tag static">STATIC</span> <span class="tag doc">DOC</span>
   (owner's board, module 2.3.3, 2026-09-05). Because the firmware has no macro table, a host engine
   like it is where macros belong <span class="tag inferred">INFERRED</span>.
 
-## nayaHistory
+## create-legacy-firmware
 
-nayaHistory (public) is the archive of all 25 stable NayaFlow releases (`MANIFEST.json` with
+create-legacy-firmware (public) is the archive of all 25 stable NayaFlow releases (`MANIFEST.json` with
 GitHub digests, `CHANGELOG.md`, `changelogs/`), the firmware images carved from each release's
 NayaCore (`firmware-history/`, OpenFlow's firmware library, described in `FIRMWARE-HISTORY.md`), the
 beta channel's record (`firmware-history-beta/MANIFEST.json` for all 16 beta releases, plus the six
@@ -198,7 +198,7 @@ by us, 2026-09-23)[^kb-toolkit].
 
 `NayaTech/NayaFlow-releases` (25 stable releases) and `NayaTech/NayaFlow-beta-releases` (16) are still
 public; they let anyone re-derive the static findings on this site. They are vendor-owned and may
-disappear; nayaHistory mirrors the stable channel's assets and records every beta release's firmware
+disappear; create-legacy-firmware mirrors the stable channel's assets and records every beta release's firmware
 <span class="tag doc">DOC</span>[^rel][^beta][^nh].
 
 ## Commands no tool should send casually
@@ -236,9 +236,9 @@ The canonical never-send list is on [Troubleshooting](../troubleshooting.md) and
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (README, `constants.py`, `transport.py`, issues #1, #3, #4), read 2026-09-22.
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) and its comments.
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6).
-[^cc]: Create Companion, [github.com/traviswye/create-companion](https://github.com/traviswye/create-companion) (README, `docs/PLAN.md`, `presets/default-config.toml`).
-[^nh]: nayaHistory, [github.com/traviswye/nayaHistory](https://github.com/traviswye/nayaHistory/tree/79eeefb) (README, `MANIFEST.json`, `FIRMWARE-HISTORY.md`, `firmware-history-beta/MANIFEST.json`, `FLASHING-PROCEDURE.md`, `LICENSE`).
-[^nh-hw]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
+[^cc]: Create Companion, [github.com/create-collective/create-companion](https://github.com/create-collective/create-companion) (README, `docs/PLAN.md`, `presets/default-config.toml`).
+[^nh]: create-legacy-firmware, [github.com/create-collective/create-legacy-firmware](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb) (README, `MANIFEST.json`, `FIRMWARE-HISTORY.md`, `firmware-history-beta/MANIFEST.json`, `FLASHING-PROCEDURE.md`, `LICENSE`).
+[^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^cfd]: createflow-dongle, [github.com/mediaandmerch/createflow-dongle](https://github.com/mediaandmerch/createflow-dongle) (README, `firmware/VERSION`, `firmware/src/usb_hid.c`, `docs/findings.md`, releases).
 [^kb]: naya-create-kb, [github.com/NemeZZiZZ/naya-create-kb](https://github.com/NemeZZiZZ/naya-create-kb) (README), read 2026-09-22.
 [^kb-toolkit]: naya-create-kb, [toolkit](https://nemezzizz.github.io/naya-create-kb/toolkit/).

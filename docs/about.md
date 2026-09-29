@@ -8,18 +8,18 @@ evidence and another site's differ, both are shown with their firmware, host and
 ## Who wrote this and how
 
 The research was done with AI tooling that walked the repositories built over the last few weeks
-while building OpenFlow (the OpenFlow code and its test and capture records, the nayaHistory release
+while building OpenFlow (the OpenFlow code and its test and capture records, the create-legacy-firmware release
 archive, Create Companion, and the public nayactl repository), with the hardware measurements made by
 the owner on the owner's own boards <span class="tag doc">DOC</span>.
 
-**The site.** It is Create-knowledge-base, built with MkDocs Material, published on GitHub Pages and
-released alongside OpenFlow's first public release (OpenFlow: link at release).
+**The site.** It is Create-knowledge-base, built with MkDocs Material and published on GitHub Pages
+from [its repository](https://github.com/create-collective/Create-knowledge-base).
 
 **Boards and period.** A daily-use board (both halves on 3.41.0; a Tune on module firmware 2.3.3 and a
 Touch on 2.1.2 by mid-September 2026), a donor board on 3.28.7 with modules on 2.1.2, and a board
 flashed both ways between 3.35.4 and 3.41.0 on 2026-09-20. Pages say "measured on the owner's board,
 <firmware>, <date>"; no serial numbers or addresses are given. Where a measurement is already public,
-the page cites the public record instead: the flashes of 2026-09-20 are written up in nayaHistory's
+the page cites the public record instead: the flashes of 2026-09-20 are written up in create-legacy-firmware's
 `FLASHING-PROCEDURE.md`, section "Measured on hardware, both halves (2026-09-20)"[^nh-hw]. The work ran
 from 2026-08-31 to 2026-09-23 (first captures 2026-09-01; first firmware flash 2026-09-20)
 <span class="tag measured">MEASURED</span>.
@@ -65,12 +65,12 @@ firmware and setup; later evidence replaces earlier notes, and replaced claims a
 | The Kickstarter campaign page (story, Specs Sheet, Risks and challenges, FAQ) and its 26 updates | the vendor's stated plans and the manufacturing history | update number and date |
 | Vendor answers on Reddit | a few technical statements | comment permalink, as archived text, marked not live-verified |
 | Bluetooth SIG listing 311198; patent WO2025188184A1; Canadian industrial designs 229065-229069 | identity and design records | by number |
-| nayaHistory (github.com/traviswye/nayaHistory) | the release archive, firmware library and flashing procedure | file and commit |
+| create-legacy-firmware (github.com/create-collective/create-legacy-firmware) | the release archive, firmware library and flashing procedure | file and commit |
 | nayactl (github.com/Qonfused/nayactl) | the first public protocol decoding | file, pull request or issue number |
 | naya-create-kb (nemezzizz.github.io/naya-create-kb) | live macOS findings and a NayaCore disassembly | page name, for REPORTED facts and credit |
 | createflow-dongle (github.com/mediaandmerch/createflow-dongle) | third-party Bluetooth measurements | file |
-| Create Companion (github.com/traviswye/create-companion) | measurements of what modules send | file |
-| OpenFlow | the tool most measurements were made with | link at release |
+| Create Companion (github.com/create-collective/create-companion) | measurements of what modules send | file |
+| OpenFlow (github.com/create-collective/openflow) | the tool most measurements were made with | file and release |
 | The Wayback Machine | the vendor's own website | archived URL |
 
 **Links to the vendor's website.** The vendor's old domain now belongs to another company, so its old
@@ -84,7 +84,7 @@ GitHub release repositories stay live sources.
 - Ways to extract keys from a keyboard, or any method to bypass its protections.
 - Token literals found in vendor bundles.
 - Serial numbers, Bluetooth addresses and UUIDs from anyone's board; private messages; marketing images.
-- Vendor firmware images. nayaHistory, public on purpose, is OpenFlow's firmware library.
+- Vendor firmware images. create-legacy-firmware, public on purpose, is OpenFlow's firmware library.
 
 ## License
 
@@ -93,7 +93,7 @@ GitHub release repositories stay live sources.
 - Vendor material stays the vendor's: manuals are linked and cited, UI and release-note text is quoted
   only in short snippets, and firmware and marketing images are not reproduced. FCC exhibits are public
   records and are cited by FCC ID, exhibit and page.
-- nayaHistory is licensed Apache-2.0, matching OpenFlow; that license covers the repository's own
+- create-legacy-firmware is licensed Apache-2.0, matching OpenFlow; that license covers the repository's own
   documents, manifests and tools, not the vendor firmware images or installers it archives.
 
 ## Credits
@@ -123,4 +123,4 @@ addresses. Safety corrections are handled first.
 
 ## Sources
 
-[^nh-hw]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
+[^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).

@@ -29,7 +29,7 @@ through an archived copy (Wayback Machine), or not linked at all.
   every protocol page uses.
 - [Command map](protocol/commands.md): every known command by category, with its params and reply.
 - [Recovery](recovery.md): a dark board, a wedged half, a half stuck in its bootloader, lost bonds.
-- [Tools](tools/index.md): OpenFlow, nayactl, Create Companion, nayaHistory and the recipes.
+- [Tools](tools/index.md): OpenFlow, nayactl, Create Companion, create-legacy-firmware and the recipes.
 
 ## How to read the evidence
 

@@ -521,7 +521,7 @@ All pass with the module above (`test_naya_cdc.py`, run 2026-09-23):
 
 [^nc]: NayaFlow 1.25.1 for Windows, `core/NayaCore/NayaCore.exe` (NayaCore 6.11.0): strings (the port-detector frames, status names, settings names).
 [^nc-mac]: NayaFlow 1.25.1 for macOS (arm64 and x86_64), `NayaFlow.app/Contents/core/NayaCore.app/Contents/MacOS/NayaCore` (NayaCore 6.11.0): symbols and code of `_remapClearFlash`, `_remapReadLayerList`, `_constructRemapMessages`, the ZMQ dispatcher and `doClearAllDataOperations`; cross-checked on the Windows x64 build. See [Disassembly](../software/disassembly.md).
-[^nh-hw]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
+[^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^nx-transport]: nayactl, [`transport.py`](https://github.com/Qonfused/nayactl) (opener retries, stream reader).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) (Windows serial settings, module type from the dock address).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (a board on 3.30.1).

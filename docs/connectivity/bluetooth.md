@@ -330,9 +330,9 @@ The `be` family (pair address, unpair, slots, dongle address, status, clear spli
 [^fcc-dg]: FCC ID 2BQ4V0825DG (Speedlink dongle), SAR report R00 and user manual exhibits, [fccid.io/2BQ4V0825DG](https://fccid.io/2BQ4V0825DG).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): Bluetooth action tables, validation messages, ClearBLEDevices, linked Qt modules.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings (static reading): BT_CLEAR tooltip, BLE v1 warnings.
-[^nh-cl]: nayaHistory, vendor release notes, [`changelogs/`](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v0.1.0, v1.19.1, v1.20.0, v1.25.0).
-[^nh-fw]: nayaHistory, [`firmware-history/`](https://github.com/traviswye/nayaHistory/tree/79eeefb/firmware-history) (v1.21.0 and v1.25.1 image sets).
-[^nh-rel]: NayaFlow 0.1.0, from the nayaHistory release archive, [github.com/traviswye/nayaHistory](https://github.com/traviswye/nayaHistory) (static reading).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [`changelogs/`](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v0.1.0, v1.19.1, v1.20.0, v1.25.0).
+[^nh-fw]: create-legacy-firmware, [`firmware-history/`](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/firmware-history) (v1.21.0 and v1.25.1 image sets).
+[^nh-rel]: NayaFlow 0.1.0, from the create-legacy-firmware release archive, [github.com/create-collective/create-legacy-firmware](https://github.com/create-collective/create-legacy-firmware) (static reading).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.18.0 and later).
 [^ks-camp]: Kickstarter campaign page, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023), "Connectivity".
 [^ks-faq]: Kickstarter FAQ, [naya-create/naya-create/faqs](https://www.kickstarter.com/projects/naya-create/naya-create/faqs) (read 2026-09-23).

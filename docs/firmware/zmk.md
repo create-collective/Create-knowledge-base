@@ -245,8 +245,8 @@ stays its report <span class="tag reported">REPORTED</span>[^kb-zmk]; it does no
 [^zmk-holdtap]: ZMK documentation, [hold-tap behavior](https://zmk.dev/docs/keymaps/behaviors/hold-tap).
 [^sig]: Bluetooth SIG listing 311198 (Naya B.V., model `NAYA-800-1(NAYA-CREATE)`), read through the SIG's public listing search on 2026-09-23. Details on [Regulatory records](../hardware/regulatory.md).
 [^zephyr]: Zephyr, [commit `31fea97e05fd`](https://github.com/zephyrproject-rtos/zephyr/commit/31fea97e05fd).
-[^fp-bottom]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Bottom line"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L16-L32).
-[^fh]: nayaHistory, [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md).
+[^fp-bottom]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Bottom line"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L16-L32).
+[^fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md).
 [^fcc-crl]: FCC ID 2BQ4V0825CRL and 2BQ4V0825CRR, internal photos exhibits; see [Regulatory records](../hardware/regulatory.md).
 [^nordic]: Nordic Semiconductor, nRF52840 Product Specification.
 [^parts]: [Parts list](../hardware/parts.md) (FCC internal photos of the halves, dongle and modules).

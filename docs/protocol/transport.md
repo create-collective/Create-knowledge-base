@@ -573,8 +573,8 @@ and [JavaScript recipes](../tools/recipes-js.md).
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6) (NayaCore 6.11.0 LED table, frame limits, right half silent to `30/100d`).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): frame-field messages, status names, port-broker and retry messages.
 [^nc-disasm]: NayaFlow 1.25.1, NayaCore 6.11.0 (Windows x64), our disassembly (2026-09-23): the error-code table ("Remap error is ...").
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (NayaFlow 1.17.2: SystemCDC retired in keyboard 3.31.1 and NayaCore 6.1.5).
-[^fp-mismatch]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c; measured 2026-09-20).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (NayaFlow 1.17.2: SystemCDC retired in keyboard 3.31.1 and NayaCore 6.1.5).
+[^fp-mismatch]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c; measured 2026-09-20).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs: NayaFlow 1.25.1 on macOS, keyboard 3.41.0); raw data decoded by us, never copied.
 [^kb-transport]: naya-create-kb, [protocol/transport](https://nemezzizz.github.io/naya-create-kb/protocol/transport/) (commit 7668067).
 [^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).

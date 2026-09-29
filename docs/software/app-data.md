@@ -175,7 +175,7 @@ Log rotation and a fix for logs over 100 MB came in 1.17.2 <span class="tag doc"
   <span class="tag reported">REPORTED</span>[^kb-appdata]. Both fit what we know: Test and Format
   SPI-Flash formats only partitions whose self-test fails, and a firmware flash leaves stored maps and
   bond tables untouched <span class="tag doc">DOC</span> <span class="tag measured">MEASURED</span>
-  (vendor text[^bg]; the owner's boards, 2026-09-20/22; nayaHistory[^nh-hw]).
+  (vendor text[^bg]; the owner's boards, 2026-09-20/22; create-legacy-firmware[^nh-hw]).
 
 ## Backups
 
@@ -191,7 +191,7 @@ Log rotation and a fix for logs over 100 MB came in 1.17.2 <span class="tag doc"
   <span class="tag doc">DOC</span> <span class="tag measured">MEASURED</span> (a 1.25.1 backup read
   2026-09-23; the restore overlay text[^bg]); also reported by naya-create-kb[^kb-appdata].
 - A NayaFlow backup (zip or `user-data.db`) is a valid OpenFlow database: OpenFlow uses the same schema
-  and imports it <span class="tag static">STATIC</span> (OpenFlow, link at release).
+  and imports it <span class="tag static">STATIC</span> ([OpenFlow](https://github.com/create-collective/openflow/releases)).
 - App identity: appId `tech.naya.nayaflow`, author "NayaTech", "Copyright 2024 tech.naya"; the updater
   caches in `nayaflow-updater` <span class="tag static">STATIC</span> (0.0.1 `package.json`; 1.25.1
   `app-update.yml`).
@@ -227,10 +227,10 @@ Log rotation and a fix for logs over 100 MB came in 1.17.2 <span class="tag doc"
 
 [^nc]: NayaFlow 1.25.1 for Windows, `core/NayaCore/NayaCore.exe` (NayaCore 6.11.0): strings (SQL queries, log formats, settings names).
 [^bg]: NayaFlow 1.25.1, `flow/flow-bg-server.exe`: strings and embedded data (settings, module settings, templates, i18n, backup code).
-[^rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases), mirrored in nayaHistory [`CHANGELOG.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md).
+[^rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases), mirrored in create-legacy-firmware [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
-[^nh-manifest]: nayaHistory, [`MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/MANIFEST.json) (the assets of every stable release).
-[^nh-hw]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
+[^nh-manifest]: create-legacy-firmware, [`MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/MANIFEST.json) (the assets of every stable release).
+[^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^manual]: Naya Create manual v1.1.x, pp. 18-23 (see [Manuals](../product/manuals.md) for archived copies).
 [^kb-appdata]: naya-create-kb, [software/app-data](https://nemezzizz.github.io/naya-create-kb/software/app-data/).
 [^kb-nayaflow]: naya-create-kb, [software/nayaflow](https://nemezzizz.github.io/naya-create-kb/software/nayaflow/).

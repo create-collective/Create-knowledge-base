@@ -8,7 +8,7 @@ can silently miss an update, so read the version of **both** halves before follo
 
 !!! note "At a glance"
     - Last published firmware: keyboard 3.41.0 and module bundle 2.3.3 (NayaFlow 1.25.0, 2026-07-17).
-    - 25 stable releases (2025-03-19 to 2026-07-21) and 16 beta releases; every image is archived in nayaHistory.
+    - 25 stable releases (2025-03-19 to 2026-07-21) and 16 beta releases; every image is archived in create-legacy-firmware.
     - Three keyboard firmwares shipped only on the beta channel: 3.39.4, 3.40.0 and 3.40.4.
     - Images carry no version of their own; versions come from the vendor's notes, app constants and the device.
     - Read `fe/1002` on each half (and the right half through the left) instead of assuming.
@@ -50,7 +50,7 @@ Future, and it parses four-part versions (`fw_version#N.N.N.N`) <span class="tag
 
 The stable channel is the vendor's GitHub repository `NayaTech/NayaFlow-releases`:
 25 releases from v0.0.1 (2025-03-19) to v1.25.1 (2026-07-21) with 264 assets (about 21.5 GB). All of
-them are mirrored in nayaHistory with checksums: 264 of 264 downloaded, and on verification 208 were
+them are mirrored in create-legacy-firmware with checksums: 264 of 264 downloaded, and on verification 208 were
 digest-checked, 56 size-checked only (they carry no published digest), none missing and none bad.
 14 of the 25 releases carry release notes <span class="tag doc">DOC</span> <span class="tag measured">MEASURED</span>[^mf][^cl].
 
@@ -59,7 +59,7 @@ Firmware only ever shipped inside NayaFlow. The vendor's component repositories
 ever found, and NayaFlow's own update check never resolved: it sent an unsubstituted build
 placeholder as its GitHub token and got HTTP 401 <span class="tag static">STATIC</span> <span class="tag doc">DOC</span>[^nc].
 
-nayaHistory groups the releases into four eras by what they bundle <span class="tag static">STATIC</span>[^fh]:
+create-legacy-firmware groups the releases into four eras by what they bundle <span class="tag static">STATIC</span>[^fh]:
 
 | Era | Releases | Firmware resources |
 |---|---|---|
@@ -147,7 +147,7 @@ generation-B pair, 26 keyboard images in all <span class="tag static">STATIC</sp
 | 1.25.0 to 1.25.1, generation A | 3.41.0 | 328 880 / 226 000 | `479e89ba` / `2abb2695` |
 | 1.25.0 to 1.25.1, generation B | 3.41.0 | 328 880 / 226 000 | `07dd2523` / `87f63fd3` |
 
-Full hashes are in nayaHistory's per-release `manifest.json` files.
+Full hashes are in create-legacy-firmware's per-release `manifest.json` files.
 
 The oldest archived images are those of 0.0.1 and 0.0.2 (`fwl.bin` 285 392, `fwr.bin`
 218 256), from the pre-production era, not those of 0.1.1 <span class="tag static">STATIC</span>[^fh].
@@ -156,7 +156,7 @@ naya-create-kb's six size rows are correct, and we confirmed them against the ar
 0.1.1 313 392 / 235 296; 1.3.11 352 256 / 239 184 (the same images ship from 1.3.8 to 1.6.10);
 1.11.11 358 496 / 243 840; 1.15.1 361 632 / 244 336; 1.21.0 312 272 / 220 688; 1.25.1 328 880 /
 226 000 <span class="tag static">STATIC</span>[^fh][^kb-versions]. Its table comes from its maintainer's own carve of six
-releases (15 images). Those 15 images are byte-identical to the corresponding nayaHistory images: the
+releases (15 images). Those 15 images are byte-identical to the corresponding create-legacy-firmware images: the
 MD5 prefixes in the maintainer's published file names match the MD5 of the MCUboot image part of ours
 (checked 2026-09-23) <span class="tag static">STATIC</span>. Also reported by naya-create-kb.
 
@@ -189,7 +189,7 @@ The beta channel is the vendor's `NayaTech/NayaFlow-beta-releases`: 16 releases 
 1.25.0) and eleven are beta-only (1.10.0, 1.16.0, 1.16.1, 1.17.0, 1.17.1, 1.18.0, 1.19.0, 1.22.0,
 1.23.0, 1.23.1, 1.24.0), 36 distinct NayaFlow version numbers across both channels. A shared number
 may still be a different build (the beta app is "NayaFlow-Beta"). Every beta release's images are
-carved into nayaHistory's `firmware-history-beta/` (commit 7b511ca), kept apart from the stable
+carved into create-legacy-firmware's `firmware-history-beta/` (commit 7b511ca), kept apart from the stable
 `firmware-history/` that OpenFlow's firmware fetcher and catalog read <span class="tag doc">DOC</span> <span class="tag static">STATIC</span>[^beta][^fhb][^fh-beta].
 
 The table gives, for each beta release, the firmware its installer actually carries
@@ -279,7 +279,7 @@ their manifests list only keyboard images and `FlashMemory.bin`, and NayaCore 1.
 name only `kb_fw/` and `m_fw/` <span class="tag static">STATIC</span>[^fh]. Also reported by the createflow-dongle author[^cfd].
 
 Which firmware people likely run: Windows installer downloads, grouped by the keyboard
-firmware each installer bundles (nayaHistory's release metadata captured 2026-09-14), are about
+firmware each installer bundles (create-legacy-firmware's release metadata captured 2026-09-14), are about
 3 570 for 3.29.1, 2 620 for 3.35.4, 1 720 for 3.41.0, 1 480 for 3.31.1 and 1 110 for 3.28.7. Downloads
 are not installs (Windows installers also serve auto-updates), so this is weak evidence; read
 `fe/1002` on both halves instead of assuming <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mf].
@@ -401,16 +401,16 @@ status is stated once, on the [home page](../index.md).
 
 ## Sources
 
-[^cl]: nayaHistory, [`CHANGELOG.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md): the vendor's release notes of `NayaTech/NayaFlow-releases`, captured 2026-09-14.
-[^cl-310]: nayaHistory, [`CHANGELOG.md` L310-L314 and L345](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L310-L314) (the two spellings; SystemCDC retirement).
-[^cl-300]: nayaHistory, [`CHANGELOG.md` L300](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L300) (manufacturing build of NayaCore).
-[^cl-222]: nayaHistory, [`CHANGELOG.md` L222](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L222) (BLE v1 to v2 removes known hosts).
-[^mf]: nayaHistory, [`MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/MANIFEST.json) (GitHub release metadata of all 25 stable releases, captured 2026-09-14), with `download.log` and `verify.py`.
-[^fh]: nayaHistory, [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md) and the per-release `firmware-history/<version>/manifest.json` files.
-[^fh-beta]: nayaHistory, [`FIRMWARE-HISTORY.md`, "Beta channel"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md#L153-L218).
-[^fhb]: nayaHistory, [`firmware-history-beta/MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca).
+[^cl]: create-legacy-firmware, [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md): the vendor's release notes of `NayaTech/NayaFlow-releases`, captured 2026-09-14.
+[^cl-310]: create-legacy-firmware, [`CHANGELOG.md` L310-L314 and L345](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L310-L314) (the two spellings; SystemCDC retirement).
+[^cl-300]: create-legacy-firmware, [`CHANGELOG.md` L300](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L300) (manufacturing build of NayaCore).
+[^cl-222]: create-legacy-firmware, [`CHANGELOG.md` L222](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L222) (BLE v1 to v2 removes known hosts).
+[^mf]: create-legacy-firmware, [`MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/MANIFEST.json) (GitHub release metadata of all 25 stable releases, captured 2026-09-14), with `download.log` and `verify.py`.
+[^fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md) and the per-release `firmware-history/<version>/manifest.json` files.
+[^fh-beta]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`, "Beta channel"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md#L153-L218).
+[^fhb]: create-legacy-firmware, [`firmware-history-beta/MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca).
 [^nc-gates]: NayaFlow 1.25.1, NayaCore 6.11.0 (macOS arm64, cross-checked on x86_64), our disassembly (2026-09-23): the guarded initializers of the `naya_fw::*_MinVersion` values, `operationMinFWVersion` and `commandMinFWVersion`; see [Disassembly](../software/disassembly.md#version-gates).
-[^fp-binary]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Native service binary"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L107-L120).
+[^fp-binary]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Native service binary"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L107-L120).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (read 2026-09-23).
 [^nc]: NayaFlow 1.25.1: main-process bundle constants and NayaCore 6.11.0 strings (version status names, the BLE v1/v2 warning, component repository names).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5), comment by the maintainer (a board on 3.30.1 with modules on 2.2.2, and their version replies).

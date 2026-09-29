@@ -250,7 +250,7 @@ best; this page is the place to check whether they carry over.
 
 - <span class="tag open">OPEN</span> Every "not recorded" cell above, in particular nearly all
   behavior on 3.35.4, and anything on the beta-only 3.39.4, 3.40.0 and 3.40.4 (images archived in
-  nayaHistory; no board on them has been read); which versions besides 3.28.7 fail on three-frame
+  create-legacy-firmware; no board on them has been read); which versions besides 3.28.7 fail on three-frame
   writes ([details](../open-questions.md#oq-p24)).
 - <span class="tag open">OPEN</span> Which firmware first lacks a USB serial number (tools fall back
   to side and product id) ([details](../open-questions.md#oq-c03)).
@@ -267,12 +267,12 @@ best; this page is the place to check whether they carry over.
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): the pairing refusal.
 [^nc-disasm]: NayaFlow 1.25.1, NayaCore 6.11.0 (Windows x64), our disassembly (2026-09-23): `ProtocolCDCProcessWorker::_remapStartStep`.
 [^nc-gates]: NayaFlow 1.25.1, NayaCore 6.11.0 (macOS arm64, cross-checked on x86_64), our disassembly (2026-09-23): the guarded initializers of the `naya_fw::*_MinVersion` values, `operationMinFWVersion` and `commandMinFWVersion` and their tables; see [Disassembly](../software/disassembly.md#version-gates).
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (NayaFlow 1.14.5 to 1.25.1).
-[^nh-beta]: nayaHistory, [`firmware-history-beta/MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca: per beta release, the note's version, the app constant, NayaCore's literals and the carved images), with [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (NayaFlow 1.14.5 to 1.25.1).
+[^nh-beta]: create-legacy-firmware, [`firmware-history-beta/MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca: per beta release, the note's version, the app constant, NayaCore's literals and the carved images), with [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.10.0 to 1.25.0).
 [^nf-rel]: Vendor release pages, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases) and the beta repository (download counts, snapshot 2026-08-28).
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c; flow corrected in 6ef80e2: upload the whole resource, then reset, no mark step).
-[^fp-mismatch]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c; flow corrected in 6ef80e2: upload the whole resource, then reset, no mark step).
+[^fp-mismatch]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (a USB CDC capture log, keyboard 3.41.0); raw data decoded by us, never copied.
 [^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
 [^kb-functions]: naya-create-kb, [disassembly/functions](https://nemezzizz.github.io/naya-create-kb/disassembly/functions/) (commit 7668067).

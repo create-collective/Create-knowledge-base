@@ -528,10 +528,10 @@ writing anything back.
 [^hid]: USB-IF, [HID Usage Tables](https://usb.org/document-library/hid-usage-tables-15) (Consumer page: `b5` Scan Next Track, `b6` Scan Previous Track, `cd` Play/Pause, `e2` Mute).
 [^zmk]: ZMK documentation, [behaviors](https://zmk.dev/docs/keymaps/behaviors).
 [^man-c]: Naya Create User Manual v1.1.x (key labels), see [Manuals](../product/manuals.md).
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v1.3.8, v1.14.5, v1.25.0).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.3.8, v1.14.5, v1.25.0).
 [^ks-camp]: Kickstarter campaign page, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023), read 2026-09-23.
 [^ks-faq]: Kickstarter campaign FAQ, [naya-create/naya-create/faqs](https://www.kickstarter.com/projects/naya-create/naya-create/faqs), read 2026-09-23.
 [^ks-9]: Kickstarter update 9, [2023-12-07](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3982337).
 [^ks-19]: Kickstarter update 19, [2025-02-11](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4312089).
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).
-[^openflow]: OpenFlow (link at release).
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases).

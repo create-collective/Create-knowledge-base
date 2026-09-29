@@ -282,5 +282,5 @@ detent spacing, strength and on/off) are one-byte fields inside each module conf
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`, `cli/keyscan.py`).
 [^man-c]: Naya Create User Manual v1.1.x, p. 5 ("Turning Create ON/OFF": sleep and deep sleep), see [Manuals](../product/manuals.md).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.17.0, 1.22.0, 1.23.0, 1.24.0).
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v1.25.0).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.25.0).
 [^zmk-ht]: ZMK documentation, [hold-tap behavior, flavors](https://zmk.dev/docs/keymaps/behaviors/hold-tap).

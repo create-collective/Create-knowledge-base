@@ -216,7 +216,7 @@ The four 3.41.0 images <span class="tag static">STATIC</span>[^fh]:
 | `kb_fwr_64.bin` | right | B | 226 000 | `87f63fd3be514538f099803c0912516a54bbb256facf2c50df6c0c85c16a6677` | no |
 
 Every other release's hashes are on [Versions](versions.md#distinct-keyboard-images) and, in full,
-in nayaHistory's per-release `manifest.json` files.
+in create-legacy-firmware's per-release `manifest.json` files.
 
 !!! note "How to name what a half runs"
     Put the half into its bootloader, read `image state` on the port that answers SMP, and look up
@@ -227,7 +227,7 @@ in nayaHistory's per-release `manifest.json` files.
 
 `d_fw.bin` (NayaFlow 0.1.0 to 1.6.10) is a separate MCUboot image family: encrypted,
 `img_size` 175 136, MCUboot length 176 244, in a 331 776-byte resource, signed with the same KEYHASH
-and carrying the same pre-armed trailer <span class="tag static">STATIC</span>[^fh]. nayaHistory calls it the "dial" image. It arrived
+and carrying the same pre-armed trailer <span class="tag static">STATIC</span>[^fh]. create-legacy-firmware calls it the "dial" image. It arrived
 in 0.1.0 together with dongle upgrade commands (`mcb_dongle_*`, `dongle_upgrade_mcb_*`) and the
 vendor's slot-5 reservation for the dongle, so it may be dongle firmware <span class="tag inferred">INFERRED</span>[^fp-bottom][^cl-453].
 Which one it is stays **open** <span class="tag open">OPEN</span> ([open question](../open-questions.md#oq-f08)). It is not the
@@ -255,7 +255,7 @@ archive afterwards <span class="tag inferred">INFERRED</span>. Whether shipped h
 
 ## Beta-channel images
 
-The beta channel's images are carved into nayaHistory's `firmware-history-beta/` folder
+The beta channel's images are carved into create-legacy-firmware's `firmware-history-beta/` folder
 (commit 7b511ca). The three keyboard firmwares that shipped only on the beta channel, 3.39.4, 3.40.0
 and 3.40.4, are stored as `kb_fwl.bin` and `kb_fwr.bin` pairs: `img_size` 327 008 to 327 808 (left)
 and 224 464 to 225 024 (right), generation A only, the same KEYHASH, the same header placeholder and
@@ -270,9 +270,9 @@ The archive was built from the public installers, and anyone can re-derive it: f
 MCUboot magic `0x96f3b83d` in the NayaCore binary (header size 32 or 512), walk the TLVs, and bind Qt
 RCC resource names to blobs (a name entry is a 16-bit length, a 32-bit hash and a UTF-16BE name; a
 file node holds the name offset as a big-endian 32-bit value at +0 and the data offset at +10; the
-data is preceded by a big-endian 32-bit length). nayaHistory's `tools/carve_fw.py` and
+data is preceded by a big-endian 32-bit length). create-legacy-firmware's `tools/carve_fw.py` and
 `tools/extract_history.py` do this for every release <span class="tag static">STATIC</span>[^carve]. The images themselves are hosted in
-nayaHistory, whose Apache-2.0 license covers its own documents, manifests and tools, not the vendor
+create-legacy-firmware, whose Apache-2.0 license covers its own documents, manifests and tools, not the vendor
 firmware images or installers it archives. This page publishes structure, sizes and hashes only.
 
 ## Where this differs from naya-create-kb
@@ -297,22 +297,22 @@ firmware images or installers it archives. This page publishes structure, sizes 
 
 ## Sources
 
-[^fh]: nayaHistory, [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md) (catalog of every carved image with sizes, generations and plaintext hashes) and the per-release `firmware-history/<version>/manifest.json` files.
-[^fh-beta]: nayaHistory, [`FIRMWARE-HISTORY.md`, "Beta channel"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md#L153-L218).
-[^fhb]: nayaHistory, [`firmware-history-beta/MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca): every beta release and every image it carried, with `img_size`, plaintext SHA-256, KEYHASH, header version and trailer.
-[^carve]: nayaHistory, [`tools/carve_fw.py`](https://github.com/traviswye/nayaHistory/blob/79eeefb/tools/carve_fw.py) and [`tools/extract_history.py`](https://github.com/traviswye/nayaHistory/blob/79eeefb/tools/extract_history.py).
-[^fp-bundle]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Firmware bundle layout"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L124-L138).
-[^fp-transport]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Transport to the device"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L82-L95).
-[^fp-binary]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Native service binary"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L107-L120).
-[^fp-bottom]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Bottom line"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L16-L32) and "Command vocabulary by era" (L140-L154).
-[^fp-slots]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
-[^fp-trailer]: nayaHistory, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226) (flow corrected in commit 6ef80e2).
-[^fp-pid]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (NayaCore 6.11.0, `Naya_Device::setCreateFlashGenerationFromPid`).
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (added in commit cdd897c).
-[^secret]: nayaHistory, [`SECRET-HUNT.md`, "Findings" sections 1 to 3](https://github.com/traviswye/nayaHistory/blob/79eeefb/SECRET-HUNT.md#L80-L116) (encryption flag, entropy, per-image wrapped keys, no key material in any installer).
+[^fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md) (catalog of every carved image with sizes, generations and plaintext hashes) and the per-release `firmware-history/<version>/manifest.json` files.
+[^fh-beta]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`, "Beta channel"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md#L153-L218).
+[^fhb]: create-legacy-firmware, [`firmware-history-beta/MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca): every beta release and every image it carried, with `img_size`, plaintext SHA-256, KEYHASH, header version and trailer.
+[^carve]: create-legacy-firmware, [`tools/carve_fw.py`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/tools/carve_fw.py) and [`tools/extract_history.py`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/tools/extract_history.py).
+[^fp-bundle]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Firmware bundle layout"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L124-L138).
+[^fp-transport]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Transport to the device"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L82-L95).
+[^fp-binary]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Native service binary"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L107-L120).
+[^fp-bottom]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Bottom line"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L16-L32) and "Command vocabulary by era" (L140-L154).
+[^fp-slots]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
+[^fp-trailer]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226) (flow corrected in commit 6ef80e2).
+[^fp-pid]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (NayaCore 6.11.0, `Naya_Device::setCreateFlashGenerationFromPid`).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (added in commit cdd897c).
+[^secret]: create-legacy-firmware, [`SECRET-HUNT.md`, "Findings" sections 1 to 3](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/SECRET-HUNT.md#L80-L116) (encryption flag, entropy, per-image wrapped keys, no key material in any installer).
 [^nc]: NayaFlow 1.25.1, main-process bundle: `NAYA_CREATE_FW_VERSION` "3.41.0" and `NAYA_MODULE_FW_VERSION` "2.3.3".
-[^cl-113]: nayaHistory, [`CHANGELOG.md` L113](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L113) (vendor release notes, NayaFlow 1.25.0, NayaCore 6.11.0).
-[^cl-453]: nayaHistory, [`CHANGELOG.md` L453-L455](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L453-L455) (vendor release notes: dongle support preparation, slot reservation).
+[^cl-113]: create-legacy-firmware, [`CHANGELOG.md` L113](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L113) (vendor release notes, NayaFlow 1.25.0, NayaCore 6.11.0).
+[^cl-453]: create-legacy-firmware, [`CHANGELOG.md` L453-L455](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L453-L455) (vendor release notes: dongle support preparation, slot reservation).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases), v1.25.0.
 [^mcuboot]: MCUboot source: image format and encryption design, [`bootutil_public.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/bootutil/src/bootutil_public.c) (swap table) and [`boot_serial.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/boot_serial/src/boot_serial.c).
 [^kb-signing]: naya-create-kb, [firmware/signing](https://nemezzizz.github.io/naya-create-kb/firmware/signing/).

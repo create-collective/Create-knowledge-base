@@ -387,8 +387,8 @@ them, as the manual says <span class="tag doc">DOC</span>[^um106]. The general s
 [^nc]: NayaFlow 1.25.1 (Windows): NayaCore 6.11.0 strings, symbols, imports and embedded resources, and the renderer bundle (static reading).
 [^nf-rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases) (0.1.0 to 1.25.1).
 [^nf-beta]: Vendor beta release notes, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
-[^nh-fh]: nayaHistory, [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md) (image catalog of the 25 stable releases).
-[^nh-beta]: nayaHistory, [`firmware-history-beta/MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/firmware-history-beta/MANIFEST.json) (beta images carved, commit 7b511ca).
+[^nh-fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md) (image catalog of the 25 stable releases).
+[^nh-beta]: create-legacy-firmware, [`firmware-history-beta/MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/firmware-history-beta/MANIFEST.json) (beta images carved, commit 7b511ca).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (README and `constants.py`).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) (module type detection; maintainer's board on 3.30.1).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (maintainer's board on 3.30.1 with modules on 2.2.2).

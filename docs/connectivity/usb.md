@@ -44,7 +44,7 @@ these ids have ever been seen on hardware <span class="tag measured">MEASURED</s
 | (outside the table) | dongle | boot pass | none | yes (`0x0137`) | <span class="tag measured">MEASURED</span> 2026-09-11 |
 
 The third mode is unnamed in NayaCore. Nordic's own DFU bootloader would enumerate under Nordic's
-vendor id, so calling it "DFU" is only a guess; nayaHistory's product-id table labels `0x07A` /
+vendor id, so calling it "DFU" is only a guess; create-legacy-firmware's product-id table labels `0x07A` /
 `0x0DE` "DFU", while this site says "third mode"[^fp-pid]. No generation-B id has ever been seen.
 See [Bootloader](../firmware/bootloader.md) for what each mode does.
 
@@ -326,13 +326,13 @@ Create), not Naya hardware <span class="tag reported">REPORTED</span> (source ch
 
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py` vendor and product ids; README, Linux permissions).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) (Windows serial fixes).
-[^fp-pid]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (NayaCore's `setCreateFlashGenerationFromPid`; its table labels the third mode "DFU").
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c: two MCUboot ports, `os reset` to the data port, no narrow recovery window).
-[^nh-fw]: nayaHistory, [`firmware-history/`](https://github.com/traviswye/nayaHistory/tree/79eeefb/firmware-history) (v1.21.0 and v1.25.1 image sets).
-[^nh-cl]: nayaHistory, vendor release notes, [`changelogs/`](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v1.25.0).
+[^fp-pid]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (NayaCore's `setCreateFlashGenerationFromPid`; its table labels the third mode "DFU").
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c: two MCUboot ports, `os reset` to the data port, no narrow recovery window).
+[^nh-fw]: create-legacy-firmware, [`firmware-history/`](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/firmware-history) (v1.21.0 and v1.25.1 image sets).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [`changelogs/`](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.25.0).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading).
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings (static reading).
-[^openflow]: OpenFlow (link at release): its udev rule `70-openflow.rules` and port handling.
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its udev rule `70-openflow.rules` and port handling.
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md) and its firmware README (third party, Apache-2.0).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs on macOS); raw data decoded by us, never copied.
 [^ks-camp]: Kickstarter campaign page, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023), "Connectivity".

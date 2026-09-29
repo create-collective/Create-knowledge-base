@@ -388,7 +388,7 @@ else needed for a ZMK port is known"[^kb-hardware]. Detail on [ZMK](../firmware/
 [^nordic]: Nordic Semiconductor, nRF52840 Product Specification.
 [^kailh]: Kailh product data for the PG1232 low-profile switch.
 [^nc]: NayaFlow 1.25.1: NayaCore 6.11.0 strings (`setCreateFlashGenerationFromPid`) and the renderer's key geometry (static reading).
-[^nh-fh]: nayaHistory, [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md) (image catalog of the 25 stable releases).
+[^nh-fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md) (image catalog of the 25 stable releases).
 [^wb-naya]: The vendor's former website and shop images, archived by the Wayback Machine ([naya.tech captures](https://web.archive.org/web/2026*/naya.tech/*)); cited only, images not reproduced.
 [^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
 [^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).

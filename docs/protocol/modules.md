@@ -397,6 +397,6 @@ MODULE exist; their params were never captured and neither was sent by us
 [^nc-batt]: NayaFlow 1.25.1, NayaCore 6.11.0 (macOS and Windows builds), our disassembly (2026-09-23): `Naya_Device::getModuleBatteryPercentage` and its caller that sets `connectedModuleBatteryLevel`. See [Disassembly](../software/disassembly.md).
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings (static reading): module update instructions.
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs and empty-dock dumps); raw data decoded by us, never copied.
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v1.3.8, v1.20.0, v1.25.0).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.3.8, v1.20.0, v1.25.0).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (v1.17.0, v1.23.0, v1.24.0).
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).

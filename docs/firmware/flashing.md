@@ -36,7 +36,7 @@ trial run and no automatic way back.
 
 - The stock image that matches the half's **side and flash generation**. The four current images
   and how to tell them apart are on [Images](images.md#flash-generations-a-and-b); all stock images
-  are in nayaHistory.
+  are in create-legacy-firmware.
 - An SMP (mcumgr) client for the serial port. The framing and its two silent-failure pitfalls are on
   [Bootloader](bootloader.md#smp-over-the-serial-console).
 - The vendor's rules for its own updater (NayaFlow 1.25.1): no modules docked on either
@@ -297,7 +297,7 @@ content is unknown <span class="tag static">STATIC</span>[^nc-core]. Trying `os 
 
 ## OpenFlow's flasher
 
-OpenFlow (link at release) implements this procedure.
+[OpenFlow](https://github.com/create-collective/openflow/releases) implements this procedure.
 
 - Interlocks before any write: the half is in recovery and answers `image state`; the
   running image is in the stock-image table (identified by hash); side and generation agree from
@@ -305,7 +305,7 @@ OpenFlow (link at release) implements this procedure.
   the caller passes an arming token equal to the hash the device just reported; a downgrade needs an
   explicit allow. Flashing ships switched off <span class="tag static">STATIC</span>[^openflow].
 - It ships only a firmware catalog, fetches a cataloged image on demand (by default
-  from nayaHistory) and refuses the bytes unless they hash to the catalog value <span class="tag static">STATIC</span>[^openflow].
+  from create-legacy-firmware) and refuses the bytes unless they hash to the catalog value <span class="tag static">STATIC</span>[^openflow].
 - Around the upload: a full backup first; an append-only log flushed per line; the
   central first; the device lock held for the whole run; brightness and lighting restored afterwards;
   a comparison against the backup (bindings, bonds and versions strict; LED and second-bank
@@ -346,15 +346,15 @@ deliberate mismatch and re-match, and the lighting restore afterwards.
 
 ## Sources
 
-[^fp-current]: nayaHistory, [`FLASHING-PROCEDURE.md`, "The current procedure (v1.25.1)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L36-L69).
-[^fp-slots]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
-[^fp-trailer]: nayaHistory, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226) (flow corrected in commit 6ef80e2: upload the whole resource, then reset; no mark step).
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
+[^fp-current]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "The current procedure (v1.25.1)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L36-L69).
+[^fp-slots]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
+[^fp-trailer]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226) (flow corrected in commit 6ef80e2: upload the whole resource, then reset; no mark step).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
 [^mcuboot]: MCUboot, [`boot_serial.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/boot_serial/src/boot_serial.c) (`bs_upload`) and the image encryption design (images are decrypted while being swapped from the secondary slot).
 [^mcuboot-2024]: MCUboot at [commit `439930aee115`](https://github.com/mcu-tools/mcuboot/tree/439930aee115e391e064f5ba2a707f2358e5673d) (2024-10-25): `boot/boot_serial/src/boot_serial.c` (a completed upload to the primary slot calls `boot_handle_enc_fw` when image encryption is built in) and `boot_serial_encryption.c`.
 [^nc-core]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (pairing refusal, "data port connection test", "need 0 or 2 HWIDs").
 [^nc-flow]: NayaFlow 1.25.1, renderer strings (Hardware Manager update texts and the Ctrl/Cmd+D shortcut).
 [^man-create]: Naya Create User Manual v1.1.0, p3; see [Manuals](../product/manuals.md).
-[^cl-340]: nayaHistory, [`CHANGELOG.md` L340](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L340) (NayaCore 5.8.1).
-[^cl-113]: nayaHistory, [`CHANGELOG.md` L113](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L113) (NayaCore 6.11.0).
-[^openflow]: OpenFlow (link at release): its flasher and firmware catalog.
+[^cl-340]: create-legacy-firmware, [`CHANGELOG.md` L340](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L340) (NayaCore 5.8.1).
+[^cl-113]: create-legacy-firmware, [`CHANGELOG.md` L113](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L113) (NayaCore 6.11.0).
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its flasher and firmware catalog.

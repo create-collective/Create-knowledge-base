@@ -211,7 +211,7 @@ Readings and calibration points: [Power and batteries](../hardware/power.md#perc
 ## Before the bundle: `d_fw.bin`
 
 Before the bundle (NayaFlow 0.1.0 to 1.6.10) the releases shipped `d_fw.bin`, an MCUboot
-image signed with the keyboard key: dial or dongle firmware, **open**. From 1.11.0 nayaHistory
+image signed with the keyboard key: dial or dongle firmware, **open**. From 1.11.0 create-legacy-firmware
 describes the dial as folded into the modules bundle <span class="tag static">STATIC</span> <span class="tag open">OPEN</span>[^fh][^fp-bundle]
 ([Images](images.md#other-image-families)).
 
@@ -256,13 +256,13 @@ version reads (`de/100a`, `de/1008`).
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (module restart modes, `Naya_DeviceManager_ModuleFwUpdate.cpp` step names and messages, `MODULE_BAT_RECOVERY`, ZMQ events) and macOS symbols and code (`Naya_Device::getModuleBatteryPercentage`, our disassembly, 2026-09-23).
 [^nc-flow]: NayaFlow 1.25.1, renderer strings (Hardware Manager module-update texts).
-[^fh]: nayaHistory, [`FIRMWARE-HISTORY.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/FIRMWARE-HISTORY.md) and the per-release `manifest.json` files (module bundle entries and `.sfb` apps).
-[^fhb]: nayaHistory, [`firmware-history-beta/MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/firmware-history-beta/MANIFEST.json) (the `VERSION` file of each beta bundle).
-[^fp-slots]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
-[^fp-bundle]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Firmware bundle layout"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L124-L138).
-[^cl]: nayaHistory, [`CHANGELOG.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md) (vendor release notes).
-[^cl-331]: nayaHistory, [`CHANGELOG.md` L331-L351](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L331-L351) (Force Module Update in NayaFlow 1.15.0, NayaCore 5.8.1, keyboard 3.29.1, modules 2.2.0).
-[^cl-421]: nayaHistory, [`CHANGELOG.md` L421](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L421) (NayaFlow 1.3.8).
+[^fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md) and the per-release `manifest.json` files (module bundle entries and `.sfb` apps).
+[^fhb]: create-legacy-firmware, [`firmware-history-beta/MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/firmware-history-beta/MANIFEST.json) (the `VERSION` file of each beta bundle).
+[^fp-slots]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
+[^fp-bundle]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Firmware bundle layout"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L124-L138).
+[^cl]: create-legacy-firmware, [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md) (vendor release notes).
+[^cl-331]: create-legacy-firmware, [`CHANGELOG.md` L331-L351](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L331-L351) (Force Module Update in NayaFlow 1.15.0, NayaCore 5.8.1, keyboard 3.29.1, modules 2.2.0).
+[^cl-421]: create-legacy-firmware, [`CHANGELOG.md` L421](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L421) (NayaFlow 1.3.8).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
 [^wb-help]: Wayback Machine index of the vendor's help center, [help.naya.tech captures](https://web.archive.org/web/2026*/help.naya.tech/*) (titles and first lines only).
 [^man-create]: Naya Create User Manual v1.1.0, pp. 11, 20 and 23; see [Manuals](../product/manuals.md).

@@ -26,7 +26,7 @@ names, offsets and behavior only, never decompiled code.
 | NayaCore of NayaFlow 1.17.3 | Windows | strings | us |
 
 <span class="tag static">STATIC</span>[^nc-mac][^nc]. Our static work is on the Windows build, with a
-few functions read in both macOS builds (recorded in nayaHistory[^nh-fp]) and, in 2026-09, the whole
+few functions read in both macOS builds (recorded in create-legacy-firmware[^nh-fp]) and, in 2026-09, the whole
 arm64 map and gate machinery. The community KB disassembled the macOS arm64 build: its "installed copy"
 has the MD5 of the public 1.25.1 arm64 asset, and it worked from a re-signed copy (MD5
 `b3dd3e14c255886d05b4a2728f61ffaa`) whose `otool -tV` dump of `(__TEXT,__text)` has 1 736 507 lines,
@@ -36,7 +36,7 @@ only in the signature <span class="tag static">STATIC</span>; also reported by n
 (its dump: raw data checked).
 
 - **Re-derive it yourself.** Every stable installer is still public in `NayaTech/NayaFlow-releases`
-  (25 releases, GitHub sha256 digests in the release metadata), and nayaHistory mirrors them with a
+  (25 releases, GitHub sha256 digests in the release metadata), and create-legacy-firmware mirrors them with a
   manifest. Match a binary by digest before comparing offsets <span class="tag doc">DOC</span>[^rel][^nh-manifest].
 - **Use a 2-character minimum** (and a UTF-16 pass) with `strings` before calling a name absent: the
   default 4-6 character minimum hides short literals that matter (`A`-`Z`, `F1`-`F24`, `mo`, `tap`,
@@ -45,7 +45,7 @@ only in the signature <span class="tag static">STATIC</span>; also reported by n
 - **Scanning all 25 releases**: read the asar header, find MCUboot images by magic `0x96f3b83d` and walk
   their TLVs, and carve Qt resources (name entry `[u16 len][u32 hash][utf-16be name]`, file node
   `nameOffset = BE32(node+0)`, `dataOffset = BE32(node+10)`, data preceded by a big-endian u32 length).
-  Public scripts: nayaHistory `tools/carve_fw.py`, `tools/extract_history.py`, `tools/flash_map.py`
+  Public scripts: create-legacy-firmware `tools/carve_fw.py`, `tools/extract_history.py`, `tools/flash_map.py`
   <span class="tag static">STATIC</span>[^nh].
 
 ## Method and what static reading cannot settle
@@ -282,7 +282,7 @@ and [Versions](../firmware/versions.md#minimum-firmware-nayacore-expects).
 Device behavior any version gate has to reflect <span class="tag measured">MEASURED</span>: 3.28.7 has no
 Bluetooth opcode from `be/100c` up (no frame at all), two CDC interfaces per half, and wedges on any
 three-frame write; 3.35.4 does not return the second bank; 3.41.0 changed the LED payload between halves
-(donor board 3.28.7, 2026-09-19; owner's board 3.35.4/3.41.0, 2026-09-20/22; nayaHistory[^nh-hw]).
+(donor board 3.28.7, 2026-09-19; owner's board 3.35.4/3.41.0, 2026-09-20/22; create-legacy-firmware[^nh-hw]).
 
 ## Device operations
 
@@ -466,10 +466,10 @@ the host <span class="tag static">STATIC</span>[^nc]. See [ZMK](../firmware/zmk.
 [^bg]: NayaFlow 1.25.1, `flow/flow-bg-server.exe`: strings (catalog tooltips, vendor texts).
 [^rend]: NayaFlow 1.25.1, `resources/app.asar`: the renderer's icon registry.
 [^rel]: Vendor release notes of NayaFlow 1.25.0, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases) and the beta channel.
-[^nh]: nayaHistory, [`tools/`](https://github.com/traviswye/nayaHistory/tree/79eeefb/tools) (`carve_fw.py`, `extract_history.py`, `flash_map.py`).
-[^nh-manifest]: nayaHistory, [`MANIFEST.json`](https://github.com/traviswye/nayaHistory/blob/79eeefb/MANIFEST.json).
-[^nh-fp]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Slot ids" and "Product ids"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L248) (the MCUboot worker and PID functions in both macOS builds).
-[^nh-hw]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
+[^nh]: create-legacy-firmware, [`tools/`](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/tools) (`carve_fw.py`, `extract_history.py`, `flash_map.py`).
+[^nh-manifest]: create-legacy-firmware, [`MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/MANIFEST.json).
+[^nh-fp]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids" and "Product ids"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L248) (the MCUboot worker and PID functions in both macOS builds).
+[^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`, `docs/cdc-wire-format.md`, `bluetooth.py`).
 [^kb-dis]: naya-create-kb, [disassembly](https://nemezzizz.github.io/naya-create-kb/disassembly/).
 [^kb-functions]: naya-create-kb, [disassembly/functions](https://nemezzizz.github.io/naya-create-kb/disassembly/functions/).

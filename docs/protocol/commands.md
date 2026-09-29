@@ -541,8 +541,8 @@ wedge)
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): command log names and categories, parameter checks, job-queue and operation step names.
 [^nc-disasm]: NayaFlow 1.25.1, NayaCore 6.11.0 (Windows x64), our disassembly (2026-09-23): the per-category command tables, `ProtocolCDCProcessWorker::_remapStartStep` (the `0x10ca` case and the missing macro cases), `_constructRemapMessages`, the module-config template type.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings (static reading): ZMQ events, Danger Zone texts, the Ctrl/Cmd+D binding, the Toggle target list.
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (NayaFlow 1.17.2: SystemCDC retired; 1.19.1: BLE v2).
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (NayaFlow 1.17.2: SystemCDC retired; 1.19.1: BLE v2).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs and a device-state note of 2026-09-22); raw data decoded by us, never copied.
 [^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
 [^kb-transport]: naya-create-kb, [protocol/transport](https://nemezzizz.github.io/naya-create-kb/protocol/transport/) (commit 7668067).

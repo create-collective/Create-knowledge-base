@@ -1,8 +1,8 @@
 site_name: Create knowledge base
-site_url: https://traviswye.github.io/Create-knowledge-base/
+site_url: https://create-collective.github.io/Create-knowledge-base/
 site_description: Hardware, wire protocol, firmware, storage, recovery and host software of the Naya Create split keyboard, from measurement, static analysis and public filings.
 site_author: Create-knowledge-base contributors
-repo_url: https://github.com/traviswye/Create-knowledge-base
+repo_url: https://github.com/create-collective/Create-knowledge-base
 repo_name: Create-knowledge-base
 edit_uri: edit/main/docs/
 copyright: Pages CC BY 4.0; code snippets MIT. Naya Create is a product of Naya B.V.; this site is independent community research.

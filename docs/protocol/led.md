@@ -436,6 +436,6 @@ Least destructive first. Each row names its basis.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings, templates and the default "Rainbow" palette (static reading).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (LED-map dumps, USB CDC capture logs and tool sources); raw data decoded by us, never copied.
 [^zmk]: ZMK documentation, [RGB underglow](https://zmk.dev/docs/keymaps/behaviors/underglow).
-[^nh-cl]: nayaHistory, vendor release notes, [changelogs/](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v1.17.2, v1.25.0).
+[^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.17.2, v1.25.0).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (v1.17.1, v1.22.0, v1.23.0, v1.24.0).
-[^fp-mismatch]: nayaHistory, [FLASHING-PROCEDURE.md, "Pairing and firmware mismatch"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
+[^fp-mismatch]: create-legacy-firmware, [FLASHING-PROCEDURE.md, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).

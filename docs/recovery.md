@@ -444,11 +444,11 @@ other recipes that wait for a donor board. R15 and R16 are vendor documentation 
 [^kb-troubleshooting]: naya-create-kb, [troubleshooting](https://nemezzizz.github.io/naya-create-kb/troubleshooting/).
 [^kb-bootloader]: naya-create-kb, [firmware/bootloader](https://nemezzizz.github.io/naya-create-kb/firmware/bootloader/).
 [^mcuboot]: MCUboot, [`bootutil_public.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/bootutil/src/bootutil_public.c) (swap from the secondary slot) and its image encryption design.
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (pairing and ClearBLEDevices steps and messages, ZMQ events, "one half connected" warnings).
 [^man-create]: Naya Create User Manual v1.1.0, pp. 4, 5, 11 and 25; see [Manuals](product/manuals.md).
 [^man-modules]: Naya Touch, Tune and Track User Manuals v1.1.0, pp. 5 and 7; see [Manuals](product/manuals.md).
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6), description by its author.
-[^cl]: nayaHistory, [`CHANGELOG.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md) (vendor release notes).
-[^cl-222]: nayaHistory, [`CHANGELOG.md` L222](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L222).
+[^cl]: create-legacy-firmware, [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md) (vendor release notes).
+[^cl-222]: create-legacy-firmware, [`CHANGELOG.md` L222](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L222).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases), v1.18.0.

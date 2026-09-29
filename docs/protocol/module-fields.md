@@ -302,4 +302,4 @@ tools that remap module keys collapse such a run: Create Companion groups keys w
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): the category enum, the gesture list, the single-action map, the double-tap refusal.
 [^nc-disasm]: NayaFlow 1.25.1, NayaCore 6.11.0 (Windows x64), our disassembly (2026-09-23): `ModuleConfig::maxSlots`, `ModuleConfig::behaviourSlotStart`, `ModuleConfig::defaultValue` and the module-config serializer.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings and templates (static reading): the fresh-install module bindings.
-[^cc]: Create Companion, [github.com/traviswye/create-companion](https://github.com/traviswye/create-companion) (MIT).
+[^cc]: Create Companion, [github.com/create-collective/create-companion](https://github.com/create-collective/create-companion) (MIT).

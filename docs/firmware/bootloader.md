@@ -287,7 +287,7 @@ against the table on [Images](images.md#naming-the-image-a-half-runs) or
 After a swap the secondary slot keeps the previous image, so it records a board's update
 history, a "swap footprint" <span class="tag measured">MEASURED</span> (the secondary held 3.35.4, 2026-09-16).
 
-OpenFlow (link at release) ships a read-only field probe, `naya-probe.py` (one file,
+[OpenFlow](https://github.com/create-collective/openflow/releases) ships a read-only field probe, `naya-probe.py` (one file,
 pyserial only). It lists Naya PIDs; reads version and bond tables from halves in their application
 (and the partner's version through the left half; Bluetooth reads sent that way answer for the left
 half, so the probe does not show them); reads both slots of a half in its bootloader and names them
@@ -304,7 +304,7 @@ protocol) dumps firmware <span class="tag measured">MEASURED</span> (the file sy
 
 `image state` **write** is not implemented (rc 8). There is no test or confirm marking over
 serial recovery, and an image already in the secondary slot cannot be booted by marking it: it must be
-uploaded again <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured] (rc 8 measured 2026-09-20; the flow corrected in nayaHistory
+uploaded again <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured] (rc 8 measured 2026-09-20; the flow corrected in create-legacy-firmware
 commit 6ef80e2). That fits an MCUboot built without its image-state option
 (`MCUBOOT_SERIAL_IMG_GRP_IMAGE_STATE`) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot-2024]. So there is no trial boot and no
 automatic revert.
@@ -399,13 +399,13 @@ canary-and-reset script, SMP probes, and a node trap for capturing the cold-boot
 [^zephyr]: Zephyr, [commit `31fea97e05fd`](https://github.com/zephyrproject-rtos/zephyr/commit/31fea97e05fd).
 [^mcuboot-2024]: MCUboot at [commit `439930aee115`](https://github.com/mcu-tools/mcuboot/tree/439930aee115e391e064f5ba2a707f2358e5673d) (2024-10-25, the date of the Zephyr build in the banner): `boot/boot_serial/src/boot_serial.c` (`BOOT_SERIAL_FRAME_MTU` 124, CRC seed 0, the op check in `boot_serial_input`, `boot_serial_check_start`), `boot/zephyr/main.c` (console started before `boot_go`; boot-mode serial recovery) and `boot/bootutil/src/bootutil_public.c`. The vendor's build is not in any public tree, so its configuration is inferred.
 [^mcuboot]: MCUboot source: [`bootutil_public.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/bootutil/src/bootutil_public.c) (swap types and swap table), [`boot_serial.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/boot_serial/src/boot_serial.c) (`bs_set`, `bs_upload`) and the swap-using-scratch code.
-[^fp-transport]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Transport to the device"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L82-L95).
-[^fp-slots]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195) (device slot map and NayaCore's wrappers; request keys and console markers).
-[^fp-trailer]: nayaHistory, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226).
-[^fp-pid]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (x86_64 `0x10017e600`, arm64 `0x10014d710`; nayaHistory's table labels the third mode "DFU").
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
+[^fp-transport]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Transport to the device"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L82-L95).
+[^fp-slots]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195) (device slot map and NayaCore's wrappers; request keys and console markers).
+[^fp-trailer]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226).
+[^fp-pid]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (x86_64 `0x10017e600`, arm64 `0x10014d710`; create-legacy-firmware's table labels the third mode "DFU").
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings and macOS symbols (`MCUBootWorker`, flash self-test partition names, update state machine, reset names).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py` reset opcodes; `discovery.py` PID table).
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md) ("The original NAYA-100-1 dongle"; the keyboard's Bluetooth services on 3.41).
-[^openflow]: OpenFlow (link at release): `tools/naya-probe.py` and its recovery module.
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): `tools/naya-probe.py` and its recovery module.
 [^kb-bootloader]: naya-create-kb, [firmware/bootloader](https://nemezzizz.github.io/naya-create-kb/firmware/bootloader/).

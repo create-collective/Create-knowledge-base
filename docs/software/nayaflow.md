@@ -413,9 +413,9 @@ reported by naya-create-kb, whose author reused the icon set for a web client
 [^bg]: NayaFlow 1.25.1, `flow/flow-bg-server.exe` (Windows) and `Contents/flow/flow-bg-server` (macOS): strings and embedded data (catalog, templates, settings, i18n).
 [^nc]: NayaFlow 1.25.1 for Windows, `core/NayaCore/NayaCore.exe` (NayaCore 6.11.0): strings (event names, step names, log formats, build paths, the port-detector frames).
 [^nc-mac]: NayaFlow 1.25.1 for macOS, `NayaFlow.app/Contents/core/NayaCore.app/Contents/MacOS/NayaCore` (NayaCore 6.11.0; the arm64 build's MD5 is `84ded78022b6d312483aae0192584168`): symbols and code (the event table, the dispatcher, `doClearAllDataOperations`). See [Disassembly](disassembly.md).
-[^rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases), mirrored in nayaHistory [`CHANGELOG.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md).
+[^rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases), mirrored in create-legacy-firmware [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
-[^nh-hw]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
+[^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^nx]: nayactl, [`constants.py`](https://github.com/Qonfused/nayactl) (shared-memory names and topics).
 [^kb-nayaflow]: naya-create-kb, [software/nayaflow](https://nemezzizz.github.io/naya-create-kb/software/nayaflow/).
 [^kb-rpc]: naya-create-kb, [software/rpc-zmq](https://nemezzizz.github.io/naya-create-kb/software/rpc-zmq/).

@@ -344,7 +344,7 @@ pages link here.
 ## Sources
 
 [^kb-troubleshooting]: naya-create-kb, [troubleshooting](https://nemezzizz.github.io/naya-create-kb/troubleshooting/).
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (README; `constants.py`).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) (Windows serial fixes).
 [^nx-4]: nayactl, [issue #4](https://github.com/Qonfused/nayactl/issues/4) (battery readings).
@@ -352,5 +352,5 @@ pages link here.
 [^nc]: NayaFlow 1.25.1: NayaCore 6.11.0 strings, macOS symbols and our disassembly (macOS and Windows builds, 2026-09-23): the flash-test messages, the ZMQ event table, its dispatcher and invalid-event answers, `doClearAllDataOperations` and `_remapClearFlash`, `Naya_Device::getModuleBatteryPercentage`; and the Qt serial-port module in its macOS app bundle. See [Disassembly](software/disassembly.md).
 [^man-create]: Naya Create User Manual v1.1.0, pp. 5 and 25; see [Manuals](product/manuals.md).
 [^man-modules]: Naya Track and Tune User Manuals v1.1.0, p7; see [Manuals](product/manuals.md).
-[^cl]: nayaHistory, [`CHANGELOG.md`](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md) (vendor release notes).
+[^cl]: create-legacy-firmware, [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md) (vendor release notes).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).

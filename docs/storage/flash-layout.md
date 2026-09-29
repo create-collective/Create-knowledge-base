@@ -250,8 +250,8 @@ NayaFlow keeps its own data in an SQLite database, `user-data.db`, with automati
 [^nc-disasm]: NayaFlow 1.25.1, macOS x86_64 NayaCore: the ZMQ name table maps `clear_data` to event 5; `_handleCommandMessage` case 5 emits `si_clearAllData_req_source`, which reaches `Naya_DeviceManager::doClearAllDataOperations`; `ProtocolCDCProcessWorker::_remapClearFlash` (`0x1004a29c0`) builds a one-byte array filled with `00` and passes it to `_constructRemapMessages` with `0x10ca`, which queues it for `dst 0x50`. See [Disassembly](../software/disassembly.md).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`).
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6), description by its author.
-[^fp-measured]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
-[^cl-250]: nayaHistory, [`CHANGELOG.md` L250 and L263](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L250-L263) (NayaFlow 1.19.1, NayaCore 6.4.0).
-[^cl-284]: nayaHistory, [`CHANGELOG.md` L81 and L284](https://github.com/traviswye/nayaHistory/blob/79eeefb/CHANGELOG.md#L284) (periodic and manual backups).
+[^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
+[^cl-250]: create-legacy-firmware, [`CHANGELOG.md` L250 and L263](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L250-L263) (NayaFlow 1.19.1, NayaCore 6.4.0).
+[^cl-284]: create-legacy-firmware, [`CHANGELOG.md` L81 and L284](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L284) (periodic and manual backups).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases), v1.18.0.
 [^kb-littlefs]: naya-create-kb, [storage/littlefs](https://nemezzizz.github.io/naya-create-kb/storage/littlefs/).

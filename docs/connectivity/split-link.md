@@ -315,12 +315,12 @@ but did not exchange key presses <span class="tag doc">DOC</span> (archived vend
 ## Sources
 
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs, NayaFlow 1.25.1 on macOS, keyboard 3.41.0); raw data decoded by us, never copied.
-[^fp-mismatch]: nayaHistory, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/traviswye/nayaHistory/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
+[^fp-mismatch]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`bluetooth.py`, the status parser).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): Pairing and ClearBLEDevices step names, refusals, status JSON names.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings (static reading): connection warnings, pairing preconditions.
-[^openflow]: OpenFlow (link at release): its pairing-repair module, which ships disabled.
-[^nh-cl]: nayaHistory, vendor release notes, [`changelogs/`](https://github.com/traviswye/nayaHistory/tree/79eeefb/changelogs) (v0.1.0, v1.17.2, v1.19.1, v1.25.0).
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its pairing-repair module, which ships disabled.
+[^nh-cl]: create-legacy-firmware, vendor release notes, [`changelogs/`](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v0.1.0, v1.17.2, v1.19.1, v1.25.0).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.17.1, 1.18.0, 1.22.0, 1.24.0).
 [^ks-camp]: Kickstarter campaign page, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023), "Connectivity".
 [^ks-10]: Kickstarter update 10, [2024-01-06](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4000229).
