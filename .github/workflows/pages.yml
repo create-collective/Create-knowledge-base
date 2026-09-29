@@ -1,11 +1,11 @@
 name: Publish site
 
-# Builds the MkDocs site and deploys it to GitHub Pages.
-# Manual only for now: switch on "push" to main when the site goes public.
+# Builds the MkDocs site and deploys it to GitHub Pages on every push to main
+# (public since 2026-09-29), or by hand.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-  # push:
-  #   branches: [main]
 
 permissions:
   contents: read
