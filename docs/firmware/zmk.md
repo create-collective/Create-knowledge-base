@@ -21,11 +21,10 @@ any method to read, bypass or extract keys or to defeat a debug lock.
 
 As of 2026-09-23 nobody we know of has ported ZMK, or any other open firmware, to the
 Create: a GitHub search that day found no keyboard firmware port (createflow-dongle replaces only the
-dongle's firmware) <span class="tag inferred">INFERRED</span>. Also reported by naya-create-kb[^kb-zmk]. naya-create-kb presents
-its wire-protocol pages as a complete behavior reference for a porter <span class="tag reported">REPORTED</span>[^kb-zmk]; they lack the
-firmware update path (SMP `image upload` over serial recovery), which they place on the configuration
-protocol instead. Ours are the [wire protocol](../protocol/transport.md) pages and
-[Flashing](flashing.md).
+dongle's firmware) <span class="tag inferred">INFERRED</span>. The firmware update path is SMP `image upload` over serial recovery, not the configuration
+protocol <span class="tag measured">MEASURED</span> ([Flashing](flashing.md)). This differs from naya-create-kb, which places it on the
+configuration protocol <span class="tag reported">REPORTED</span>[^kb-zmk]. For a porter, the rest of the stock firmware's behavior is on
+our [wire protocol](../protocol/transport.md) pages.
 
 ## Evidence the stock firmware is a ZMK fork
 

@@ -200,8 +200,8 @@ report 3.
 Whether the keyboard acts on the host's lock-key LED output report is not known.
 
 <!--BT-19-->The `0x1234` / `0x5678` pipe: reads return one byte `65` ("e"), writes are accepted, and
-nothing is ever notified, bonded or unbonded (naya-create-kb and createflow-dongle)
-<span class="tag reported">REPORTED</span>[^kb-ble][^cfd]. Writing the keyboard's USB configuration
+nothing is ever notified (createflow-dongle)
+<span class="tag reported">REPORTED</span>[^cfd]. Writing the keyboard's USB configuration
 frames to it (GET FW VERSION, addressed to either half) gets no reply, and there is no DFU, SMP or UART
 service <span class="tag reported">REPORTED</span>[^cfd]. So configuration and firmware updates are
 USB-only on 3.41.0 <span class="tag inferred">INFERRED</span>; "no reply to a configuration frame, no

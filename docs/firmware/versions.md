@@ -257,8 +257,6 @@ Boards in circulation run more than 3.41.0. We have measured 3.28.7 (with module
 board last updated from the beta channel before 2026-07-17 may run a beta-only version <span class="tag inferred">INFERRED</span>. One board
 arrived with its left half on 3.41.0 and its right half on 3.35.4 in **both** slots: the vendor
 update had never reached the right half (owner's board, slot hashes read 2026-09-20) <span class="tag measured">MEASURED</span>.
-naya-create-kb's bench boards run 3.41.0 <span class="tag reported">REPORTED</span>[^kb-versions] (raw data checked: every published capture
-of its maintainer shows `fe/1002` `00 00 03 29 00` from both halves).
 
 3.30.1 is in no public release on either channel: the beta carve confirms that no
 installer carries it <span class="tag static">STATIC</span>[^fhb]. A factory build is the likelier explanation <span class="tag inferred">INFERRED</span>: the beta 1.16.0 note
@@ -374,7 +372,7 @@ Measured on the owner's boards (3.28.7 on 2026-09-19; 3.35.4 and 3.41.0 between 
 
 3.41.0 (NayaFlow 1.25.0, 2026-07-17, re-shipped in 1.25.1 on 2026-07-21) is the last
 published keyboard firmware, and 2.3.3 the last module firmware <span class="tag doc">DOC</span>[^cl][^beta][^fhb].
-naya-create-kb also calls 3.41.0 current as of the last release <span class="tag reported">REPORTED</span>[^kb-versions]. The vendor's
+The vendor's
 status is stated once, on the [home page](../index.md).
 
 ## Where this differs from naya-create-kb
@@ -387,7 +385,6 @@ status is stated once, on the [home page](../index.md).
 | The images shrink at 1.21.0 | They shrink at 3.31.1 (1.17.2); 3.35.4 in 1.21.0 is larger again |
 | 328 880 pairs with `fwr_64`, 226 000 with `fwl_64`; "dual-slot entries"; `_64` introduced in 1.25.1 as dual-bank slots | `kb_fwl_64.bin` is the left image (328 880), `kb_fwr_64.bin` the right (226 000); `_64` is flash generation B, first in 1.25.0 |
 | Module firmware is present only up to 1.6.10; releases from 1.15 on carry none; 0.1.1 ships one 175 136-byte module blob | Module firmware ships in every stable release from 1.11.0 (`FlashMemory.bin`, 2.1.1 to 2.3.3); the 175 136-byte image is `d_fw.bin` |
-| "v1.3.11 is a renamed release" | We see nothing renamed: 1.3.11 ships the same images as 1.3.8 to 1.6.10; what the phrase means is unclear <span class="tag reported">REPORTED</span>[^kb-versions] |
 
 ## Open questions
 

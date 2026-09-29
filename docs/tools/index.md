@@ -190,8 +190,8 @@ published toolkit also has `naya-brt-wrap-spike.py`, `naya-led-batch-spike.py` a
 the `0x0b` hypothesis its table still names, and the T10 spike is recorded as a success on its keymap
 page; `extract_fw.py`'s images are Qt resources in the native NayaCore binary, which on Windows sat
 inside `app.asar` only up to 1.17.3 and on macOS has been outside it since at least 1.11.11. Its raw
-captures are six serial logs (five under `research/captures/`, one at `research/cdc-capture4.log`,
-1-3 MB each), three of them with writes <span class="tag reported">REPORTED</span> (raw data checked
+captures are six published serial logs of
+1-3 MB each, three of them with writes <span class="tag reported">REPORTED</span> (raw data checked
 by us, 2026-09-23)[^kb-toolkit].
 
 ## The vendor's release repositories

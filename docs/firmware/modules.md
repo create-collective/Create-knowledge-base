@@ -224,10 +224,10 @@ first lines survive in the Wayback Machine's index <span class="tag doc">DOC</sp
 
 ## Tested and untested
 
-A module firmware update has not been run on hardware by us; OpenFlow has it wired and
-switched off (status 2026-09-23) <span class="tag measured">MEASURED</span>. naya-create-kb also reports that `update_module_fw` was never
-exercised live <span class="tag reported">REPORTED</span>[^kb-versions] (raw data checked: its maintainer's published tools and captures
-name the module-update commands but never send them). Tested: the recovery key (3.28.7 with modules on 2.1.2), the
+A module firmware update has been run on hardware by us: NayaFlow 1.25.1 updated a Touch from 2.1.2
+to 2.3.3 in the left bay of a half on 3.41.0, captured end to end (2026-09-23), and OpenFlow's own
+module update, now part of the app, has flashed modules on the owner's boards since, including a
+Track downgrade that read back as a correct Track <span class="tag measured">MEASURED</span>[^fp-modules]. Tested: the recovery key (3.28.7 with modules on 2.1.2), the
 version reads (`de/100a`, `de/1008`).
 
 ## Where this differs from naya-create-kb
@@ -270,4 +270,4 @@ version reads (`de/100a`, `de/1008`).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`: module types, `fe/1003`, `de/1006`).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2), comments by the maintainer (text commands silent on 3.41.0; a module at 0 to 1 % reporting `0xF0`).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (module version replies).
-[^kb-versions]: naya-create-kb, [firmware/versions](https://nemezzizz.github.io/naya-create-kb/firmware/versions/).
+[^fp-modules]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Module firmware update, captured from NayaFlow (2026-09-23)"](https://github.com/create-collective/create-legacy-firmware/blob/db9a07c/FLASHING-PROCEDURE.md#module-firmware-update-captured-from-nayaflow-2026-09-23).

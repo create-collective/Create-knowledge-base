@@ -428,8 +428,7 @@ def set_timeouts(link: Link, idle_ms: int, sleep_ms: int, third_ms: int = 30000)
   (0, 1, 2, 3 and 200 behaved the same on `ed/1008`); a one-byte payload is zero-filled (the value
   becomes 0); and every ED frame is acked whether or not it applied
   <span class="tag measured">MEASURED</span> (owner's board, left half, 3.41.0, 2026-09-09/10).
-  naya-create-kb uses `ff` as "all halves" <span class="tag reported">REPORTED</span>[^kb-python];
-  whether `ff` reaches the other half is untested by us.
+  Whether a target such as `ff` reaches the other half is untested by us.
 - `ed/1013` sets a persistent maximum brightness (1-100); `ed/1012` is scan-mode PWM (0/1);
   `ed/1014` is the LED action override (0 until restart, 1 until the next layer change)
   <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-13/16); the ceiling was
@@ -468,7 +467,7 @@ print(fw_version(link.send(CAT_SYSTEM, 0x1002, dest=RIGHT))) # right half, throu
 NayaCore sends `30/10ca` with params `00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`): in our
 disassembly of NayaCore 6.11.0 (macOS and Windows builds), `_remapClearFlash` passes one byte `00`,
 built the same way as `30/1001`'s index byte <span class="tag static">STATIC</span>[^nc-mac].
-naya-create-kb's `01` read the byte array's size argument as its value; its own tool sends `01`
+This differs from naya-create-kb, which read the byte array's size argument as its value, so its own tool sends `01`
 (`aa 00 50 00 30 03 10 ca 01 db 04`) to the left half, gets status `00`, and afterwards `30/1001`
 and `30/1003` answer status `16` (nothing stored) until a profile is written again
 <span class="tag reported">REPORTED</span>[^kb-python]. Status `16` as "nothing stored" is ours

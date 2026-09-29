@@ -369,9 +369,6 @@ naya-create-kb checks the exit with `fa/1001`. That command is the read-only SPI
 self-test, not "device info"; an answer does show that the application is up. OpenFlow confirms with
 `fe/1002` (firmware version) <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> ([Flash layout](../storage/flash-layout.md#the-spi-flash-self-test)).
 
-naya-create-kb's bootloader page names tools from its maintainer's own repository: a
-canary-and-reset script, SMP probes, and a node trap for capturing the cold-boot log <span class="tag reported">REPORTED</span>[^kb-bootloader].
-
 ## Where this differs from naya-create-kb
 
 | naya-create-kb says (bootloader page) | What the evidence shows |

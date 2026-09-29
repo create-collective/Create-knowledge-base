@@ -78,8 +78,8 @@ and passes it to `_constructRemapMessages` with `0x10ca`; that function queues r
 `30/1001` read. The only other callers of `_constructRemapMessages` are `1001` to `1004`, `1009` and
 `100a` to `100e` <span class="tag static">STATIC</span>.
 
-**What naya-create-kb sent.** naya-create-kb's `01` read the byte array's size argument as its
-value; its own tool sends `01` (`aa 00 50 00 30 03 10 ca 01 db 04`: in this site's convention a flag
+**What naya-create-kb sent.** This differs from naya-create-kb, which read the byte array's size argument as its
+value, so its own tool sends `01` (`aa 00 50 00 30 03 10 ca 01 db 04`: in this site's convention a flag
 byte `01` and no data) <span class="tag reported">REPORTED</span>[^kb-fr]. Whether `00 00` and `01`
 behave the same stays a donor-board test <span class="tag open">OPEN</span>
 ([open question](../open-questions.md#oq-f16)). (An earlier inference of ours, `00 01`, was wrong
@@ -180,8 +180,7 @@ creating `00 00 03 03 00 10 <uuid16>` added layer 3 <span class="tag measured">M
 
 It would replace the stock-flash step and avoid its reverted records and verify error.
 
-After a format, set the LED settings again. The ceiling (`ed/1013`) has no read command, so
-re-send the value you want (100) <span class="tag reported">REPORTED</span>[^kb-fr]. Never "probe" an ED setting with an empty payload: it is
+After a format, set the LED settings again. The ceiling (`ed/1013`) has no read command, so re-send the value you want (100) <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-13 and 2026-09-16). Never "probe" an ED setting with an empty payload: it is
 zero-filled, so it writes 0 <span class="tag measured">MEASURED</span> ([Flash layout](flash-layout.md#persistent-settings)).
 
 The third party's closing steps after a successful format: re-read the device, restore the

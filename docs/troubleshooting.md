@@ -136,8 +136,8 @@ report: NayaFlow's "Clear all keymap data" sends `clear_data`, which dispatches 
 then `30/10ca`, the command it says does clear the state <span class="tag static">STATIC</span>[^nc].
 NayaCore sends `30/10ca` with params `00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`): in our
 disassembly of NayaCore 6.11.0 (macOS and Windows builds), `_remapClearFlash` passes one byte `00`
-<span class="tag static">STATIC</span>[^nc]. naya-create-kb's `01` read the byte array's size
-argument as its value; its own tool sends `01` <span class="tag reported">REPORTED</span>. Whether
+<span class="tag static">STATIC</span>[^nc]. This differs from naya-create-kb, which read the byte array's size
+argument as its value <span class="tag static">STATIC</span>[^nc], so its own tool sends `01` <span class="tag reported">REPORTED</span>[^kb-troubleshooting]. Whether
 `00 00` and `01` behave the same stays a donor-board test <span class="tag open">OPEN</span>
 ([Factory reset](storage/factory-reset.md#the-command-and-its-parameters)).
 
@@ -315,7 +315,7 @@ pages link here.
 | a hold-tap flavor of 4 or more | every key stops until the board is unplugged (a power cycle) | 3.41.0 | <span class="tag measured">MEASURED</span> |
 | a `&tog 0` binding | strands the board on the upper layer until a power cycle | 3.41.0 | <span class="tag measured">MEASURED</span> |
 | any configuration write of three frames | wedges the half until it is unplugged | 3.28.7 only | <span class="tag measured">MEASURED</span> |
-| "oversized" single `30/100e` frames | naya-create-kb: wedges the parser; frames up to 253 bytes were accepted on 3.41.0 | 3.41.0 | <span class="tag reported">REPORTED</span> <span class="tag measured">MEASURED</span> (253 bytes) |
+| `30/100e` writes of 241 or 41 bytes | the nayactl PR #6 author: they wedged the parser until a power cycle; frames up to 253 bytes were accepted on 3.41.0 | 3.41.0 | <span class="tag reported">REPORTED</span>[^nx-pr6] <span class="tag measured">MEASURED</span> (253 bytes) |
 | wireless output with no host, on battery | freezes the board until a power cycle | 3.41.0 | <span class="tag measured">MEASURED</span> |
 | naya-create-kb's LED ladder (RESUME and RGB phases) sent to the right half's port (`dst 0x51`) | once left the right half and its module dark; a single `ed/1013` sent there was answered and parked nothing (owner's board, 3.35.4 and 3.41.0) | 3.41.0 | <span class="tag reported">REPORTED</span> (ladder) <span class="tag measured">MEASURED</span> (single write) |
 | SMP `image upload` to `image` 0 or 1 | writes the primary slot directly: the first chunk erases the running image, with no swap to fall back on | all | <span class="tag inferred">INFERRED</span> |
@@ -354,3 +354,4 @@ pages link here.
 [^man-modules]: Naya Track and Tune User Manuals v1.1.0, p7; see [Manuals](product/manuals.md).
 [^cl]: create-legacy-firmware, [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md) (vendor release notes).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
+[^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6), description by its author.

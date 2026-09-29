@@ -194,7 +194,7 @@ parser only in 1.25.1.
   `_remapClearFlash`, which builds the parameter list `[QByteArray(1, 0x00), QByteArray()]` and calls
   `_constructRemapMessages(0x10ca, ...)`, the same construction as `30/1001` (`_remapReadLayerList`),
   whose frame our captures show as params `00 00`; `_constructRemapMessages` has no
-  subcommand-specific branch. naya-create-kb's `01` read the byte array's size argument as its value;
+  subcommand-specific branch. This differs from naya-create-kb, which read the byte array's size argument as its value, so
   its own tool sends `01` (`aa 00 50 00 30 03 10 ca 01 db 04`)
   <span class="tag reported">REPORTED</span>[^kb-functions]. Whether `00 00` and `01` behave the same
   stays a donor-board test <span class="tag open">OPEN</span>

@@ -257,7 +257,7 @@ More per-platform notes are on [Platforms](../tools/platforms.md).
 | A half seems gone, then returns on a new COM number | unclean detach left a ghost entry | rescan ports | <span class="tag measured">MEASURED</span> |
 | Two ports per half, one silent (3.28.7) | two CDC interfaces, one answers | try each interface of the same serial | <span class="tag measured">MEASURED</span> 3.28.7 |
 | A half sits at `0x006F` / `0x00D3` | parked in MCUboot (normal if it lasts only 1-2 s) | SMP `os reset` on the data port, or the switch | <span class="tag measured">MEASURED</span> |
-| Permission denied on `/dev/ttyACM*` (Linux) | `dialout` / `uucp` ownership | udev rule above | <span class="tag reported">REPORTED</span> |
+| Permission denied on `/dev/ttyACM*` (Linux) | `dialout` / `uucp` ownership | udev rule above | <span class="tag reported">REPORTED</span> (nayactl README[^nx]); rule <span class="tag static">STATIC</span>[^openflow] |
 | Nothing enumerates through a hub | hub gave power only (one setup) | use a motherboard port | <span class="tag measured">MEASURED</span> once |
 
 ## Cabling guidance from the vendor

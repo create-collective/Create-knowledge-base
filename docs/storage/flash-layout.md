@@ -186,8 +186,7 @@ may be overwritten. Its ZMQ form is `repair_flash` with `{"target_devices":[],"t
 <span class="tag static">STATIC</span> <span class="tag doc">DOC</span>[^nc]. naya-create-kb also says it formats only after a failed self-test.
 
 If the failing partition is the secondary slot or the module store, the repair's format
-would lose a staged image or the module bundle <span class="tag inferred">INFERRED</span>. On a healthy board it changes nothing:
-naya-create-kb logged a "success" after 1 318 ms with no effect <span class="tag reported">REPORTED</span>[^kb-littlefs].
+would lose a staged image or the module bundle <span class="tag inferred">INFERRED</span>. On a healthy board it formats nothing and reports that it completed without reformatting <span class="tag static">STATIC</span>[^nc].
 
 !!! warning "The repair runs without a confirmation dialog"
     Safe on a healthy flash, destructive on a failing one. NayaFlow's other Danger Zone actions
@@ -254,4 +253,3 @@ NayaFlow keeps its own data in an SQLite database, `user-data.db`, with automati
 [^cl-250]: create-legacy-firmware, [`CHANGELOG.md` L250 and L263](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L250-L263) (NayaFlow 1.19.1, NayaCore 6.4.0).
 [^cl-284]: create-legacy-firmware, [`CHANGELOG.md` L81 and L284](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L284) (periodic and manual backups).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases), v1.18.0.
-[^kb-littlefs]: naya-create-kb, [storage/littlefs](https://nemezzizz.github.io/naya-create-kb/storage/littlefs/).

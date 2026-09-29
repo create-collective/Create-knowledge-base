@@ -201,8 +201,9 @@ no keymap and reports no module-configuration slots; one layer-list write to the
 lighting on both halves <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01 to 2026-09-20). The right half answers
 the status families on its own port (system, Bluetooth, module and dock reads), but NayaCore never
 sends it a keymap-family frame, so the left half is the only way in for layout changes <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>
-(3.41.0, 2026-09-11)[^nc] (also reported by naya-create-kb). That the right half would never answer
-`30/1001` if asked is stated by naya-create-kb but untested <span class="tag reported">REPORTED</span>[^kb-device]. See
+(3.41.0, 2026-09-11)[^nc]. A keymap-family read sent to the right half goes unanswered: `30/1009` got no reply
+(3.41.0, 2026-09-01) <span class="tag measured">MEASURED</span>, and NayaCore's per-command table marks every `30` command
+"Unsupported" on the right <span class="tag static">STATIC</span> ([Firmware differences](../protocol/firmware-differences.md#minimum-firmware-per-command)); `30/1001` itself has not been sent there. See
 [Keymap](../protocol/keymap.md).
 
 ## Models and identifiers

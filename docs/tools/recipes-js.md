@@ -331,8 +331,7 @@ with the continue flag, and the `ed/1013` guard (run 2026-09-23 with Node 25.8, 
 
 naya-create-kb's JavaScript page describes calls of its own client (`ses.cmd`, `writeKey`, `writeLed`,
 `readModuleConfig`, `getTimeouts`, `setTimeouts`; `cmd()` returns the parsed frame)
-<span class="tag reported">REPORTED</span>[^kb-js]. Its sketches were adapted from its web client (the page cites `src/lib/naya.ts`; the file sits
-at `client/web/src/lib/naya.ts`).
+<span class="tag reported">REPORTED</span>[^kb-js]. Its sketches were adapted from its own web client.
 
 ## Open questions
 

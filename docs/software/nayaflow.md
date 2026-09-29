@@ -246,13 +246,11 @@ NayaCore accepts exactly **16 events** (enum 1-16; 0 is `invalid_command_event`)
   2026-09-01).
 - **Steady poll every 6 s**: left `be/100c`, `de/1001`, `de/1008`, `de/100b`, `fe/1006`; right the same
   without `be/100c`. The keyboard never pushes battery values; the 6 s tick is NayaCore's handshake
-  frequency <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01). A
-  third-party macOS capture shows the right-port polls as `fa/1001`, `fe/1001`, `fe/1002`, `fe/1006`,
-  `be/1002`, `be/1008`, `be/100f`, `de/1001`, `de/1008`, `de/100b`
-  <span class="tag reported">REPORTED</span> (raw data checked by us, 2026-09-23)[^kb-nayaflow].
+  frequency <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01).
 - While NayaFlow runs, NayaCore holds every Create port: on Windows a second program gets "Access is
-  denied" <span class="tag measured">MEASURED</span>; naya-create-kb reports "Resource busy" on macOS
-  <span class="tag reported">REPORTED</span>[^kb-toolkit]. Quit NayaFlow (all three programs) before
+  denied" <span class="tag measured">MEASURED</span>; on macOS it gets "Resource busy" (`EBUSY`), because NayaCore opens its ports
+  through Qt's serial-port module, which opens them exclusively <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span>
+  (see [Troubleshooting](../troubleshooting.md#host-and-port-problems)). Quit NayaFlow (all three programs) before
   using another tool.
 - **Port sorting.** Per half NayaCore keeps a Broker port, a ProtocolCDC port (binary protocol), a
   SystemCDC port (text protocol) and two MCUboot ports; it sorts ports with a broker that sends
@@ -392,9 +390,7 @@ rounded up to 4, and each entry's offset counts from there. `npx @electron/asar 
 
 Useful trees in the 1.25.1 asar: `dist/main/index.js`, `dist/renderer/assets/` (renderer bundle
 `index-mihUmo_8.js`), `assets/icons/action/` with 860 action icons. The firmware is not in the asar:
-it is embedded as Qt resources in the NayaCore binary <span class="tag static">STATIC</span>; also
-reported by naya-create-kb, whose author reused the icon set for a web client
-<span class="tag reported">REPORTED</span>[^kb-nayaflow]. Carving the images is covered on
+it is embedded as Qt resources in the NayaCore binary <span class="tag static">STATIC</span>. Carving the images is covered on
 [Firmware images](../firmware/images.md).
 
 ## Open questions
@@ -419,4 +415,3 @@ reported by naya-create-kb, whose author reused the icon set for a web client
 [^nx]: nayactl, [`constants.py`](https://github.com/Qonfused/nayactl) (shared-memory names and topics).
 [^kb-nayaflow]: naya-create-kb, [software/nayaflow](https://nemezzizz.github.io/naya-create-kb/software/nayaflow/).
 [^kb-rpc]: naya-create-kb, [software/rpc-zmq](https://nemezzizz.github.io/naya-create-kb/software/rpc-zmq/).
-[^kb-toolkit]: naya-create-kb, [toolkit](https://nemezzizz.github.io/naya-create-kb/toolkit/).

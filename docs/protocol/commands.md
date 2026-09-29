@@ -145,7 +145,7 @@ reboot. `fe/100a` is not a commit (see [Settings and timing](settings.md)).
 | <!--CM-35-->`fe/1006` | GET KB BATTERY LEVEL | `00` | `00 <mV hi> <mV lo>`, the half's own cell, e.g. `00 0f f5` = 4085 mV | <span class="tag measured">MEASURED</span> 3.41.0 |
 | <!--CM-36-->`fe/1007` | SET RELEASE MODE | `00 00`, `00 01` accepted; `00 ff` refused (`ea`) | `00` | <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-02 <span class="tag static">STATIC</span> |
 | <!--CM-37-->`fe/1008` | TOGGLE KEYSCAN MODE | one data byte; nayactl sends `00 01` on, `00 00` off | `00` | <span class="tag static">STATIC</span>[^nx] <span class="tag measured">MEASURED</span> 2026-09-20 |
-| <!--CM-38-->`fe/1009` | KEYSCAN EVENT (device to host) | none | `00 <row> <col> <state>` | <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span> <span class="tag reported">REPORTED</span> (polarity) |
+| <!--CM-38-->`fe/1009` | KEYSCAN EVENT (device to host) | none | `00 <row> <col> <state>` | <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span> <span class="tag reported">REPORTED</span> (polarity, as nayactl decodes it)[^nx] |
 | <!--CM-39-->`fe/100a` | SET ACTIVITY TIMEOUTS | `00` + three u32 little-endian milliseconds | `00` | <span class="tag measured">MEASURED</span> 3.41.0 <span class="tag static">STATIC</span> |
 | `fe/100b` | GET ACTIVITY TIMEOUTS | `00` | `00` + the same 12 bytes | <span class="tag measured">MEASURED</span> 3.41.0 |
 

@@ -49,7 +49,7 @@ the frame checksum, which the byte before `04` always is (see the framing trap o
 | Dock | Reply | Checksum | Evidence |
 |---|---|---|---|
 | left, Track | `00 01 20` | `30` | <span class="tag measured">MEASURED</span> 3.41.0, 2026-09 |
-| left, Touch | `00 01 10` | `00` | <span class="tag reported">REPORTED</span> (raw data checked)[^kb-modules][^kb-raw] |
+| left, Touch | `00 01 10` | `00` | <span class="tag reported">REPORTED</span> (address `10`, nayactl)[^nx-pr2] |
 | left, Tune | `00 01 40` | `50` | <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 |
 | left, nothing booted | `00 00 f0` | `e1` | <span class="tag measured">MEASURED</span> 3.41.0, 2026-09 |
 | right, Touch | `00 01 11` | `01` | <span class="tag measured">MEASURED</span> 3.41.0, 2026-09 |

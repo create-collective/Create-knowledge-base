@@ -204,9 +204,7 @@ layer-list rewrite or a power cycle clears it <span class="tag measured">MEASURE
    Module LEDs are outside the ceiling, per the same author <span class="tag reported">REPORTED</span>.
 3. Rewrite the layer list as in R5; it clears runtime LED effects.
 
-**naya-create-kb's ladder.** Its explanation: the live LED state is wedged in the
-persistent store, usually by a zeroed ceiling or scan mode, while the module LEDs, which the ceiling
-does not cover, stay lit (the tell); ED writes then acknowledge without applying <span class="tag reported">REPORTED</span>[^kb-recovery].
+**naya-create-kb's ladder.** Its explanation is the one the nayactl PR #6 author gives: a stored ceiling of 0 keeps the keys dark while every LED command is still acknowledged, and the module LEDs, which the ceiling does not cover, stay lit (the tell) <span class="tag reported">REPORTED</span>[^nx-pr6]. naya-create-kb adds a zeroed scan mode as a second cause <span class="tag reported">REPORTED</span>[^kb-recovery].
 Its steps, in order (the ED values as its published scripts send them):
 
 !!! danger "Safety MEDIUM to HIGH (the third step wipes the keymap). TESTED (third party), 3.41.0, macOS; UNTESTED by us."
@@ -268,8 +266,7 @@ receive. Unplug and replug the half: no damage (it came back at 4.21 V). From th
 writes on record boundaries into writes of at most two frames, each starting `00 <layer>` again (at
 most 482 record bytes per write) <span class="tag measured">MEASURED</span>. 3.41.0 takes NayaFlow's own three-frame writes, and single
 `30/100e` frames of up to 253 bytes were accepted on 3.41.0 (owner's boards, 2026-09-16 and
-2026-09-21) <span class="tag measured">MEASURED</span>. naya-create-kb's warning about "oversized" single `30/100e` frames is a different
-limit, not defined by size <span class="tag reported">REPORTED</span>[^kb-recovery].
+2026-09-21) <span class="tag measured">MEASURED</span>. The nayactl PR #6 author reports that `30/100e` writes of 241 and of 41 bytes wedged the parser until a power cycle (3.41.0) <span class="tag reported">REPORTED</span>[^nx-pr6]; since 253-byte frames were accepted, that is a different limit, not defined by size <span class="tag inferred">INFERRED</span>.
 
 ## R9 Module dead
 
@@ -366,7 +363,7 @@ the only real reset besides `ee/10ce`; the switch alone is already a reset.
 | Action | What it does | Evidence |
 |---|---|---|
 | `os reset` (SMP, data port) | leaves the bootloader; about 8 s to the application | <span class="tag measured">MEASURED</span> |
-| `ee/10ce` NORMAL_RESET | reboots the half; its port drops at once | <span class="tag measured">MEASURED</span> <span class="tag reported">REPORTED</span> |
+| `ee/10ce` NORMAL_RESET | reboots the half; its port drops at once | <span class="tag measured">MEASURED</span> |
 | `ee/10ae` MCU_BOOT_RESET | parks the half in its bootloader until `os reset` | <span class="tag measured">MEASURED</span> |
 | `ee/10be` DFU_RESET | unknown; never observed | <span class="tag static">STATIC</span> |
 | Unplug and replug USB (battery half) | reboots through the bootloader (1 to 1.7 s) and reboots the other half at re-link | <span class="tag measured">MEASURED</span> |

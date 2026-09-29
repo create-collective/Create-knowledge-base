@@ -148,10 +148,10 @@ NayaCore's table also names TUNE_MODE_L / TUNE_MODE_R (150 / 151), WINDOWS_OS (2
 SCROLL_DIRECTION_L / _R (300 / 301) and MODULE_CHARGING (400); none has been seen on a board.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-08; 3.28.7, 2026-09-19 +
 <span class="tag static">STATIC</span>[^nc]. naya-create-kb lists the same eight values but states
-that no genuine wire sample exists; the stock record above is one[^kb-keymap]. It also reports that
-the palette's macOS entry is flashed as a plain LGUI key press rather than a `06` record
-<span class="tag reported">REPORTED</span>[^kb-keymap]; a captured NayaFlow flash of that palette
-key would settle it.
+that no genuine wire sample exists; the stock record above is one[^kb-keymap]. NayaFlow's key palette offers no MAC_OS action to flash: its only `naya`
+action is MODULE_FORCE_CHARGING, MAC_OS appears only as an icon (the MacOS tab and the OS badges),
+and its macOS-labelled entries are ordinary keys and chords, such as Meta (`LGUI`, labelled Command
+on macOS) and `LGUI + C` <span class="tag static">STATIC</span>[^nf].
 
 <!--KM-21-->**`07` NONE** (`&none`) has no param. Every unbound position reads back as `07 00`; a
 board read returns about 220 NONE records. naya-create-kb calls it DISABLE[^kb-keymap].
@@ -293,14 +293,16 @@ that key. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 `03` record with no second-bank record; three are a `10` primary plus a 10-byte second-bank record
 (its "mini shadow", `74 10 07 c8 00 01 05 00 07 00`); four are a `10` primary plus a full 27-byte
 second-bank record[^kb-keymap]. Our USB capture of a four-behavior key shows full 27-byte records in
-both banks <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-03. For three behaviors, the
-naya-create-kb maintainer's device reads of 2026-09-17 hold the short form at the second-bank
-position: `74 10 07 c8 00 01 05 00 07 00` (term 200, then `01`, then a key press) behind a
-`22 10 18 ...` primary, and the record stays when the key drops back to a plain press
-<span class="tag reported">REPORTED</span> (raw data checked[^kb-raw]). The same shape is what
+both banks <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-03. For three behaviors, the second-bank position holds the
+double tap alone inside the `10` wrapper, `[pp+52] 10 07 c8 00 01 <key press>` (term 200, then the
+record type `01` and its four-byte param), behind a `[pp] 10 18 ...` primary that wraps the tap and
+hold pair. NayaCore writes a bank that holds one behavior as that record alone, wraps both banks when
+the key has a double tap or tap and hold, and writes no second-bank record for a key without them, so
+a stale second-bank record stays when the key drops back to a plain press
+<span class="tag static">STATIC</span>[^nc-mac]. Keys written in these forms typed as set and read
+back unchanged <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-26. The same shape is what
 NayaCore prints for a key in its own logs (`wire: 351007c800012a000700`)
-<span class="tag static">STATIC</span>[^nc]. Which writer produced the stored record, NayaFlow or the
-maintainer's tool, the dump does not say. The same page says NayaFlow's editor enforces the order
+<span class="tag static">STATIC</span>[^nc]. The same page says NayaFlow's editor enforces the order
 tap, then hold, then double tap, then tap and hold; the renderer confirms it: hold depends on tap,
 double tap on tap and hold, and tap and hold on all three <span class="tag static">STATIC</span>[^nf];
 also reported by naya-create-kb.
@@ -535,3 +537,4 @@ writing anything back.
 [^ks-19]: Kickstarter update 19, [2025-02-11](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4312089).
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).
 [^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases).
+[^nc-mac]: NayaFlow 1.25.1 for macOS (x86_64), NayaCore 6.11.0: `Key::serializeBindingData`, `Key::serializeBindingPairData`, `Key::wrapDblTapRecord` and the record reader, our disassembly (2026-09-26); see [Disassembly](../software/disassembly.md).

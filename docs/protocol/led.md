@@ -175,10 +175,7 @@ agrees in substance (a target byte, `ff` for all, value ignored, short sends zer
 | `ed/1004` | `00` | target 0 | off |
 
 Reading the first params byte as the target would give brightness 100 for `00 64`, which the board
-did not show. naya-create-kb and its tools write `ed` params as `[target, value]` with no leading flag
-byte, for example `ed/1013` as `[ff, 64]`; in this site's convention the same logical command (target
-`ff`, value 100) is `00 ff 64`[^kb-led] <span class="tag reported">REPORTED</span> (raw data checked:
-their tools send the params verbatim)[^kb-raw]. How the device treats a frame without the flag byte is
+did not show. How the device treats a frame without the flag byte is
 not measured by us.
 
 <!--LD-22-->A consequence for nayactl's command line on 3.41.0: `led brightness N` and `led effect N`
@@ -326,8 +323,8 @@ it on 2026-09-10 <span class="tag measured">MEASURED</span> 3.41.0 and 3.28.7, 2
 Whether a Track follows one index or a band is open.
 
 <!--LD-63-->Module LEDs are driven outside the key array's gate: with the key ceiling at 0 the modules
-stay lit, according to naya-create-kb and the author of nayactl PR #6
-<span class="tag reported">REPORTED</span>[^kb-led][^nx-pr6]. We have no measurement of our own of
+stay lit, according to the author of nayactl PR #6
+<span class="tag reported">REPORTED</span>[^nx-pr6]. We have no measurement of our own of
 lit modules beside a zero ceiling, since OpenFlow refuses to send 0.
 
 <!--LD-64-->A "module green blink" (three red breaths, a green blink, repeating, with a Touch docked on
