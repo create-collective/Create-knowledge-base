@@ -152,14 +152,6 @@ Full hashes are in create-legacy-firmware's per-release `manifest.json` files.
 The oldest archived images are those of 0.0.1 and 0.0.2 (`fwl.bin` 285 392, `fwr.bin`
 218 256), from the pre-production era, not those of 0.1.1 <span class="tag static">STATIC</span>[^fh].
 
-naya-create-kb's six size rows are correct, and we confirmed them against the archive:
-0.1.1 313 392 / 235 296; 1.3.11 352 256 / 239 184 (the same images ship from 1.3.8 to 1.6.10);
-1.11.11 358 496 / 243 840; 1.15.1 361 632 / 244 336; 1.21.0 312 272 / 220 688; 1.25.1 328 880 /
-226 000 <span class="tag static">STATIC</span>[^fh][^kb-versions]. Its table comes from its maintainer's own carve of six
-releases (15 images). Those 15 images are byte-identical to the corresponding create-legacy-firmware images: the
-MD5 prefixes in the maintainer's published file names match the MD5 of the MCUboot image part of ours
-(checked 2026-09-23) <span class="tag static">STATIC</span>. Also reported by naya-create-kb.
-
 The images shrank at 3.31.1 (NayaFlow 1.17.2): left 361 632 to 304 448, right 244 336 to
 218 064. 3.35.4 (1.19.1 to 1.21.0) is larger again, 312 272 / 220 688 <span class="tag static">STATIC</span>[^fh]. 3.31.1 is also the
 firmware that retired the engineering text channel (SystemCDC); a link between the two is a guess
@@ -375,17 +367,6 @@ published keyboard firmware, and 2.3.3 the last module firmware <span class="tag
 The vendor's
 status is stated once, on the [home page](../index.md).
 
-## Where this differs from naya-create-kb
-
-| naya-create-kb says (versions page) | What the evidence shows |
-|---|---|
-| The halves are nRF52811 | nRF52840 ([ZMK](zmk.md#the-hardware-a-port-targets)) |
-| 0.1.1 is the oldest archived firmware | 0.0.1 and 0.0.2 are older (285 392 / 218 256) |
-| The desktop core moves out of the asar at 1.15.1 | It moves out at 1.19.1 |
-| The images shrink at 1.21.0 | They shrink at 3.31.1 (1.17.2); 3.35.4 in 1.21.0 is larger again |
-| 328 880 pairs with `fwr_64`, 226 000 with `fwl_64`; "dual-slot entries"; `_64` introduced in 1.25.1 as dual-bank slots | `kb_fwl_64.bin` is the left image (328 880), `kb_fwr_64.bin` the right (226 000); `_64` is flash generation B, first in 1.25.0 |
-| Module firmware is present only up to 1.6.10; releases from 1.15 on carry none; 0.1.1 ships one 175 136-byte module blob | Module firmware ships in every stable release from 1.11.0 (`FlashMemory.bin`, 2.1.1 to 2.3.3); the 175 136-byte image is `d_fw.bin` |
-
 ## Open questions
 
 - <span class="tag open">OPEN</span> The firmware versions of the images in 0.0.1 to 1.11.11, and the module version of the 1.11.x bundle ([details](../open-questions.md#oq-f12)).
@@ -412,6 +393,5 @@ status is stated once, on the [home page](../index.md).
 [^nc]: NayaFlow 1.25.1: main-process bundle constants and NayaCore 6.11.0 strings (version status names, the BLE v1/v2 warning, component repository names).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5), comment by the maintainer (a board on 3.30.1 with modules on 2.2.2, and their version replies).
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md).
-[^kb-versions]: naya-create-kb, [firmware/versions](https://nemezzizz.github.io/naya-create-kb/firmware/versions/).
 [^ks-19]: Kickstarter update 19, [2025-02-11](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4312089).
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).

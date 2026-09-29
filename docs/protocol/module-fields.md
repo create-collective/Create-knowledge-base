@@ -24,8 +24,7 @@ vocabulary (NayaFlow's module editor, NayaCore's action map).
 ## Field records and categories
 
 <!--MF-01-->A field is `[field][type][len][value]`, the same shape as a key record, and the TYPE decides
-what it holds <span class="tag measured">MEASURED</span> 3.41.0, 2026-09. naya-create-kb describes the
-same records from a static decode[^kb-modules].
+what it holds <span class="tag measured">MEASURED</span> 3.41.0, 2026-09.
 
 | Type | Len | Holds | Example |
 |---|---|---|---|
@@ -39,9 +38,8 @@ same records from a static decode[^kb-modules].
 <!--MF-02-->The two-word categories are NayaCore's enum, in order
 <span class="tag static">STATIC</span>[^nc]; the host effect of 0, 1, 3, 4, 6 and 8 is measured
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09 (zoom 2026-09-18). Motion selectors are
-+1 / -1. Categories 2, 5 and 7 were written and "work but are not useful". naya-create-kb lists the
-same nine names as "host gesture slots"[^kb-settings]; they are the categories of this record, used in
-module fields and on keys, not slots.
++1 / -1. Categories 2, 5 and 7 were written and "work but are not useful". The same categories serve
+module fields and `0f` records on keys.
 
 | Category | NayaCore name | Meaning | Selector |
 |---|---|---|---|
@@ -111,8 +109,7 @@ observable on the Tune's two-finger pointer records <span class="tag measured">M
 `09`/`0a` rotate (category 4: `09` is the +1 half and `0a` the -1 half, the opposite field order to
 the other axes); `0b`-`0e` buttons 1-4 (category 3; the stock Track Left masks are 1, 4, 2, 8 = M1, M3,
 M2, M4). The Track Right on the board differs: `0b` empty (a NayaFlow flash had cleared it), `0c` M2,
-`0d` M3, `0e` M1 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-02. naya-create-kb lists
-the Track's vocabularies on its hardware page[^kb-hardware].
+`0d` M3, `0e` M1 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-02.
 
 <!--MF-21-->The Track has no field for a button HOLD: asked for tap `d` / hold `a` on button 1, NayaFlow
 wrote `a` into `0b` and `d` nowhere, and the button then emits `a`. Track buttons also accept key-press
@@ -241,8 +238,7 @@ entries (Float: `translation_x/y/z:float:3d_nav`, `rotation_x/y/z:float:3d_nav`,
 clockwise and anti-clockwise). Beside them NayaCore names Float-like settings and directions
 (`dial_tracking_speed`, `translation_sensitivity`, `rotation_sensitivity`, `response_curve`,
 `crown_cw`, `x_left` ... `yaw_right`) <span class="tag static">STATIC</span>[^nc]. These are the app's
-vocabulary, not a list of what firmware supports. naya-create-kb lists gesture vocabularies on its
-hardware page[^kb-hardware].
+vocabulary, not a list of what firmware supports.
 
 ## What the host receives
 
@@ -251,8 +247,9 @@ motion and wheel. A module gesture bound to a key is indistinguishable from a ke
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09. The config that decides what each gesture
 sends lives on the keyboard's left half and is picked per layer by the bays, while gesture
 recognition and streaming happen inside the module's own firmware
-<span class="tag inferred">INFERRED</span> (strong). naya-create-kb observes the same for the trackball
-over Bluetooth[^kb-ble]; see [Bluetooth](../connectivity/bluetooth.md).
+<span class="tag inferred">INFERRED</span> (strong). Over Bluetooth the same holds: the keyboard's HID
+reports are keyboard, consumer (media keys and dials) and mouse, and heavy touchpad use arrived as
+ordinary reports <span class="tag reported">REPORTED</span>[^cfd]; see [Bluetooth](../connectivity/bluetooth.md).
 
 <!--MF-53-->Tune two-finger swipes STREAM, quantized on accumulated motion rather than time: about 1 cm
 fast gives 8-9 events in about 85 ms, the whole pad fast 16, slowly 24-27; the stream stops when the
@@ -291,15 +288,12 @@ tools that remap module keys collapse such a run: Create Companion groups keys w
 ## Open questions
 
 - <span class="tag open">OPEN</span> Field `04` on every module; Tune `06` / `07` on the wire, Tune `1c`-`21`; Touch `09` / `0a`; the spare fields; whether keys in the Touch's `05`-`08` act; whether MO and sticky-layer records work in a field; horizontal and pointer signs per host OS; whether the stock Track axes carry invert = 1 ([details](../open-questions.md#oq-p22))
-- <span class="tag open">OPEN</span> What the keyboard does with the Tune's empty-key-press LED gestures ([details](../open-questions.md#oq-p13))
+- <span class="tag open">OPEN</span> What an empty key press does on a key; on the Tune's two LED gestures it does nothing ([details](../open-questions.md#oq-p13))
 
 ## Sources
 
-[^kb-modules]: naya-create-kb, [protocol/modules](https://nemezzizz.github.io/naya-create-kb/protocol/modules/) (commit 7668067).
-[^kb-settings]: naya-create-kb, [protocol/settings](https://nemezzizz.github.io/naya-create-kb/protocol/settings/) (commit 7668067).
-[^kb-hardware]: naya-create-kb, [device/hardware](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (commit 7668067).
-[^kb-ble]: naya-create-kb, [connectivity/ble](https://nemezzizz.github.io/naya-create-kb/connectivity/ble/) (commit 7668067).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): the category enum, the gesture list, the single-action map, the double-tap refusal.
 [^nc-disasm]: NayaFlow 1.25.1, NayaCore 6.11.0 (Windows x64), our disassembly (2026-09-23): `ModuleConfig::maxSlots`, `ModuleConfig::behaviourSlotStart`, `ModuleConfig::defaultValue` and the module-config serializer.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings and templates (static reading): the fresh-install module bindings.
 [^cc]: Create Companion, [github.com/create-collective/create-companion](https://github.com/create-collective/create-companion) (MIT).
+[^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md) (third party, Apache-2.0): the keyboard's HID reports and the touchpad load over Bluetooth, keyboard 3.41.0.

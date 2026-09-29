@@ -74,15 +74,9 @@ for byte only with the integer 60-degree formula, truncated: `#0084ff` gives hue
 floating-point rounding gives 209 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 (against NayaFlow's stored values).
 
-<!--LD-07-->naya-create-kb lists named colors as (hue, saturation) pairs: red 0/70, green 120/70, cyan
-180/100, blue 240/100, purple 266/70, magenta 300/100, pink 300/100, white 0/0 and "factory amber"
-38/100[^kb-led]. Its maintainer's LED-map dumps hold exactly those entries, so these are colors set on
-that board, not a vendor palette <span class="tag reported">REPORTED</span> (raw data
-checked)[^kb-raw]. The factory amber is real: early reads of our board returned `[led] 26 00 64` for
-every entry <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01, and NayaFlow gives a new
-layer's keys the color `#FFA500`, which converts to 38/100 <span class="tag static">STATIC</span>[^nf].
-NayaCore's LED-key color table, a different table, has magenta at hue 270 and pink at 300
-<span class="tag static">STATIC</span>[^nc].
+<!--LD-07-->The default key color is amber, hue 38 and saturation 100: early reads of our board
+returned `[led] 26 00 64` for every entry <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01, and NayaFlow
+gives a new layer's keys the color `#FFA500`, which converts to 38/100 <span class="tag static">STATIC</span>[^nf].
 
 NayaFlow's stock color palette ("Rainbow") and the values its conversion stores:
 
@@ -103,9 +97,9 @@ NayaFlow's stock color palette ("Rainbow") and the values its conversion stores:
 <!--LD-08-->**Reading.** Send `30/100d` with params `00 <layer>`, then `01 <layer>` while the reply
 status is `01`. The 544 record bytes come back in three chunks of 241 + 241 + 62 with reply byte 3
 counting `02`, `01`, `00` <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. A layer with
-no stored map answers status `16` with the layer echo and no records: seen by us on 3.28.7
-<span class="tag measured">MEASURED</span> 3.28.7, 2026-09-19, and in a third-party 3.41.0 capture
-<span class="tag reported">REPORTED</span> (raw data checked)[^kb-raw]. The map lives on the left half
+no stored map answers status `16` with the layer echo and no records
+<span class="tag measured">MEASURED</span> 3.28.7, 2026-09-19 (3.41.0: see
+[Differences by firmware](firmware-differences.md)). The map lives on the left half
 only; the right half answers nothing to `30/100d`[^nx-pr6]. Chunking rules are on
 [Transport](transport.md).
 
@@ -118,8 +112,7 @@ native: NayaFlow sent `00 00 22 f0 00 64` (layer 0, LED `22`, hue 240, saturatio
 NayaFlow's three-frame write: each frame's params are `00 <layer>` plus the next 241 / 241 / 62-byte
 slice of the 544-byte entry stream (params 243 / 243 / 64; the slices split entries), with byte 3
 `02`, `01`, `00`; for layer 3 the acks were `01 03`, `01 03`, `00 03`
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. naya-create-kb attributes the
-full-map form to a nayactl claim; it is NayaFlow's own form[^kb-led].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
 
 !!! danger "3.28.7: three-frame writes wedge the half"
     On 3.28.7 a write that needs three frames stops the half answering and typing until it is
@@ -130,9 +123,8 @@ fine: 120 entries (480 record bytes, params 243 + 241 in two frames), then 16 en
 params 66) <span class="tag measured">MEASURED</span> 3.28.7, 2026-09-19. See
 [Differences by firmware](firmware-differences.md).
 
-<!--LD-11-->naya-create-kb's per-key ritual (read the whole map, write one entry, read again) works: no
-commit is needed and the entry persists <span class="tag measured">MEASURED</span> 3.41.0,
-2026-09-01; also reported by naya-create-kb, read-back proven on layers 1 and 2[^kb-led].
+<!--LD-11-->A single-entry write needs no commit: the entry persists, and a read of the map afterwards
+shows it <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
 
 <!--LD-12-->A map write that covers only part of the map leaves the rest as last written: a writer that
 stopped at 82 of the 136 entries left the module bay LEDs on an older color
@@ -141,8 +133,7 @@ stopped at 82 of the 136 entries left the module bay LEDs on an older color
 <!--LD-13-->A third party (the author of nayactl PR #6) saw oversized `30/100e` writes of 241 or 41
 bytes wedge the CDC parser until a power cycle, and a 5-byte single entry ack without effect, on
 3.41.0 <span class="tag reported">REPORTED</span>[^nx-pr6]. The 5-byte case most likely lacked or
-misplaced the layer byte <span class="tag inferred">INFERRED</span>. naya-create-kb reports the same
-wedge for oversized single frames[^kb-led].
+misplaced the layer byte <span class="tag inferred">INFERRED</span>.
 
 ## `ed` commands
 
@@ -157,8 +148,7 @@ TARGET byte, then the command's values: `ed/1008` brightness 40 is params `00 00
 `aa 00 50 00 ed 05 10 08 00 00 28 30 04`. The target's value is ignored: targets 0, 1, 2, 3 and 200
 behaved the same for brightness. Short params are zero-filled from the end, so a missing value becomes
 0 and a missing target becomes 0, and every such frame acks exactly like a correct one
-<span class="tag measured">MEASURED</span> left half, 3.41.0, 2026-09-09[^nx-pr6]. naya-create-kb
-agrees in substance (a target byte, `ff` for all, value ignored, short sends zero-filled)[^kb-led].
+<span class="tag measured">MEASURED</span> left half, 3.41.0, 2026-09-09[^nx-pr6].
 
 <!--LD-21-->The measured series, params as sent <span class="tag measured">MEASURED</span> left half,
 3.41.0, 2026-09-09:
@@ -212,11 +202,10 @@ stored per-layer animation in the layer list uses 2 spectrum, 3 swirl
 | 2 | swirl | spectrum |
 | 3 | spectrum | swirl |
 
-<!--LD-26-->naya-create-kb reports four further behaviors, untested by us: `ed/1004` OFF and a
-brightness of 0 are separate states (ON does not relight a board at brightness 0, INCREMENT does);
-`ed/10d1` and `ed/10d2` get no reply; `ed/1014` gets no reply from the right half; and empty params act
-on the half addressed <span class="tag reported">REPORTED</span>[^kb-commands][^kb-led]. The last one
-agrees with our zero-fill measurement (LD-20).
+<!--LD-26-->naya-create-kb reports that `ed/1004` OFF and a brightness of 0 are separate states: ON
+does not relight a board at brightness 0, and INCREMENT does <span class="tag reported">REPORTED</span>[^kb-commands].
+Untested by us. Empty params act on the half they are sent to: they are zero-filled (LD-20), and
+commands act on the half addressed (LD-23) <span class="tag inferred">INFERRED</span>.
 
 ## Persistent settings, ceilings and the `ed/1050` override
 
@@ -243,19 +232,19 @@ ceiling exists, and none was taken before and after.
 pressed on a key lasts until the keyboard restarts, 1 = until the next layer change) are persistent
 device settings too <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-13 and 2026-09-16; see
 [Settings and timing](settings.md). None of `ed/1012`-`1014` has a read command: NayaCore 6.11.0 names
-every LED command it can send, and none reads a setting <span class="tag static">STATIC</span>[^nc];
-also reported by naya-create-kb[^kb-commands].
+every LED command it can send, and none reads a setting <span class="tag static">STATIC</span>[^nc].
 
 <!--LD-33-->Empty or one-byte params to `ed/1012`-`1014` are writes (zero-filled), not reads: an empty
 `ed/1013` sets a ceiling of 0 by the measured zero-fill rule <span class="tag inferred">INFERRED</span>
-from LD-20. naya-create-kb describes the empty-param frame as a read that returns a bare ack; the ack
-is real, but the probe is a write[^kb-commands][^kb-led].
+from LD-20. This differs from naya-create-kb, which describes the empty-param frame as a read that
+returns a bare ack <span class="tag reported">REPORTED</span>[^kb-commands]; the ack is real, but the
+frame is a write, and on `ed/1013` it would darken the keys.
 
-<!--LD-34-->naya-create-kb reports `ed/1050` RGB BRIGHTNESS as a global color override: it survives a
-reboot, beats the map (a white override over a zeroed map still lights the keys), and bulk `30/100e`
-writes drop it back to following the map; no value that clears it back to the map is known
-<span class="tag reported">REPORTED</span>[^kb-led][^kb-settings]. Untested by us. A layer-list
-rewrite (below) is an untested candidate for clearing it <span class="tag inferred">INFERRED</span>.
+<!--LD-34-->naya-create-kb reports `ed/1050` RGB BRIGHTNESS as a global color override that survives
+a reboot and beats the map (a white override over a zeroed map still lights the keys), and that bulk
+`30/100e` writes return the keys to the map; no value that clears it is known
+<span class="tag reported">REPORTED</span>[^kb-led]. Untested by us. A layer-list rewrite (below) is an untested candidate
+for clearing it <span class="tag inferred">INFERRED</span>.
 
 ## Runtime effects and restoring the stored lighting
 
@@ -314,8 +303,8 @@ positions 90-96 never reach the board. Per-layer module colors do reach the modu
 layer keys changed a Tune and a Touch to that layer's colors
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-09/10.
 
-<!--LD-62-->What each module lights: a Touch takes only the first index of its block (88 or 112),
-as naya-create-kb also reports[^kb-led]. The Tune carries 24 LEDs
+<!--LD-62-->What each module lights: a Touch takes only the first index of its block (88 or 112)
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-10. The Tune carries 24 LEDs
 <span class="tag doc">DOC</span> (Kickstarter and filings, see [Tune](../hardware/tune.md)); how many
 map indices a docked Tune follows is open and may depend on module firmware: on 2.1.2 indices 88-93
 took the color and 94-111 stayed white, a 2026-09-08 band test saw 88-96 lit, and index 88 alone lit
@@ -335,49 +324,38 @@ the map; its meaning is open <span class="tag measured">MEASURED</span> 3.41.0, 
 right answers no `30/100d`, one layer-list write to the left restores lighting on both halves, and a
 firmware mismatch darkens only the peripheral's LEDs. So the left (the central) drives the right
 half's LED state over the split link <span class="tag inferred">INFERRED</span> from those measured
-facts. naya-create-kb describes the right half as deaf to LED commands in general, with a
-firmware-internal recovery path[^kb-led]; see [Split link](../connectivity/split-link.md).
+facts. See [Split link](../connectivity/split-link.md).
 
 ## Known problems
 
-<!--LD-70-->**The "cold-boot saturation drop".** naya-create-kb reports a firmware bug in which white
-keys come back red after a power cycle while the map stays byte-identical[^kb-led]. On our 3.41.0 board
-the stored map was byte-identical across a power cycle and white keys stayed white (2026-09-10); 17 +
-24 white keys have come through every power cycle since 2026-09-08
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-10. The red keys we once saw came from a
-misunderstanding of the map layout (byte 3 read as brightness), not from the firmware. It is not
-reproduced here. A 30-second check: power cycle, hold layer 1 before any write, and look at the white
-keys.
+<!--LD-70-->**White keys after a power cycle.** White keys stay white across a power cycle: on our
+3.41.0 board the stored map was byte-identical across a power cycle and white keys stayed white
+(2026-09-10), and 17 + 24 white keys have come through every power cycle since 2026-09-08
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-10. Red keys where white was meant come from reading byte 3
+as brightness (LD-03), a misunderstanding of the map layout, not from the firmware. A 30-second check
+on any board: power cycle, hold layer 1 before any write, and look at the white keys.
 
-<!--LD-71-->**The "dark saga".** naya-create-kb reports that wrong-arity `ed` writes parked its key LEDs
-dark for hours, through reboots and NayaFlow resets, by zero-filling 0 into the `ed/1013` ceiling and
-the scan mode <span class="tag reported">REPORTED</span>[^kb-led]. Its recovery ladder, sent to the
-left half with every step at target `ff`, is: `ed/1013` 100, `ed/1012` 1, `ed/1014` 0, `ed/1050`
-white at 100, `ed/1008` 100, `ed/1011` solid, `ed/1003` on (plus resume); it calls the ladder
-idempotent, and adds `30/10ca` for a store that is "truly wedged" even across a firmware reflash. In
-this site's convention those steps are params `00 ff 64`, `00 ff 01`, `00 ff 00`, and so on (see
-LD-21). Our measured parts: the ceiling persists across reboots (LD-30), re-sending it fixed a dim
-board after a firmware flash, though whether the flash changed it was not recorded (LD-31), and short
-params zero-fill (LD-20). Our non-destructive first step for a runtime lighting state is the
-layer-list rewrite (LD-40). The ladder as a whole is untested by us.
+<!--LD-71-->**A dark key array that still acks.** Short `ed` params are zero-filled (LD-20) and the
+`ed/1013` ceiling persists across reboots (LD-30), so one empty or one-byte `ed/1013` keeps the keys
+dark through reboots while every LED command acks <span class="tag inferred">INFERRED</span> from LD-20 and
+LD-30. The author of nayactl PR #6 revived a board that had been dark for weeks by setting the
+ceiling <span class="tag reported">REPORTED</span>[^nx-pr6]. Our fixes, least destructive first: re-send the
+ceiling, `ed/1013` params `00 00 64` (LD-31), and rewrite the layer list for a runtime lighting state
+(LD-40). OpenFlow ends every firmware update with both and never sends a ceiling of 0
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-20/22[^openflow].
 
-<!--LD-72-->**Dim halves, progressive dimming, inverted brightness keys.** naya-create-kb's open item
-(2026-09-18: scan mode 0 + brightness 100 + ON changed nothing on a dim left half; progressive
-dimming; brightness keys inverted)[^kb-led] is partly explained. Scan mode is invisible by eye
-(flicker shows only on camera). The LED idle timer did not run with the cable in and USB output
-selected, but did on battery (LEDs off at 90 s, one tap restores; whether the power source or the
-output mode gates it is open), so a dim half on USB is not the idle timer
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-11. A low ceiling after a flash is one
-measured cause (LD-31). The vendor's notes for 3.39.4 to 3.41.0 add LED notifications and a lower
-low-battery LED threshold, untested causes <span class="tag doc">DOC</span>[^nh-cl]. For the
-brightness-key inversion there is no data.
+<!--LD-72-->**Dim halves.** Scan mode is invisible by eye (flicker shows only on camera), so it does
+not explain a dim half. The LED idle timer did not run with the cable in and USB output selected, but
+did on battery (LEDs off at 90 s, one tap restores; whether the power source or the output mode gates
+it is open), so a dim half on USB is not the idle timer <span class="tag measured">MEASURED</span> 3.41.0,
+2026-09-11. A low ceiling after a flash is one measured cause (LD-31). The vendor's notes for 3.39.4
+to 3.41.0 add LED notifications and a lower low-battery LED threshold, untested causes
+<span class="tag doc">DOC</span>[^nh-cl].
 
 <!--LD-73-->A NayaFlow keymap flash sends no `ed` frame at all: three captured flashes that changed LED
 override and max brightness in the UI sent none, and none of our captures (flashes on 2026-09-01, -07
 and -17, an LED-override change on 2026-09-14) contains one
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17. A third-party
-settings-flash capture has none either (raw data checked)[^kb-raw]; naya-create-kb draws the same
-conclusion[^kb-settings].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17.
 
 <!--LD-74-->**LED changes by firmware**, as the vendor dated them <span class="tag doc">DOC</span>[^nh-cl][^beta]:
 
@@ -410,29 +388,28 @@ Least destructive first. Each row names its basis.
 | Key array dark, every `ed` command acks | ceiling at 0 (for example after an empty or short `ed/1013`) | re-send `ed/1013` 100 (LD-30, LD-33) | <span class="tag measured">MEASURED</span> ceiling; <span class="tag inferred">INFERRED</span> cause |
 | Right half's LEDs dark, typing works | halves on different firmware (`fe/1002` on both) | match the firmware (LD-74) | <span class="tag measured">MEASURED</span> 3.35.4 / 3.41.0 |
 | Keys go dark on battery after 90 s, one tap restores | idle timer | none needed; change the timeout on [Settings and timing](settings.md) | <span class="tag measured">MEASURED</span> 3.41.0 |
-| Still dark | the KB's recovery ladder (LD-71), then `30/10ca` | untested by us; `30/10ca` wipes the keymaps, LED maps and (reportedly) the layer list: see [Factory reset](../storage/factory-reset.md) | <span class="tag reported">REPORTED</span> |
+| Still dark | the other stored LED settings | re-send `ed/1012` 1 and `ed/1014` 0 (NayaFlow's defaults, LD-32); as a last resort `30/10ca`, which wipes the keymaps, LED maps and (reportedly) the layer list: see [Factory reset](../storage/factory-reset.md) | <span class="tag inferred">INFERRED</span>; untested as a fix |
 
 ## Open questions
 
 - <span class="tag open">OPEN</span> Which physical edge carries indices 74-80; how many bay indices a Tune and a Track follow ([details](../open-questions.md#oq-h08))
-- <span class="tag open">OPEN</span> What the board shows for saturation 150; which NayaFlow row (88 or 89) feeds each bay; what changed in the inter-half LED data between 3.35.4 and 3.41.0; the dimming and brightness-inversion reports ([details](../open-questions.md#oq-p19))
+- <span class="tag open">OPEN</span> What the board shows for saturation 150; which NayaFlow row (88 or 89) feeds each bay; what changed in the inter-half LED data between 3.35.4 and 3.41.0 ([details](../open-questions.md#oq-p19))
 - <span class="tag open">OPEN</span> The `ed/1050` clear value; `ed/1009`-`100c`; what `ed/10d1` / `10d2` do ([details](../open-questions.md#oq-p06))
 - <span class="tag open">OPEN</span> Whether a layer-list rewrite clears an `ed/1050` override ([details](../open-questions.md#oq-p17))
-- <span class="tag open">OPEN</span> The community observations nobody else has measured: `ed/1050` persistence, ON versus brightness 0, `ed/1014` on the right half, module LEDs under a zero ceiling ([details](../open-questions.md#oq-p25))
+- <span class="tag open">OPEN</span> Whether the module LEDs stay lit when the key array's ceiling (`ed/1013`) is 0 ([details](../open-questions.md#oq-p25))
+- <span class="tag open">OPEN</span> Whether an `ed/1050` override survives a reboot, and whether ON relights a board at brightness 0 (both reported, untested by us)
 - <span class="tag open">OPEN</span> The meaning of the module's red-red-red-green blink ([details](../open-questions.md#oq-h32))
-- <span class="tag open">OPEN</span> How the device treats `ed` params sent without the leading flag byte: left to the conversation with naya-create-kb's maintainer, not measured by us.
+- <span class="tag open">OPEN</span> How the device treats `ed` params sent without the leading flag byte; not measured by us.
 
 ## Sources
 
 [^kb-led]: naya-create-kb, [protocol/led](https://nemezzizz.github.io/naya-create-kb/protocol/led/) (commit 7668067).
 [^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
-[^kb-settings]: naya-create-kb, [protocol/settings](https://nemezzizz.github.io/naya-create-kb/protocol/settings/) (commit 7668067).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`cli/led.py`, LED palette and color decoding).
 [^nx-pr6]: nayactl, [pull request 6](https://github.com/Qonfused/nayactl/pull/6) (NayaCore 6.11.0 LED command table, `ed/1012`-`1014`, the zero-fill comment and the author's oversized-write and module-LED observations).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): LED log line, LED command names, LED-key color table.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings, templates and the default "Rainbow" palette (static reading).
-[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (LED-map dumps, USB CDC capture logs and tool sources); raw data decoded by us, never copied.
 [^zmk]: ZMK documentation, [RGB underglow](https://zmk.dev/docs/keymaps/behaviors/underglow).
 [^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.17.2, v1.25.0).
-[^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (v1.17.1, v1.22.0, v1.23.0, v1.24.0).
 [^fp-mismatch]: create-legacy-firmware, [FLASHING-PROCEDURE.md, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its firmware procedure, which re-sends the LED ceiling and rewrites the layer list after every update, and its LED settings, which refuse a ceiling of 0.

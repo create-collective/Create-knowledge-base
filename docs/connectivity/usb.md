@@ -23,8 +23,7 @@ reproduced.
 <!--US-01-->Every Naya USB device uses vendor id `0x37D1`. In application mode the left half is product
 id `0x0064` (decimal 100), the right half `0x00C8` (200) and the dongle `0x012C` (300)
 <span class="tag measured">MEASURED</span> 3.41.0; dongle 2026-09-11
-<span class="tag static">STATIC</span>[^nx]. naya-create-kb gives the halves as "100" and "200"
-without the radix and lists no dongle id[^kb-transport].
+<span class="tag static">STATIC</span>[^nx].
 
 <!--US-02-->NayaCore 6.11.0 decides what a Create device is from its product id alone
 (`Naya_Device::setCreateFlashGenerationFromPid`): it masks the id with `0xEFFF` and accepts exactly
@@ -77,8 +76,7 @@ Timeline of a power-on, from the measurements above:
 it off, and switching it back ON works as a reset, so on USB the switch alone gives a reset; unplugging
 is not needed for one <span class="tag measured">MEASURED</span> owner's board, 2026-09-23. This agrees
 with the manual ("Create will respect the ON/OFF state even while connected over USB")
-<span class="tag doc">DOC</span>[^man-c] and contradicts naya-create-kb's statement that a switch flip
-with USB plugged in is not even an MCU reset[^kb-littlefs][^kb-power]. Whether the half's MCUboot boot
+<span class="tag doc">DOC</span>[^man-c]. Whether the half's MCUboot boot
 pass was seen on that reset was not recorded
 (<span class="tag open">OPEN</span>). A reset does not erase stored settings, so whether a switch reset
 clears a stuck LED or settings state is a separate question.
@@ -90,9 +88,7 @@ clears a stuck LED or settings state is a separate question.
 keys travel over the [split link](split-link.md) and reach the host through the left
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. This matches the Kickstarter campaign's
 description of wired mode, in which the halves still link over RF and only the left half sends data
-over USB <span class="tag doc">DOC</span>[^ks-camp]. naya-create-kb describes each half as CDC control,
-CDC data and HID[^kb-transport][^kb-hardware]; that holds for the left half only. A right half alone on
-USB was not recorded.
+over USB <span class="tag doc">DOC</span>[^ks-camp]. A right half alone on USB was not recorded.
 
 <!--US-07-->On 3.28.7 each half exposes **two** CDC interfaces at once (right `MI_00` + `MI_02`, left
 `MI_00` + `MI_03`), both healthy and sharing one USB serial number, and only one of them answers the
@@ -126,7 +122,6 @@ See [Bootloader](../firmware/bootloader.md).
 <!--US-08-->Descriptors: product strings "Naya Create Left" / "Naya Create Right", interface strings
 "Left Keyboard" / "Right Keyboard". The half's USB serial string equals the reply to `fe/1004` and
 NayaCore's hardware id (per device, not reproduced) <span class="tag measured">MEASURED</span> 3.41.0.
-naya-create-kb notes the same use of serial numbers as device ids[^kb-ble].
 
 <!--US-10-->USB endpoints: host frames go OUT on bulk endpoint `0x01` (11-byte frames for commands with
 no data); replies come IN on bulk `0x82`, which USBPcap logs one byte per transfer, so a capture must
@@ -148,8 +143,8 @@ channel is dead on 3.41.0 <span class="tag measured">MEASURED</span> 3.41.0, 3.2
 <!--US-26-->The configuration protocol and the firmware-update protocol (SMP) share the same CDC port;
 SMP answers only while the half sits in MCUboot <span class="tag static">STATIC</span>. The
 configuration channel stays up when the keyboard's output is switched to Bluetooth with the cable in
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-10. naya-create-kb says halves must be "in
-USB mode"; a cable is what is needed[^kb-transport].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-10. So a tool needs the cable, not
+USB output mode.
 
 <!--US-24-->NayaCore gives each half's ports roles: Broker, ProtocolCDC (binary), SystemCDC (text),
 MCUBootPort1 and MCUBootPort2. It adds a port directly as ProtocolCDC when the firmware version is
@@ -199,13 +194,13 @@ left, so order halves by side, not by arrival <span class="tag measured">MEASURE
 process) holds both ports while it runs, so quit it (or use OpenFlow's release button) before another
 tool. On Windows the second opener gets "Access is denied"; a killed script's leftover Python process
 can hold the port and look like a dead board <span class="tag measured">MEASURED</span> 3.41.0.
-naya-create-kb gives the same advice[^kb-transport].
 
 <!--US-16-->**Windows serial settings.** With pyserial `dsrdtr=True`, Windows enables DSR output flow
 control; the Create never raises DSR, so the first write blocks forever. Open with `dsrdtr=False` and a
 write timeout (fixed upstream in nayactl PR #2[^nx-pr2]). The baud setting is nominal (see
 [Transport](../protocol/transport.md)) <span class="tag measured">MEASURED</span> 3.41.0, Windows.
-naya-create-kb advises setting DTR and RTS like the stock client[^kb-transport].
+nayactl then asserts DTR and RTS, which is its reading of NayaCore's own port setup
+<span class="tag static">STATIC</span>[^nx-serial].
 
 <!--US-17-->**More Windows behavior.** A port whose device detached uncleanly stays listed ("ghost")
 and looks live until opened; a half that dropped off USB came back on a new COM number. After a power
@@ -241,11 +236,10 @@ ACTION!="remove", SUBSYSTEMS=="usb", ATTRS{idVendor}=="37d1", ENV{ID_MM_DEVICE_I
 ACTION!="remove", SUBSYSTEM=="tty", ATTRS{idVendor}=="37d1", TAG+="uaccess"
 ```
 
-<!--US-19-->**macOS.** Each half's data port is a `/dev/cu.usbmodem*` node, one per half
-<span class="tag reported">REPORTED</span> by naya-create-kb[^kb-transport] (raw data checked: the
-maintainer's published capture logs open exactly one such node per half[^kb-raw]). An extra node
-appears while a half is in MCUboot recovery[^kb-transport], consistent with the two MCUboot ports
-measured on Windows (see the MCUboot interfaces above) <span class="tag measured">MEASURED</span> Windows, 2026-09-16.
+<!--US-19-->**macOS.** macOS names a USB CDC port `/dev/cu.usbmodem*`, so each half's data port
+should be one such node, and a half in MCUboot recovery should add a second, matching the two MCUboot
+ports measured on Windows (see the MCUboot interfaces above) <span class="tag inferred">INFERRED</span>
+(not checked by us on a Mac; the two ports <span class="tag measured">MEASURED</span> Windows, 2026-09-16).
 More per-platform notes are on [Platforms](../tools/platforms.md).
 
 | Symptom | Cause | Fix | Evidence |
@@ -334,13 +328,8 @@ Create), not Naya hardware <span class="tag reported">REPORTED</span> (source ch
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings (static reading).
 [^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its udev rule `70-openflow.rules` and port handling.
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md) and its firmware README (third party, Apache-2.0).
-[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs on macOS); raw data decoded by us, never copied.
 [^ks-camp]: Kickstarter campaign page, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023), "Connectivity".
 [^ks-15]: Kickstarter update 15, [2024-09-03](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4095301).
 [^man-c]: Naya Create User Manual v1.1.x ("Turning Create ON/OFF", cabling); see [Manuals](../product/manuals.md).
 [^um106]: Naya Create User Manual v1.0.6, FCC ID 2BQ4V0825CRR user manual exhibits ([fccid.io/2BQ4V0825CRR](https://fccid.io/2BQ4V0825CRR)).
-[^kb-transport]: naya-create-kb, [protocol/transport](https://nemezzizz.github.io/naya-create-kb/protocol/transport/) (commit 7668067).
-[^kb-hardware]: naya-create-kb, [device/hardware](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (commit 7668067).
-[^kb-ble]: naya-create-kb, [connectivity/ble](https://nemezzizz.github.io/naya-create-kb/connectivity/ble/) (commit 7668067).
-[^kb-littlefs]: naya-create-kb, [storage/littlefs](https://nemezzizz.github.io/naya-create-kb/storage/littlefs/) (commit 7668067).
-[^kb-power]: naya-create-kb, [device/power](https://nemezzizz.github.io/naya-create-kb/device/power/) (commit 7668067).
+[^nx-serial]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`transport.py`: opens with `dsrdtr=False`, then asserts DTR and RTS; `docs/cdc-wire-format.md`: NayaCore's serial configuration, DTR and RTS enabled).

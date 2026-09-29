@@ -2,8 +2,7 @@
 
 This is the full list of parts read from Naya's public FCC filings for the Create halves, the
 Speedlink dongle and the Tune, Touch and Track modules, with the unconfirmed readings kept apart
-from confirmed part numbers, the earlier public readings the photos correct, and the open hardware
-questions with what would settle each. The same list is published as a data file,
+from confirmed part numbers, and the open hardware questions with what would settle each. The same list is published as a data file,
 [`parts.json`](../assets/data/parts.json). The one thing to know: every photographed unit is a
 pre-production sample the lab received on 2025-06-20, so retail boards may differ.
 
@@ -26,14 +25,12 @@ and 27 open questions across 20 board entries. The 16 exhibits obtained on 2026-
 left-half RF-exposure report, DG-19 dongle antenna position, ACC-08 SAR extension cable), settle one
 unconfirmed reading (U-LB-04b, the ISED numbers) and one open question (OQ-25, the missing exhibits),
 and extend about 20 rows: 222 main rows, 47 unconfirmed readings, 50 rejected readings and 26 open
-questions now. The 7 new rows had one extraction pass, not the blind re-read <span class="tag doc">DOC</span>[^fcc]. When the list
-was built, 142 of its 215 rows were facts naya-create-kb does not state, 55 agreed with it and 18
-corrected it <span class="tag doc">DOC</span>[^kb-hardware].
+questions now. The 7 new rows had one extraction pass, not the blind re-read <span class="tag doc">DOC</span>[^fcc].
 
 Verdicts: **confirmed** (a blind re-read found the same marking and the identity holds),
 **corrected** (the re-read found a different or fuller value, which the row now carries),
-**unverifiable** (kept only in the unconfirmed table), **refuted** (kept only in the errata table),
-and **new** for the 2026-09-23 rows <span class="tag doc">DOC</span>. The list reads only public FCC exhibits and vendor manuals
+**unverifiable** (kept only in the unconfirmed table), **refuted** (dropped from the list), and
+**new** for the 2026-09-23 rows <span class="tag doc">DOC</span>. The list reads only public FCC exhibits and vendor manuals
 and datasheets; no hardware was opened for it <span class="tag doc">DOC</span>. The page and the data file are licensed CC BY 4.0
 like the rest of the site; the underlying facts come from public FCC records[^license].
 
@@ -63,11 +60,10 @@ the field exists and gives no value <span class="tag doc">DOC</span>.
 [`parts.json`](../assets/data/parts.json) holds the same rows as this page: `boards`,
 `part_number_index`, `parts` (fields `id`, `section`, `location`, `part_number`, `manufacturer`,
 `function`, `marking`, `verdict`, `verdict_note`, `tag`, `source`, `notes`, `image`, `image_source`), `unconfirmed`,
-`rejected` (the 16 published errata), `open_questions`, `exhibits` (the citation codes) and
-`counts`. Compared with the working file behind it, this edition:
+`open_questions`, `exhibits` (the citation codes) and `counts`. Compared with the working file behind it, this edition:
 
-- drops every research-run field (verification pass pointers, local file names, inputs) and the
-  per-row comparison with naya-create-kb, and carries no private references;
+- drops every research-run field (verification pass pointers, local file names, inputs, per-row
+  comparisons) and carries no private references;
 - corrects two rows from the dongle report's text layer: the dongle's filing is "2 Mbps only" (not
   1M / 2M / 125k), and its power setting is 8 / 7 / 8 across 2402 / 2442 / 2480 MHz; the half SoC's
   first marking line is published as `N528…` (partial) <span class="tag doc">DOC</span>[^fcc];
@@ -231,7 +227,7 @@ Every board whose name is legible in the filings. Rows here are not repeated in 
 
 | ID | Image | Location | Part | Maker | Function | Marking as read | Source | Basis | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| <span id="hm-01"></span>HM-01 | [![HM-01](../assets/images/fcc/parts/hm-01.jpg){ width="120" loading=lazy }](../assets/images/fcc/parts/hm-01.jpg){ .glightbox data-title="HM-01: FCC ID 2BQ4V0825CRL, Internal Photos 1, page 8, upper photo (switch-side silkscreen)" } | Left half mainboard | `Create_L_KB_20250220_V13` | Custom PCB (board house not named; ODM Dongguan Boen) | Left main PCB, 1.0 mm; design date 2025-02-20, revision V13 | `Create_L_KB_20250220_V13` / `T=1.0MM`, circled `L`, on both faces [clear] | CRL IP1 p8, p9; declared HW version CRL BLE p10, CRL SRD p10, CRR BLE p10, CRR SRD p10, CRR MPE p1 | <span class="tag doc">DOC</span>; confirmed | naya-create-kb's exhibit page calls this board V11; both faces read V13 (V11 is the wing). |
+| <span id="hm-01"></span>HM-01 | [![HM-01](../assets/images/fcc/parts/hm-01.jpg){ width="120" loading=lazy }](../assets/images/fcc/parts/hm-01.jpg){ .glightbox data-title="HM-01: FCC ID 2BQ4V0825CRL, Internal Photos 1, page 8, upper photo (switch-side silkscreen)" } | Left half mainboard | `Create_L_KB_20250220_V13` | Custom PCB (board house not named; ODM Dongguan Boen) | Left main PCB, 1.0 mm; design date 2025-02-20, revision V13 | `Create_L_KB_20250220_V13` / `T=1.0MM`, circled `L`, on both faces [clear] | CRL IP1 p8, p9; declared HW version CRL BLE p10, CRL SRD p10, CRR BLE p10, CRR SRD p10, CRR MPE p1 | <span class="tag doc">DOC</span>; confirmed | Both faces read V13 (V11 is the wing). |
 | <span id="hm-02"></span>HM-02 | [![HM-02](../assets/images/fcc/parts/hm-02.jpg){ width="120" loading=lazy }](../assets/images/fcc/parts/hm-02.jpg){ .glightbox data-title="HM-02: FCC ID 2BQ4V0825CRR, Internal Photos 1, page 6, lower photo" } | Right half mainboard | `Create_R_KB_20250221_V13` | Custom PCB | Right main PCB, 1.0 mm; 2025-02-21, V13 | `Create_R_KB_20250221_V13` / `T=1.0MM`, circled `R` [clear] | CRR IP1 p6; CRL BLE p10 (the SRD report prints `Create_R_KB20250221_V13`) | <span class="tag doc">DOC</span>; confirmed | - |
 | <span id="wg-01"></span>WG-01 | [![WG-01](../assets/images/fcc/parts/wg-01.jpg){ width="120" loading=lazy }](../assets/images/fcc/parts/wg-01.jpg){ .glightbox data-title="WG-01: FCC ID 2BQ4V0825CRL, Internal Photos 1, page 12, upper photo (rotated to read upright)" } | Left wing board | `Create_L_Wing_20250206_V11` | Custom PCB | Left wing PCB (outer two key columns), 1.0 mm; 2025-02-06, V11 | `Create_L_Wing_20250206_V11` / `T=1.0MM` [clear]; separate stamp `25 15` [clear] | CRL IP1 p11, p12 | <span class="tag doc">DOC</span>; <span class="tag inferred">INFERRED</span> (stamp = fab year 25, week 15); confirmed (Stamp now read in full (was `25 ?5`)) | - |
 | <span id="wg-02"></span>WG-02 | [![WG-02](../assets/images/fcc/parts/wg-02.jpg){ width="120" loading=lazy }](../assets/images/fcc/parts/wg-02.jpg){ .glightbox data-title="WG-02: FCC ID 2BQ4V0825CRR, Internal Photos 1, page 9, upper photo (rotated)" } | Right wing board | `Create_R_Wing_20250206_V11` (middle INFERRED) | Custom PCB | Right wing PCB, 1.0 mm | `Create_R` ... `0250206_V11`, `1.0MM`; `_Wing_2` hidden under a QR label; fiducial `MARK3` beside [partial] | CRR IP1 p9 | <span class="tag doc">DOC</span> (legible part); <span class="tag inferred">INFERRED</span> (hidden part, from the left twin); confirmed | - |
@@ -751,7 +747,7 @@ Cell labels read from photos; declared values from the test reports' EUT tables.
 
 | ID | Image | Location | Part | Maker | Function | Marking as read | Source | Basis | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| <span id="bat-01"></span>BAT-01 | [![BAT-01 battery](../assets/images/fcc/batteries/half.jpg){ width="120" loading=lazy }](../assets/images/fcc/batteries/half.jpg){ .glightbox data-title="BAT-01: battery photo" } | Each keyboard half, one cell, taped with its protection board | `FH301217` (report: 'Model: 301217') | not identified (`FH` prefix) | Half cell: keeps the half on while a module is swapped; charged while the half draws power; Li-ion polymer pouch about 3.0 x 12 x 17 mm by size code (INFERRED) | `- FH301217 3.7V` / `+ 50mAh 0.185Wh` [clear]; report 'Power Source 1# Supplied from battery. Model: 301217', 'DC 3.7V 50mAh 0.185Wh'; '2# Supplied from PC USB port', 'DC 5V' | CRL IP2 p13, p14; CRL IP1 p7; CRR IP1 p10, p11; CRL BLE p10; CRL SRD p10; CRR BLE p10; CRR SRD p10; CRR UM1 p4 | <span class="tag doc">DOC</span>; <span class="tag inferred">INFERRED</span> (chemistry, size); confirmed | Manual v1.0.6 spec sheet says 'Internal Battery Capacity 45mA' (repeated by naya-create-kb); the cell and the report say 50 mAh (45 is a typo or a minimum, INFERRED). |
+| <span id="bat-01"></span>BAT-01 | [![BAT-01 battery](../assets/images/fcc/batteries/half.jpg){ width="120" loading=lazy }](../assets/images/fcc/batteries/half.jpg){ .glightbox data-title="BAT-01: battery photo" } | Each keyboard half, one cell, taped with its protection board | `FH301217` (report: 'Model: 301217') | not identified (`FH` prefix) | Half cell: keeps the half on while a module is swapped; charged while the half draws power; Li-ion polymer pouch about 3.0 x 12 x 17 mm by size code (INFERRED) | `- FH301217 3.7V` / `+ 50mAh 0.185Wh` [clear]; report 'Power Source 1# Supplied from battery. Model: 301217', 'DC 3.7V 50mAh 0.185Wh'; '2# Supplied from PC USB port', 'DC 5V' | CRL IP2 p13, p14; CRL IP1 p7; CRR IP1 p10, p11; CRL BLE p10; CRL SRD p10; CRR BLE p10; CRR SRD p10; CRR UM1 p4 | <span class="tag doc">DOC</span>; <span class="tag inferred">INFERRED</span> (chemistry, size); confirmed | Manual v1.0.6 spec sheet says 'Internal Battery Capacity 45mA'; the cell and the report say 50 mAh (45 is a typo or a minimum, INFERRED). |
 | <span id="bat-02"></span>BAT-02 | [![BAT-02 battery](../assets/images/fcc/batteries/half.jpg){ width="120" loading=lazy }](../assets/images/fcc/batteries/half.jpg){ .glightbox data-title="BAT-02: battery photo" } | Half cell lead | 3-wire lead into a white multi-contact plug (JST SH class pitch, about 1.0-1.25 mm) | not identified | Cell connection; the white wire is an NTC or ID line (INFERRED) | Red / white / black wires; 3-4 gold blades visible in the shell [clear] | CRL IP2 p14; CRR IP1 p10, p11 | <span class="tag doc">DOC</span>; <span class="tag inferred">INFERRED</span> (pitch, role); confirmed | The mainboard receptacle's pin count is unresolved (U-HP-10). |
 | <span id="bat-06"></span>BAT-06 | [![BAT-06 battery](../assets/images/fcc/batteries/tune.jpg){ width="120" loading=lazy }](../assets/images/fcc/batteries/tune.jpg){ .glightbox data-title="BAT-06: battery photo" } | Naya Tune pack | `FH 202030` | not identified (`FH` prefix) | Tune battery: 3.7 V 1000 mAh 3.7 Wh Li-ion polymer block pack, blue PVC wrap; about 20 x 20 x 30 mm by size code (INFERRED); 3 wires red/white/black to a white 3-position plug | `+ FH 202030 3.7V` / `1000mAh 3.7Wh` / `- 20250603` [clear] | CRL IP2 p18; CRL IP4 p25-p26 = CRR IP2 p15; CRR IP4 p22-p23 | <span class="tag doc">DOC</span>; <span class="tag inferred">INFERRED</span> (size); confirmed | - |
 | <span id="bat-09"></span>BAT-09 | [![BAT-09 battery](../assets/images/fcc/batteries/touch.jpg){ width="120" loading=lazy }](../assets/images/fcc/batteries/touch.jpg){ .glightbox data-title="BAT-09: battery photo" } | Naya Touch cell A | `FH364046` | not identified (`FH` prefix) | Touch battery: 3.7 V 700 mAh 2.59 Wh Li-ion polymer pouch about 3.6 x 40 x 46 mm by size code (INFERRED); 3 wires red/black/white to a white 3-position plug (mates `J3`); protection board under yellow Kapton | `- FH364046 3.7V` / `700mAh 2.59Wh` / `+ 20250611` [clear] | CRL IP5 p33-p34 = CRR IP5 p30-p31 | <span class="tag doc">DOC</span>; <span class="tag inferred">INFERRED</span> (size); confirmed | - |
@@ -842,33 +838,6 @@ Legible text whose identity is not established. The Candidate column is reasonin
 | <span id="u-bat-11"></span>U-BAT-11 | Touch | Cell date on the in-situ thumbnail | `…0250?19` (one copy), partial on the other | - | Does not match the sharp `20250611`; resolution too low | CRL IP5 p33 = CRR IP5 p30 |
 | <span id="u-bat-17"></span>U-BAT-17 | All devices | Cell makers | Prefixes `FH` (half, Tune, Touch) and `QS` (Track) | - | No manufacturer, distributor or datasheet hit for FH301217, FH202030, FH364046, FH364045 or QS801630 | BAT-01, BAT-06, BAT-09, BAT-10, BAT-13 |
 
-## Earlier public readings the photos correct
-
-<!-- parts fact 12 -->
-Of the 50 rejected readings, only those that appeared in another public source, naya-create-kb at
-commit 7668067, are published here; rejected readings from our own earlier working notes are not
-<span class="tag doc">DOC</span>[^kb-hardware][^kb-exhibits][^kb-manual]. Details and the correct values are on
-[Board inventory](index.md#earlier-public-readings-the-photos-correct).
-
-| ID | Earlier reading | Where it appeared | What the photos show |
-|---|---|---|---|
-| R-01 | Half SoC is an nRF52811 (`N5281?`, `N52811`) | naya-create-kb device/hardware; naya-create-kb device/exhibits | HM-04 (nRF52840 CKAA; CKAA is not an nRF52811 code; naya-create-kb's own photo shows `N528` cut off) |
-| R-02 | 'USB MCU: unknown 2nd chip'; nRF has no USB; images exceed 192 KB flash | naya-create-kb device/hardware | No second MCU-class IC on either face; the nRF52840 has native USB 2.0 FS and 1 MB flash (HM-04) |
-| R-03 | Half mainboard `Create_L_KB 20250220_V11` | naya-create-kb device/exhibits; naya-create-kb device/hardware | HM-01 (V13 on both faces; V11 is the wing, WG-01) |
-| R-04 | Dongle `BOK17_Dongle` (letter O) | naya-create-kb device/hardware; naya-create-kb device/exhibits | DG-01 (`B0K17`, digit zero in the text layer) |
-| R-05 | Tune module ring is `Tune_Touch_20240926_V00` | naya-create-kb device/exhibits | TUM-01 (ring = `Tune_MB_20250227_V09`); TUX-01 (`Tune_touch` is the disc) |
-| R-06 | Track module ring `Y08_06025_20250227_V00` | naya-create-kb device/exhibits | TKM-01 |
-| R-07 | 'Touch frontend: SGMicro `4T523DF`' | naya-create-kb device/hardware | TCM-06 (`41523DF` = SGM41523 charger); TCX-02 (CST3640 is the touch controller) |
-| R-08 | Module link 'VBUS/USB on test pads' | naya-create-kb device/hardware | PD-13 (UART + BOOT + power; no `D+`/`D-` on any dock contact) |
-| R-09 | 'Touch FH202030 1000 mAh class' | naya-create-kb device/hardware | BAT-06 (Tune pack) |
-| R-10 | Track battery `FH364046` 700 mAh | naya-create-kb device/exhibits; naya-create-kb device/manual | BAT-09 (Touch cell); BAT-13 (Track 600 mAh 1S2P) |
-| R-11 | 'Smallest puck ICR ... 300 mAh ... (cylindrical)' | naya-create-kb device/exhibits | BAT-14 (a pouch cell inside the Track pack; no fourth module battery) |
-| R-12 | One grant date, 2025-08-29, for all filings | naya-create-kb device/hardware; naya-create-kb device/exhibits | LB-02a, LB-02b, LB-02c |
-| R-13 | 'The SRD report is a 2nd BLE grant' | naya-create-kb device/hardware | LB-02a (same FCC ID on the SRD report cover) |
-| R-14 | 'nRF Connect SDK 5.1.0' | naya-create-kb device/hardware | LB-19 (`nrfconnect-setup-5.1.0-x64` = nRF Connect for Desktop installer) |
-| R-15 | Switches 'clicky' | naya-create-kb device/manual | EN-01 (manual v1.0.6 does not state a switch type) |
-| R-16 | 'Body: Aluminum + polycarbonate' | naya-create-kb device/manual | EN-05 (body/dock/wing aluminum); EN-03 (keycaps polycarbonate) |
-
 ## Open hardware questions
 
 <!-- parts fact 13 -->
@@ -955,8 +924,5 @@ serial-number fields, lab tags and handwriting.
 
 [^fcc]: FCC IDs 2BQ4V0825CRL, 2BQ4V0825CRR and 2BQ4V0825DG: exhibits on the FCC record ([FCC EAS search](https://apps.fcc.gov/oetcf/eas/reports/GenericSearch.cfm), grantee code 2BQ4V; mirrors [fccid.io/2BQ4V0825CRL](https://fccid.io/2BQ4V0825CRL), [fccid.io/2BQ4V0825CRR](https://fccid.io/2BQ4V0825CRR), [fccid.io/2BQ4V0825DG](https://fccid.io/2BQ4V0825DG)).
 [^license]: Pages CC BY 4.0, code snippets MIT; see [About](../about.md).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
-[^kb-manual]: naya-create-kb, [official manual claims](https://nemezzizz.github.io/naya-create-kb/device/manual/) (third party).
 [^ks-14]: Kickstarter update 14, [2024-07-24](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4157656).
 [^ks-15]: Kickstarter update 15, [2024-09-03](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4095301).

@@ -47,19 +47,15 @@ Converting other sources to this convention:
 
 - nayactl's output and most tool code print the bytes **after** the flag byte (nayactl calls it
   `flags`); put the flag byte in front to get this site's form.
-- naya-create-kb's REMAP and `fe` request strings already include the flag byte (its
-  `[00, layer] + record` is this site's form). Its reply strings include the status byte, but some
-  also include the checksum as if it were data (see [the framing trap](#the-framing-trap)). Its `ed`
-  strings leave out the flag byte; see [LEDs](led.md) for the framing this site measured.
+- `ed` strings: this site's params start with the flag byte, then the target (see [LEDs](led.md) for
+  the framing this site measured). This differs from naya-create-kb, whose `ed` strings leave out the
+  flag byte[^kb-led].
 
 ## The frame
 
 <!--TR-01-->Every binary exchange on the data port is one frame, and the same layout runs in both
 directions except for bytes 1 and 2. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
-(NayaFlow 1.25.1 captured on USB) <span class="tag static">STATIC</span>[^nx][^nc] The
-naya-create-kb maintainer's published captures have the same layout, with every checksum valid (raw
-data checked)[^kb-raw];
-naya-create-kb draws it the same way[^kb-transport].
+(NayaFlow 1.25.1 captured on USB) <span class="tag static">STATIC</span>[^nx][^nc]
 
 | Offset | This site's name | NayaCore's name | In a request | In a reply |
 |---|---|---|---|---|
@@ -80,8 +76,7 @@ address of the half that answers and byte 2 is `00`: a left reply starts `aa 50 
 reply `aa 51 00 00`. All 5 239 replies in our own captures follow this pattern, and NayaCore's port
 detector expects the reply `aa 50 00 00 fe 03 10 01 00 11 04`.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17
-<span class="tag static">STATIC</span>[^nc] Also reported by naya-create-kb[^kb-transport]. (An
-earlier note of ours drew the reply as `aa 00 <dest> 00`; that was wrong.)
+<span class="tag static">STATIC</span>[^nc] (An earlier note of ours drew the reply as `aa 00 <dest> 00`; that was wrong.)
 
 <!--TR-03-->Destination bytes: `50` is the left half and `51` the right half. nayactl also uses `50`
 for the Speedlink dongle, which answers nothing (see [USB](../connectivity/usb.md)).
@@ -97,8 +92,7 @@ and byte 8 its "status". <span class="tag static">STATIC</span>[^nc]
 so LEN = 2 + the params length, where the params include the flag byte. A whole frame is LEN + 8
 bytes. The smallest frame, whose params are the flag byte alone, is 11 bytes:
 `aa 00 50 00 fe 03 10 01 00 11 04`. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
-<span class="tag static">STATIC</span>[^nx] naya-create-kb says the same (requests of 11 to 12
-bytes, LEN = the command bytes plus params)[^kb-transport].
+<span class="tag static">STATIC</span>[^nx]
 
 <!--TR-07-->The command travels high byte first: `0x1001` is sent `10 01`. NayaCore keeps it
 little-endian in its message structure and writes the high byte first.
@@ -112,9 +106,8 @@ in one NayaFlow capture decode as flag `00`, and the vendor's own probe `fe/1001
 
 <!--TR-06-->The checksum is the XOR of every byte from the first command byte through the last data
 byte (frame bytes 6 to LEN+5). NayaCore's logs call it a CRC, but it is a plain XOR. The terminator
-is always `04`. <span class="tag measured">MEASURED</span> 3.41.0 (every frame of our captures and of
-six third-party captures re-checked, 2026-09-23) <span class="tag static">STATIC</span>[^nx]
-naya-create-kb checked 269 frames the same way[^kb-transport].
+is always `04`. <span class="tag measured">MEASURED</span> 3.41.0 (every frame of our captures re-checked,
+2026-09-23) <span class="tag static">STATIC</span>[^nx]
 
 !!! warning "Start the XOR at the command bytes, not at LEN"
     A checksum that includes the LEN byte is wrong for every frame. Two published code sketches
@@ -138,7 +131,6 @@ published reply strings carry it as if it were data, and each can be checked by 
 `aa 50 00 00 fe 07 10 02 00 00 03 29 00 38 04`, `be/100f` `aa 50 00 00 be 04 10 0f 00 02 1d 04` from
 both halves, `be/1002` with LEN `09`, 2026-09-01 to 2026-09-17)
 <span class="tag inferred">INFERRED</span> (the XOR arithmetic on the published bytes).
-naya-create-kb flags the same trap for `de/1008`[^kb-modules].
 
 <!--TR-42-->Several published "payload" sizes are whole-frame sizes. Use this list when a size does
 not add up:
@@ -151,16 +143,14 @@ not add up:
 | "250 B" | `be/100c` | the whole frame (LEN `f2`); the status blob is 239 bytes |
 
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17
-<span class="tag inferred">INFERRED</span> (arithmetic). The sizes appear as payloads on
-naya-create-kb[^kb-transport][^kb-commands].
+<span class="tag inferred">INFERRED</span> (arithmetic).
 
 ## Addressing and relaying
 
 <!--TR-31-->Only the left half answers the REMAP category `30` (keymap, LED maps, layer list, module
 configs): the right half holds none of those stores, NayaFlow never sends a REMAP frame to `51`,
 and a `30/1009` read sent to the right half on 2026-09-01 got no reply.
-<span class="tag measured">MEASURED</span> 3.41.0 Also reported by naya-create-kb[^kb-transport]
-and by nayactl PR #6 (the right half returns nothing to `30/100d`)[^nx-pr6].
+<span class="tag measured">MEASURED</span> 3.41.0 Also reported by nayactl PR #6 (the right half returns nothing to `30/100d`)[^nx-pr6].
 
 <!--TR-32-->Relaying through the left half is partial. Through the left half's port, `dst 51`
 reaches the right half for the firmware-version read: on 2026-09-20 the left port read the right
@@ -168,14 +158,12 @@ half's version (3.35.4) while the right half's own port answered only empty payl
 port below). The Bluetooth identity reads `be/1008`, `be/1002` and `be/1005` sent to `51` on the
 left port answer for the **left** half. Through the right half's port the left half is not
 reachable. <span class="tag measured">MEASURED</span> 2026-09-20, 2026-09-22[^fp-mismatch] OpenFlow
-has no automatic retry through this route, but the route itself is measured. naya-create-kb
-describes the left half as a full proxy for `51`[^kb-transport]; for these reads it is not.
+has no automatic retry through this route, but the route itself is measured. This differs from
+naya-create-kb, which describes the left half as a full proxy for `51`[^kb-transport]; for these
+reads it is not.
 
 <!--TR-33-->Which sender byte (byte 1) a `dst 51` reply carries when it comes back through the left
-port is not recorded by us. naya-create-kb gives two readings: check the sender, `51` meaning the
-right half (its transport page), and replies to `51` arriving with sender `50` (its device
-overview)[^kb-transport][^kb-device]. <span class="tag reported">REPORTED</span>
-<span class="tag open">OPEN</span> One read of `fe/1002` at `dst 51` with the raw bytes logged
+port is not recorded by us. <span class="tag open">OPEN</span> One read of `fe/1002` at `dst 51` with the raw bytes logged
 settles it.
 
 <!--TR-34-->A half running different keyboard firmware from its partner has a **hollow port**: it
@@ -189,8 +177,7 @@ the firmware ends it. <span class="tag measured">MEASURED</span> 2026-09-20[^fp-
 
 <!--TR-09-->Request flag values: `00` is normal, and also "start over" for a chunked read; `01` asks
 for the next chunk of a chunked read. NayaCore has never been seen sending another value.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 naya-create-kb calls this byte a
-"part" number[^kb-transport]; see [chunked reads](#chunked-reads).
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 See [chunked reads](#chunked-reads).
 
 <!--TR-10-->Reply status values seen on the wire:
 
@@ -199,13 +186,11 @@ for the next chunk of a chunked read. NayaCore has never been seen sending anoth
 | `00` | final or only frame; write accepted | everywhere | <span class="tag measured">MEASURED</span> 3.41.0, 3.28.7 |
 | `01` | more read chunks follow, or the ack of a non-final write chunk | chunked reads and writes | <span class="tag measured">MEASURED</span> 3.41.0 |
 | `11` | command not implemented | macro opcodes and an invented opcode on 3.28.7 (2026-09-19); the one macro-list read captured on 3.41.0 (params `00` only, 2026-09-01) | <span class="tag measured">MEASURED</span> |
-| `16` | nothing stored for that index; header-only reply (e.g. an LED-map read of a layer with no map) | 3.28.7 (ours, 2026-09-19); 3.41.0 (third-party capture, raw data checked) | <span class="tag measured">MEASURED</span> <span class="tag reported">REPORTED</span>[^kb-raw] |
+| `16` | nothing stored for that index; header-only reply (e.g. an LED-map read of a layer with no map) | 3.28.7, 2026-09-19 | <span class="tag measured">MEASURED</span> |
 | `18` | the same, on a continuation | 3.28.7 | <span class="tag measured">MEASURED</span> |
-| `19` | the index does not exist: `30/1003` reads of layers `81`, `e4` and `e5` answered `19 81`, `19 e4`, `19 e5` | 3.41.0, 2026-09-01 | <span class="tag measured">MEASURED</span>; also reported by naya-create-kb for `30/1004` sent without its layer byte[^kb-keymap] |
+| `19` | the index does not exist: `30/1003` reads of layers `81`, `e4` and `e5` answered `19 81`, `19 e4`, `19 e5` | 3.41.0, 2026-09-01 | <span class="tag measured">MEASURED</span> |
 | `ea` | value refused, nothing stored | `fe/100a` under 30 s; `fe/1007` value `ff` (3.41.0, 2026-09-02 and 2026-09-11) | <span class="tag measured">MEASURED</span> |
 | `ff` | no data | `be/1006` with no name set (3.28.7) | <span class="tag measured">MEASURED</span> |
-
-naya-create-kb lists `00` and `16 00`[^kb-transport].
 
 <!--TR-11-->NayaCore's own status names, in table order: Final Packet / Success, Multi Packet /
 Continue, Invalid Command, Busy, Memory Full, Invalid Format, Save Failed, Load Failed, NVS, No
@@ -216,13 +201,11 @@ Numbering the error names from `11` gives `11` Invalid Command, `12` Busy, `13` 
 Invalid Format, `15` Save Failed, `16` Load Failed, `17` NVS, `18` No Data, `19` Invalid ID, which
 fits all four measured error codes; `12` to `15` and `17` have not been seen.
 <span class="tag inferred">INFERRED</span> `ea` and `ff` are outside NayaCore's table.
-naya-create-kb lists the names without codes[^kb-transport].
 
 <!--TR-12-->An ack proves that the frame parsed, not that the write took effect. The firmware acks
 writes it silently discards (every macro write, a record of unknown type `7e`) and stores
 short-parameter records that then do nothing. Verify by reading back, and verify behavior by
-pressing the key. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-07 Also reported by
-naya-create-kb[^kb-transport].
+pressing the key. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-07
 
 ## Chunked reads
 
@@ -230,19 +213,17 @@ naya-create-kb[^kb-transport].
 status is `01`, send the same command with params `01 <index>` for the next chunk. Every reply chunk
 starts with the index echo; strip it from every chunk after the first and join the chunks by bytes,
 because chunks split records. The last chunk has status `00` and is shorter than a full one.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 naya-create-kb describes the same loop
-with a "part" byte and a layer echo[^kb-transport].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
 
 <!--TR-24-->The first params byte of a read is a continue flag (`00` for the first chunk, `01` for
 every later chunk), not a part number: NayaCore never sends `02`.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17 (our captures carry only
-`00` and `01`; the third-party captures agree, raw data checked[^kb-raw]) naya-create-kb writes
-these params as `[part, layer]`[^kb-transport].
+`00` and `01`)
 
 <!--TR-14-->Byte 3 of a reply counts the chunks still to come: `03 02 01 00` for a four-chunk layer,
 `02 01 00` for an LED map. It is `00` on single replies and on write acks.
 <span class="tag measured">MEASURED</span> 3.41.0 (235 non-final chunks in our captures,
-2026-09-01 to 2026-09-17) Also reported by naya-create-kb[^kb-transport].
+2026-09-01 to 2026-09-17)
 
 <!--TR-16-->A full read chunk carries LEN `f5`: status, index, then 241 record bytes.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
@@ -254,9 +235,7 @@ open connection: reopening the port or sending the opener again resets it.
 
 <!--TR-18-->The number of chunks depends on the data. NayaCore read layers 0, 1 and 2 in 4, 3 and 4
 frames and each LED map in 3 (3.41.0); a 764-byte layer comes back in 4.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 A third-party capture shows a
-772-byte layer in 4 chunks (raw data checked)[^kb-raw]. naya-create-kb's "two parts per layer" holds
-only for small layers[^kb-transport].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
 
 A layer read, as a sequence (layer 0, 764 record bytes):
 
@@ -271,8 +250,7 @@ A layer read, as a sequence (layer 0, 764 record bytes):
 
 <!--TR-13-->Byte 3 of a request is `00` for a single frame and counts the frames still to come in a
 chunked write: a three-frame write goes out with byte 3 = `02`, `01`, `00`.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 naya-create-kb draws this byte as a
-fixed `00`[^kb-transport].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
 
 <!--TR-19-->A write longer than one frame is split: every frame's params are `00 <index>` followed by
 the next slice of up to 241 record bytes, so each frame re-sends the index byte and slices can split
@@ -293,7 +271,6 @@ params (flag, index, 241 record bytes). Two frames therefore carry at most 482 r
 that drop the flag byte and count the index once (nayactl's) say 242 per frame and 483 per two.
 NayaCore quotes a "hard limit 257".
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 <span class="tag static">STATIC</span>[^nx-pr6]
-naya-create-kb mentions "≤242 B" chunks as a nayactl claim[^kb-led].
 
 <!--TR-21-->Writes apply by record index, so one large write can be sent as several smaller writes of
 whole records: LED records 120 to 135 written alone landed exactly there, and a layer written in two
@@ -302,8 +279,9 @@ parts read back byte-identical. <span class="tag measured">MEASURED</span> 3.28.
 <!--TR-22-->Firmware 3.28.7 cannot receive a three-frame write: the half stops answering and typing
 until it is unplugged, while two-frame writes land at any index. 3.41.0 accepts NayaFlow's
 three-frame writes. <span class="tag measured">MEASURED</span> 3.28.7, 2026-09-19; 3.41.0,
-2026-09-01 See [Differences by firmware](firmware-differences.md). naya-create-kb reports a
-different wedge, from oversized single frames[^kb-led].
+2026-09-01 See [Differences by firmware](firmware-differences.md). The author of nayactl PR #6
+reports a different wedge on 3.41.0: `30/100e` writes of 241 or 41 bytes stopped the parser until a
+power cycle <span class="tag reported">REPORTED</span>[^nx-pr6].
 
 !!! danger "Three-frame writes wedge 3.28.7"
     On 3.28.7 any write that needs three frames stops the half (no typing, no answers) until it is
@@ -318,8 +296,7 @@ continuation ack (2026-09-16). <span class="tag measured">MEASURED</span> 3.41.0
 <!--TR-25-->Write acks echo the index in their data: a layer write to layer 1 is acked `00 01`, to
 layer 2 `00 02`; a layer-list or module-list write is acked `00 00`; a module-config write echoes the
 slot. A strict "equals `00 00`" matcher rejects good writes to layers above 0.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17 Also reported by
-naya-create-kb[^kb-transport].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17
 
 ## Opening a session and polling
 
@@ -330,13 +307,10 @@ REQUEST (params `00`, reply `00`), then `fe/1002` GET FW VERSION. The first conn
 <span class="tag static">STATIC</span>[^nx] <span class="tag measured">MEASURED</span> 3.41.0,
 2026-09-01 (NayaCore's opener on the wire)
 
-<!--TR-37-->naya-create-kb advises that the first frame after wake is often lost and should be
-retried[^kb-transport]. Our captures agree: in 23 of 30 nayactl connections on 2026-09-01 the first
-`fe/1001` on a freshly opened port got no reply and the retry did, with both halves awake on USB;
-NayaCore's own connects were answered the first time.
+<!--TR-37-->The first frame on a freshly opened port is often lost, so retry it: in 23 of 30 nayactl
+connections on 2026-09-01 the first `fe/1001` got no reply and the retry did, with both halves awake
+on USB; NayaCore's own connects were answered the first time.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 <span class="tag static">STATIC</span>[^nx]
-The same page says that a sleeping half answers nothing at all and must be woken with a key press;
-we have not measured a sleeping half. <span class="tag reported">REPORTED</span>[^kb-transport]
 
 <!--TR-27-->NayaCore's port broker sends `fe/1001` to both `50` and `51` to tell left from right,
 logs a short reply as "ProtocolCDC ... DEFECTIVE", and, when no binary reply comes, falls back to the
@@ -352,8 +326,7 @@ ProtocolCDC". <span class="tag static">STATIC</span>[^nc]
 `be/1008`, `be/1002`, `be/1006`, `be/100f`, `be/100c`, `30/1001` (params `00 00`), `30/1003` for each
 layer with the continue loop, `30/1009` (params `00 00`), `30/100b` for slots 0 to 4, `30/100d` for
 each layer, `fe/100b`. To the right half: `fe/1001`, `fe/1002`, `fa/1001`, `be/1008`, `be/1002`,
-`be/100f`, then module polling. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 The
-third-party captures show the same sequence (raw data checked)[^kb-raw].
+`be/100f`, then module polling. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
 
 <!--TR-29-->NayaCore then polls each half every 6 s: the left with `be/100c`, `de/1001`, `de/1008`,
 `de/100b` and `fe/1006`; the right with the same except `be/100c`. The keyboard never pushes battery
@@ -365,11 +338,10 @@ to send again") up to a per-command budget ("Max message retries reached"). We h
 on the wire. <span class="tag static">STATIC</span>[^nc] <span class="tag measured">MEASURED</span>
 (absence, 3.41.0 and 3.28.7)
 
-<!--TR-30-->naya-create-kb states that the `30/10xx` commands answer only after a `30/1001` read on
-the same open handle[^kb-transport]. That rule is contradicted per connection: our captures show
-fresh connections answering `30/1003`, `30/1009`, `30/100d` and `30/1005` after the session opener
-alone (`fe/1001`, `fe/1002`), with no `30/1001` on that connection (full three-layer reads of 4, 3
-and 4 chunks followed the opener directly). <span class="tag measured">MEASURED</span> 3.41.0,
+<!--TR-30-->The `30/10xx` commands do not need a `30/1001` read on the same connection: our captures
+show fresh connections answering `30/1003`, `30/1009`, `30/100d` and `30/1005` after the session
+opener alone (`fe/1001`, `fe/1002`), with no `30/1001` on that connection (full three-layer reads of
+4, 3 and 4 chunks followed the opener directly). <span class="tag measured">MEASURED</span> 3.41.0,
 2026-09-01 Whether one `30/1001` is needed after power-up is untested, because the board had been
 read by NayaFlow earlier; a read-only keyboard check settles it. <span class="tag open">OPEN</span>
 NayaCore and OpenFlow always read `30/1001` first anyway, and `30/1001` is READ LAYER LIST, not a
@@ -377,7 +349,7 @@ dedicated handshake (see [Layers](layers.md)).
 
 <!--TR-38-->The baud rate is nominal on this CDC port: NayaCore opens the bootloader port at
 1 000 000 baud, and 115200 reads the same bytes. <span class="tag measured">MEASURED</span>
-2026-09-08 naya-create-kb says the same without a basis[^kb-transport].
+2026-09-08
 
 <!--TR-47-->Timeouts seen in practice: a Bluetooth read that the firmware does not implement costs
 the client's whole timeout (about 2.08 s per command in OpenFlow on 3.28.7; caching which commands a
@@ -395,25 +367,21 @@ battery command costs about 1.09 s; a present one answers in about 0.22 s.
 ## Empty payloads and silence
 
 <!--TR-35-->Opcodes a half does not implement answer with silence, not an error: on 3.28.7
-`be/100c` to `be/100f` return no frame at all; `ff/1000` sent to the left half on 3.41.0 got no frame
-back; naya-create-kb also reports no reply to `ff/1003`, `ed/10d1` and `ed/10d2`. A client must time
-out rather than wait. <span class="tag measured">MEASURED</span> 3.28.7, 2026-09-19;
-3.41.0, 2026-09-01 (`ff/1000`) <span class="tag reported">REPORTED</span> (`ff/1003`, `ed/10d1`,
-`ed/10d2`)[^kb-commands]
+`be/100c` to `be/100f` return no frame at all, and `ff/1000` sent to the left half on 3.41.0 got no
+frame back. A client must time out rather than wait. <span class="tag measured">MEASURED</span>
+3.28.7, 2026-09-19; 3.41.0, 2026-09-01 (`ff/1000`)
 
 <!--TR-36-->An empty `ed` params string is a write, not a read: short `ed` params are zero-filled
 (see [LEDs](led.md)), so probing `ed/1012` to `ed/1014` with empty params writes 0.
 <span class="tag measured">MEASURED</span> (zero-fill, 3.41.0, 2026-09-09)
-<span class="tag inferred">INFERRED</span> (the `ed/1013` case) naya-create-kb calls such an empty
-send a self-targeted read returning a bare ack[^kb-commands][^kb-led]; the ack is real, but there
-is no read command, and the probe writes.
+<span class="tag inferred">INFERRED</span> (the `ed/1013` case) This differs from naya-create-kb, which calls such an empty
+send a self-targeted read returning a bare ack[^kb-commands]; the ack is real, but no read command
+exists, and the probe writes.
 
 <!--TR-43-->Frames can arrive unsolicited: keyscan events (`fe/1009`) stream while keyscan mode is on.
-Request-shaped frames inside reply streams are not confirmed. The one in a third-party capture sits
-among interleaved log fragments on both ports at the same instant, which points to a logging
-artifact <span class="tag inferred">INFERRED</span>[^kb-raw]; a re-decode of all our remaining
-captures finds none. Our own 2026-09-01 sighting (on the right half's IN pipe) cannot be re-checked,
-because those two capture files no longer exist. <span class="tag open">OPEN</span>
+Request-shaped frames inside reply streams are not confirmed: a re-decode of all our remaining
+captures finds none, and our own 2026-09-01 sighting (on the right half's IN pipe) cannot be
+re-checked, because those two capture files no longer exist. <span class="tag open">OPEN</span>
 
 <!--TR-44-->nayactl clears its input buffer before every command it writes, so unsolicited frames
 that arrive between commands are thrown away; only its `listen` and `keyscan` modes stream.
@@ -434,7 +402,7 @@ that arrive between commands are thrown away; only its `listen` and `keyscan` mo
 
 <span class="tag measured">MEASURED</span> 3.41.0 <span class="tag static">STATIC</span>
 (the `be/100c` connection fields read little-endian would be 1536, 0 and 36865, which are not valid
-Bluetooth values). naya-create-kb gives the order of individual fields[^kb-commands].
+Bluetooth values).
 
 ## The text channel
 
@@ -446,8 +414,8 @@ Bluetooth values). naya-create-kb gives the order of individual fields[^kb-comma
 the binary opener). <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01; the nayactl
 maintainer saw the same[^nx-pr2] The vendor's notes retire SystemCDC in keyboard firmware 3.31.1 and
 NayaCore 6.1.5 <span class="tag doc">DOC</span>[^nh-cl]; nayactl's author used it on 3.30.1
-<span class="tag reported">REPORTED</span>[^nx]. naya-create-kb lists `clear_bonds` and
-`mcuboot_reset` as never-send commands[^kb-transport]; on current firmware they do nothing.
+<span class="tag reported">REPORTED</span>[^nx]. nayactl refuses `clear_bonds` and `mcuboot_reset` without `--force`[^nx]; on
+current firmware they do nothing.
 
 ## Worked frames
 
@@ -552,8 +520,7 @@ and [JavaScript recipes](../tools/recipes-js.md).
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> Status codes `12` to `15` and `17`; what `ea` and the `80` data
-  byte of naya-create-kb's `30/10ca` reply mean beyond "refused" and "observed"
+- <span class="tag open">OPEN</span> Status codes `12` to `15` and `17`; what `ea` means beyond "refused"
   ([details](../open-questions.md#oq-p01)).
 - <span class="tag open">OPEN</span> Which sender byte a `dst 51` reply carries through the left
   port ([details](../open-questions.md#oq-c12)).
@@ -563,8 +530,8 @@ and [JavaScript recipes](../tools/recipes-js.md).
   ([details](../open-questions.md#oq-p03)).
 - <span class="tag open">OPEN</span> What NayaCore's "hard limit 257" applies to, given a one-byte
   LEN ([details](../open-questions.md#oq-p04)).
-- <span class="tag open">OPEN</span> Whether a sleeping half answers at all, and how it is woken
-  ([details](../open-questions.md#oq-p25)).
+- <span class="tag open">OPEN</span> Whether a sleeping half answers nothing until a key press, and
+  whether the first frame after waking is lost ([details](../open-questions.md#oq-p27)).
 
 ## Sources
 
@@ -575,10 +542,6 @@ and [JavaScript recipes](../tools/recipes-js.md).
 [^nc-disasm]: NayaFlow 1.25.1, NayaCore 6.11.0 (Windows x64), our disassembly (2026-09-23): the error-code table ("Remap error is ...").
 [^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (NayaFlow 1.17.2: SystemCDC retired in keyboard 3.31.1 and NayaCore 6.1.5).
 [^fp-mismatch]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c; measured 2026-09-20).
-[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs: NayaFlow 1.25.1 on macOS, keyboard 3.41.0); raw data decoded by us, never copied.
 [^kb-transport]: naya-create-kb, [protocol/transport](https://nemezzizz.github.io/naya-create-kb/protocol/transport/) (commit 7668067).
 [^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
-[^kb-keymap]: naya-create-kb, [protocol/keymap](https://nemezzizz.github.io/naya-create-kb/protocol/keymap/) (commit 7668067).
 [^kb-led]: naya-create-kb, [protocol/led](https://nemezzizz.github.io/naya-create-kb/protocol/led/) (commit 7668067).
-[^kb-modules]: naya-create-kb, [protocol/modules](https://nemezzizz.github.io/naya-create-kb/protocol/modules/) (commit 7668067).
-[^kb-device]: naya-create-kb, [device/index](https://nemezzizz.github.io/naya-create-kb/device/) (commit 7668067).

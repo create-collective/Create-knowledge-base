@@ -24,11 +24,7 @@ reproduced.
 <!--SL-01-->The two halves are bonded to each other over Bluetooth LE. Each half's pair table (`be/1005`)
 holds the other half's address (its only entry when no host is bonded), and `be/1002` on each half
 returns the other half's own address. The left half's `be/100c` blob carries a split-link block naming
-the right half <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 and 2026-09-08. The
-naya-create-kb maintainer's own captures show the same swap (raw data checked: the left half's
-`be/1008` equals the right half's `be/1002`)[^kb-raw]. This contradicts naya-create-kb's "no radio
-link between halves"[^kb-ble][^kb-device] and fits the CLEAR ALL SPLIT LINKS command it lists itself
-(`be/1010`)[^kb-commands].
+the right half <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 and 2026-09-08.
 
 <!--SL-02-->The left half is the central: it holds every store (keymaps, LED maps, layer list, module
 configs) and receives the right half's key positions over the link. With both halves on USB the right
@@ -63,8 +59,7 @@ are `be/1002` GET PAIR ADDRESS (the partner), `be/1005` GET ALL PAIRS and `be/10
 fields, in three blocks: a 15-byte header, five 37-byte host-profile blocks (offsets 15-199) and a
 39-byte split-link block (offsets 200-238). The split is self-validating: each profile block starts
 with its own index, 0 to 4 in order <span class="tag measured">MEASURED</span> 3.41.0, two captures
-2026-09-08 and one with a bonded host 2026-09-11. naya-create-kb's "250 B live blob" is the whole
-frame[^kb-commands].
+2026-09-08 and one with a bonded host 2026-09-11.
 
 | Offset (blob) | Field | Values seen | Confidence | Evidence |
 |---|---|---|---|---|
@@ -184,8 +179,9 @@ state, which is driven from the left half's maps <span class="tag inferred">INFE
 [LEDs](../protocol/led.md)); and so does the firmware-version read sent to `51` through the left port
 <span class="tag measured">MEASURED</span> 2026-09-20. The Bluetooth identity reads (`be/1008`,
 `be/1002`, `be/1005`) sent to `51` through the left port answer for the LEFT half
-<span class="tag measured">MEASURED</span> 2026-09-22. naya-create-kb describes the left port as
-proxying the right half in general[^kb-transport][^kb-device]; the relay is partial. Which reply
+<span class="tag measured">MEASURED</span> 2026-09-22, so the relay is partial, and a partner's
+Bluetooth address cannot be read that way. This differs from naya-create-kb, which describes the left
+port as relaying the right half in general[^kb-transport]. Which reply
 address byte a relayed answer carries is not recorded ([open questions](../open-questions.md#oq-c12)).
 
 <!--SL-25-->**No wired link between the halves.** Kickstarter update 10 (2024-01-06) says full-duplex
@@ -199,8 +195,7 @@ right-half keys arriving through the left when each half has its own cable)
 <span class="tag measured">MEASURED</span> 3.41.0. So update 10 most likely describes a prototype or a
 design that changed <span class="tag inferred">INFERRED</span>. No wired traffic between the halves has
 been observed, and the rate of the dock (module) link today is not known
-([open questions](../open-questions.md#oq-c15)). naya-create-kb says there is no link between the
-halves at all[^kb-ble].
+([open questions](../open-questions.md#oq-c15)).
 
 ## Repairing the pair
 
@@ -272,12 +267,10 @@ and swaps each, 3.35.4 to 3.41.0 and back): pairing survives an update, so a rep
 post-update step <span class="tag measured">MEASURED</span> 2026-09-20[^fp-mismatch]. See
 [Flashing](../firmware/flashing.md).
 
-<!--SL-24-->Whether `30/10ca` (the factory format) touches the split link is not known to us.
-naya-create-kb judges that it "most likely survives", because clearing the split link is a separate
-command, advises re-pairing through NayaFlow if it does not, and its maintainer's post-format sessions
-show the halves still linked <span class="tag reported">REPORTED</span>[^kb-fr]. Which partition
-NayaCore's clear-all path formats is not recovered by us. See
-[Factory reset](../storage/factory-reset.md) ([open questions](../open-questions.md#oq-f19)).
+<!--SL-24-->Whether `30/10ca` (the factory format) touches the split link has not been tested by us;
+what is known is on [Factory reset](../storage/factory-reset.md#what-it-wipes-and-what-it-may-spare).
+Which partition NayaCore's clear-all path formats is not recovered by us
+([open questions](../open-questions.md#oq-f19)).
 
 ## Vendor notes about the link
 
@@ -314,7 +307,6 @@ but did not exchange key presses <span class="tag doc">DOC</span> (archived vend
 
 ## Sources
 
-[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs, NayaFlow 1.25.1 on macOS, keyboard 3.41.0); raw data decoded by us, never copied.
 [^fp-mismatch]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Pairing and firmware mismatch"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L369-L384) (commit cdd897c).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`bluetooth.py`, the status parser).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): Pairing and ClearBLEDevices step names, refusals, status JSON names.
@@ -326,8 +318,4 @@ but did not exchange key presses <span class="tag doc">DOC</span> (archived vend
 [^ks-10]: Kickstarter update 10, [2024-01-06](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4000229).
 [^man-c]: Naya Create User Manual v1.1.x ("Turning Create ON/OFF", pairing); see [Manuals](../product/manuals.md).
 [^um106]: Naya Create User Manual v1.0.6, FCC ID 2BQ4V0825CRR user manual exhibits ([fccid.io/2BQ4V0825CRR](https://fccid.io/2BQ4V0825CRR)), cable drawing.
-[^kb-ble]: naya-create-kb, [connectivity/ble](https://nemezzizz.github.io/naya-create-kb/connectivity/ble/) (commit 7668067).
-[^kb-device]: naya-create-kb, [device/index](https://nemezzizz.github.io/naya-create-kb/device/) (commit 7668067).
-[^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
 [^kb-transport]: naya-create-kb, [protocol/transport](https://nemezzizz.github.io/naya-create-kb/protocol/transport/) (commit 7668067).
-[^kb-fr]: naya-create-kb, [storage/factory-reset](https://nemezzizz.github.io/naya-create-kb/storage/factory-reset/) (commit 7668067).

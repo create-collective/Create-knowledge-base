@@ -52,9 +52,9 @@ Bluetooth Version "5.4"; Speedlink Connection "Using Bluetooth v5.4"; USB "2.0 o
 
 | Sheet entry | What the filings or other vendor text show | Evidence |
 |---|---|---|
-| Switch type | none given: the sheet names the Kailh CPG-1232 part and pin variant only. The word "clicky" in naya-create-kb's summary is not in it; the lab samples have red stems, and the 2023 campaign sold linear and clicky switches separately from the pre-installed tactile ones | <span class="tag doc">DOC</span> UM1 p3, CRL IP1 p5[^um106][^fcc-crl][^ks-camp][^ks-21] |
-| Materials | aluminum on the body, dock and wing, polycarbonate on the keycaps; the sheet does not describe the body as "aluminum + polycarbonate" (naya-create-kb's wording) | <span class="tag doc">DOC</span>[^um106][^kb-manual] |
-| Keycap legends | the sheet lists keycap material and RGB backlighting only, nothing about transparent or shine-through legends. The 2023 campaign spec sheet did describe "backlit ABS shine-through keycaps with shine-resistant coating" (ABS then; polycarbonate and PC-ABS were sampled in 2024), so naya-create-kb's "transparent characters" has a vendor source, just not the manual. Whether shipped keycaps have shine-through legends is not confirmed | <span class="tag doc">DOC</span> <span class="tag open">OPEN</span>[^um106][^ks-camp][^ks-13] ([details](../open-questions.md#oq-h29)) |
+| Switch type | none given: the sheet names the Kailh CPG-1232 part and pin variant only; the lab samples have red stems, and the 2023 campaign sold linear and clicky switches separately from the pre-installed tactile ones | <span class="tag doc">DOC</span> UM1 p3, CRL IP1 p5[^um106][^fcc-crl][^ks-camp][^ks-21] |
+| Materials | aluminum on the body, dock and wing, polycarbonate on the keycaps only | <span class="tag doc">DOC</span>[^um106] |
+| Keycap legends | the sheet lists keycap material and RGB backlighting only, nothing about transparent or shine-through legends. The 2023 campaign spec sheet did describe "backlit ABS shine-through keycaps with shine-resistant coating" (ABS then; polycarbonate and PC-ABS were sampled in 2024), so shine-through legends have a vendor source, just not the manual. Whether shipped keycaps have shine-through legends is not confirmed | <span class="tag doc">DOC</span> <span class="tag open">OPEN</span>[^um106][^ks-camp][^ks-13] ([details](../open-questions.md#oq-h29)) |
 | "45mA" battery | best read as a typo or a minimum rating: the test reports declare a 3.7 V, 50 mAh, 0.185 Wh cell (model 301217) and the photographed cell reads 50 mAh | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> BLE reports p10, CRL IP2 p14[^fcc-crl][^fcc-crr] |
 | "Input Voltage 4.2V" | best read as the Li-ion cell's full-charge voltage: the label rates each half's input at 5 V DC 1.5 A and the manual asks for a computer USB port | <span class="tag inferred">INFERRED</span>[^fcc-crr][^um106] |
 
@@ -134,8 +134,7 @@ low" pattern may not appear on current module firmware (see
   its previous connection state <span class="tag doc">DOC</span>[^um106].
 - **v1.0.6 contradicts itself on the slot count.** Its text says keys 1-5 and one drawing labels a
   fifth device on `LG1`, while another drawing and the Layer 2 table give BT Device 1-4 on
-  `LC1`-`LF1`, `LG1` Disabled and `LA1` (the Esc position) BT Clear <span class="tag doc">DOC</span>[^um106]. naya-create-kb's
-  "Layer 2 + 1...5" and "Layer 2 + Esc" are the v1.0.6 text, not the later default[^kb-manual].
+  `LC1`-`LF1`, `LG1` Disabled and `LA1` (the Esc position) BT Clear <span class="tag doc">DOC</span>[^um106].
 - **Other v1.0.6 Layer 2 keys.** `LA4` "Speedlink", `LB4` "Connect to Bluetooth", `LC4` "Connect to
   USB" <span class="tag doc">DOC</span>[^um106].
 - **v1.1.0 settles the slots.** Layer 2 plus 1-4 selects a slot, and the "5" key (`LG1`) enters pairing
@@ -284,7 +283,6 @@ computer's USB port <span class="tag doc">DOC</span>[^um106].
 [^man-tu]: Naya Tune User Manual Version 1.1.0, vendor PDF `Naya_Tune_UserManual.pdf`.
 [^man-tr]: Naya Track User Manual Version 1.1.0, vendor PDF `Track_UserManual_100_8c81323d-033e-4b06-a3c7-bdbfe61fab55.pdf`.
 [^nc]: NayaFlow 1.25.1 (Windows): user-interface strings, stock profile and NayaCore 6.11.0 strings (static reading).
-[^kb-manual]: naya-create-kb, [official manual claims](https://nemezzizz.github.io/naya-create-kb/device/manual/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet and FAQ, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-13]: Kickstarter update 13, [2024-05-08](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4061393).
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).

@@ -87,10 +87,8 @@ ground. No contact label anywhere reads `D+` or `D-` <span class="tag doc">DOC</
 only; which pin carries which net, and the direction of each line, are not established, because the
 schematic is confidential <span class="tag inferred">INFERRED</span> ([details](../open-questions.md#oq-h09)).
 
-naya-create-kb describes the link as wired pogo pins with "VBUS/USB on test pads"[^kb-hardware]. That
-wording is partly right: module boards do have `VBUS`, `VBUS_5V` and `USB_5V` pads, but these are the 5 V
-feed from the dock, not USB data. The modules' STM32F411 has a USB device, but nothing shows it wired to
-the dock <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>.
+The module boards' `VBUS`, `VBUS_5V` and `USB_5V` pads carry the 5 V feed from the dock, not USB data.
+The modules' STM32F411 has a USB device, but nothing shows it wired to the dock <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>.
 
 | Net (by name) | Half side | Module side | Direction (inferred) |
 |---|---|---|---|
@@ -104,8 +102,8 @@ the dock <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</s
 Pin positions are not established <span class="tag open">OPEN</span>.
 
 Power flows both ways through the dock: the half feeds 5 V to a docked module (which charges it when
-the keyboard has power), and a charged module powers the half when there is no USB <span class="tag doc">DOC</span>[^um106][^man-c]
-(also stated by naya-create-kb as user-confirmed). On each module the dock 5 V and the Qi receiver
+the keyboard has power), and a charged module powers the half when there is no USB <span class="tag doc">DOC</span>[^um106][^man-c].
+On each module the dock 5 V and the Qi receiver
 output (`QI_VBUS`) reach the SGM41523 charger through `SL` Schottky diodes; the Tune and Touch also
 carry an SGM62117 buck-boost, whose role (3.3 V from the cell, or 5 V toward the dock) is not established
 <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fcc-crl]. The modules have no radio and link to the half only through the dock contacts; the Qi
@@ -143,10 +141,7 @@ module boots once it has drawn enough dock power, at about 1 % <span class="tag 
 - **Presence.** The presence command (`de/1002`) reports presence only (`01` for any module); reading
   it as a type code labels every module a Touch <span class="tag measured">MEASURED</span> (owner's board, 3.41.0)[^nx-pr2].
 - **Handshake.** `de/1001` replies `00 01 <addr>` for a docked, booted module (status `00`, handshake
-  byte `01`, dock address) and `00 00 f0` when nothing booted answers <span class="tag measured">MEASURED</span>. naya-create-kb's four-byte
-  form `[00, PRESENT, TYPE | HALF, X]` is this reply plus the frame's XOR checksum: its `X` values
-  (`30`, `00`, `01`, `31`, `e1`) are exactly the XOR over the command and payload bytes, and its
-  empty-dock value `f0` is the no-module address <span class="tag inferred">INFERRED</span> (arithmetic checked 2026-09-23)[^kb-modules].
+  byte `01`, dock address) and `00 00 f0` when nothing booted answers <span class="tag measured">MEASURED</span>.
 - **Which bay.** Use the dock address, not which LEDs look lit, to tell which bay a module is in <span class="tag measured">MEASURED</span>
   (a second board, 3.28.7, 2026-09-19).
 - **Per half.** Module queries go to the half the module is docked on, and each half reports only its
@@ -155,13 +150,10 @@ module boots once it has drawn enough dock power, at about 1 % <span class="tag 
   `00 <addr> <flag> 00 <major> <minor> <patch>` (the flag byte read `00`, and `01` with an all-zero
   version while a module had not reported yet) <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, both halves, 2026-09-11 and
   2026-09-16; also reported in nayactl pull request 5, `00 20 00 00 02 02 02` Track left and
-  `00 11 00 00 02 02 02` Touch right on the maintainer's 3.30.1 board[^nx-pr5]). NayaCore itself reads it
-  on the right half in the naya-create-kb maintainer's own captures, which contradicts that KB's
-  "left-only"[^kb-modules].
+  `00 11 00 00 02 02 02` Touch right on the maintainer's 3.30.1 board[^nx-pr5]).
 - **Versions in the field.** The Tune and Track on the owner's 3.41.0 board report module firmware
   2.3.3, while the Touch on the same board reported 2.1.2 (right-docked, 2026-09-11 and 2026-09-16);
-  2.1.2 (also on a second board's modules) and 2.2.2 are in the field too <span class="tag measured">MEASURED</span>[^nx-pr5] (2.3.3 also
-  reported by naya-create-kb[^kb-hardware]).
+  2.1.2 (also on a second board's modules) and 2.2.2 are in the field too <span class="tag measured">MEASURED</span>[^nx-pr5].
 - **Stored bundle.** The stored module-bundle version (`de/100a`) is answered by the left half only,
   because only the left half holds the module firmware store <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-16).
 
@@ -178,12 +170,6 @@ board, 3.41.0, NayaFlow write captures, 2026-09). Each layer's keymap has 8 bay 
 inherit from the base layer, or are empty; a module whose bay is empty on the base layer runs its own
 animation and answers no gesture <span class="tag measured">MEASURED</span> (2026-09-03, 2026-09-16). See [Keymap](../protocol/keymap.md).
 
-naya-create-kb observes that a module on a half whose profile disables it shows only its indicator LED,
-and that a re-seated module shows as disabled in NayaFlow until the profile is flashed again
-<span class="tag reported">REPORTED</span>[^kb-device][^kb-modules]. Its maintainer's published factory profile does carry disabled Touch bays
-(`4a 00 00`, `4b 00 00` on layer 0) while a Touch sat in the right bay (raw data checked); neither
-behavior has been tested by us.
-
 Each bay has its own 24-entry LED block in the whole-board map (88-111 left, 112-135 right); the block
 belongs to the bay, not to the module: swapping a Tune and a Track kept each side's color <span class="tag measured">MEASURED</span> (owner's
 board, 3.41.0, 2026-09-08). See [Layout and positions](layout.md#the-led-map).
@@ -192,11 +178,13 @@ board, 3.41.0, 2026-09-08). See [Layout and positions](layout.md#the-led-map).
 
 <!-- dock facts 28-31 -->
 Module firmware reaches a module through the dock. NayaCore carries a 1 MiB LittleFS bundle
-(`FlashMemory.bin`) of encrypted module apps inside its own executable, uploads it to the LEFT half's
-module store over the bootloader's serial protocol (image slot 4), then tells the half to program the
-docked module (`de/1005`). We have never run this <span class="tag static">STATIC</span>[^nc]. naya-create-kb says the `.sfb` files are not
-in the app bundle and are flashed through the base via MCUboot[^kb-hardware]: the "through the base"
-part agrees, the rest does not.
+(`FlashMemory.bin`) of encrypted module apps (`.sfb` files) inside its own executable, uploads it to the
+LEFT half's module store over the bootloader's serial protocol (image slot 4), then tells the half to
+program the docked module (`de/1005`) <span class="tag static">STATIC</span>[^nc]. We have run it on the owner's board (left half on
+3.41.0, 2026-09-23): NayaFlow updated a Touch, and OpenFlow's own module update then flashed a Touch up,
+down and up again and downgraded a Track, which read back as a correct Track; `de/1005` carries one byte for the
+module type (`01` Touch, `02` Tune, `03` Track). One later Track update never finished and left that
+Track silent <span class="tag measured">MEASURED</span>[^fp-modules]. See [Module firmware](../firmware/modules.md).
 
 The UART and `BOOT1` nets fit a module update driven by the half over UART with a boot strap
 (inferred, untested); nothing shows the STM32's USB bootloader reachable through the dock <span class="tag inferred">INFERRED</span>. Module
@@ -218,9 +206,14 @@ up to 4 minutes <span class="tag doc">DOC</span>[^nc]. Detail on [Module firmwar
     <span class="tag doc">DOC</span>[^um106][^man-c]. Do not probe the dock with a bench supply or USB without knowing the pin order,
     which is not established.
 
-!!! danger "Forced module update"
-    NayaFlow's forced module update is a vendor "Danger Zone" operation; see
-    [Module firmware](../firmware/modules.md). Never run by us.
+!!! danger "Module updates can leave a module dark or hang the keyboard"
+    We have run module updates, NayaFlow's forced update (a vendor "Danger Zone" operation) included,
+    on the owner's board (left half, 3.41.0, from 2026-09-23). Two things went wrong on the way: the
+    type byte in `de/1005` must match the docked module, and `03` (Track) sent to a Tune programmed it
+    with the Track's app and left it dark until a forced update with `02` restored it; and one Track
+    update never finished, hung the keyboard until a power cycle, and left that Track answering like an
+    empty bay <span class="tag measured">MEASURED</span>[^fp-modules]. Pick the type that is physically docked. See
+    [Module firmware](../firmware/modules.md).
 
 ## Open questions
 
@@ -244,11 +237,9 @@ up to 4 minutes <span class="tag doc">DOC</span>[^nc]. Detail on [Module firmwar
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) and its comments (maintainer's board on 3.30.1, modules on 2.2.2).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (maintainer's comment with `de/1008` replies).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-device]: naya-create-kb, [device overview](https://nemezzizz.github.io/naya-create-kb/device/) (third party).
-[^kb-modules]: naya-create-kb, [modules](https://nemezzizz.github.io/naya-create-kb/protocol/modules/) (third party).
 [^ks-04]: Kickstarter update 4, [2023-08-10](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3881566).
 [^ks-08]: Kickstarter update 8, [2023-11-28](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3964585).
 [^ks-10]: Kickstarter update 10, [2024-01-06](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4000229).
 [^wo]: WO2025188184A1, "Manual user input device", Naya B.V., published 2025-09-12 ([Google Patents](https://patents.google.com/patent/WO2025188184A1/en)).
 [^wb-naya]: The vendor's former website, archived by the Wayback Machine ([naya.tech captures](https://web.archive.org/web/2025*/naya.tech/*)); cited only, images not reproduced.
+[^fp-modules]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Module firmware update, captured from NayaFlow (2026-09-23)"](https://github.com/create-collective/create-legacy-firmware/blob/db9a07c/FLASHING-PROCEDURE.md#module-firmware-update-captured-from-nayaflow-2026-09-23) (NayaFlow and OpenFlow module updates on the owner's board, and "A module that hangs the keyboard (Track, 2026-09-23)").

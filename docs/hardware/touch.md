@@ -40,18 +40,17 @@ later moved to 2.5D curved etched glass <span class="tag doc">DOC</span>[^ks-cam
 <!-- fcc-images:end -->
 
 The main board is `Touch_MB_20250227_V10`, part number `408-06025-000`, 1.0 mm, single-sided, round,
-about 44 mm (scaled from the 7 x 7 mm MCU package) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP4 p28; CRL IP5 p29-p31[^fcc-crl] (also
-named by naya-create-kb[^kb-hardware]).
+about 44 mm (scaled from the 7 x 7 mm MCU package) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP4 p28; CRL IP5 p29-p31[^fcc-crl].
 
 | Part | Identity and marking | Evidence |
 |---|---|---|
 | MCU | ST STM32F411CEU6 (`U1`), marked `STM32F` / `411CEU6` / `GQ20N 1A9R` / `CHN GQ 302`, 48 leads; the modules moved from a Holtek MCU to the STM32F411 in May 2024 | <span class="tag doc">DOC</span> CRL IP5 p31[^ks-13] |
 | Qi receiver | Maxic MT5705, lot `240801` | <span class="tag doc">DOC</span> CRL IP5 p30-p31 |
-| Charger | SG Micro SGM41523 (`U8`, `SGM` / `41523DF` / `S2A3C`); naya-create-kb's "Touch frontend `4T523DF`" is this charger[^kb-hardware] | <span class="tag doc">DOC</span> |
+| Charger | SG Micro SGM41523 (`U8`, `SGM` / `41523DF` / `S2A3C`) | <span class="tag doc">DOC</span> |
 | Buck-boost | SG Micro SGM62117 (`U3`, `01KGH` / `R2A4C`) | <span class="tag doc">DOC</span> |
 | Other parts | 16 MHz crystal `YC16.0`; `1AM` NPN (`Q4`); `SL` Schottky diodes (`D1`, `D2`) near `QI_VBUS`; a 100 uF tantalum (`J107`); a 5 V TVS on the battery line; `S78` and `T4` diodes; 1.0 uH and 0.47 uH inductors; two `S1D`-marked SOT-23 parts that match no known code | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP5 p30-p31 |
 | Connectors | `J4`, a 14-position FPC (about 0.3 mm pitch) for the pogo-board flex; `J5`, an 8-position FPC for the sensor board; `J3`, a 3-position battery header (about 1.0 mm pitch) with `VBAT` and `NTC` pads beside it | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> |
-| Debug and boot pads | `SWCLK1`, `SWDIO`, `BOOT0`, `BOOT1` | <span class="tag doc">DOC</span> (also listed by naya-create-kb) |
+| Debug and boot pads | `SWCLK1`, `SWDIO`, `BOOT0`, `BOOT1` | <span class="tag doc">DOC</span> |
 | Other pads | sensor-board I2C, INT, RST and LED data (`PAD_*`); `QI_RX_SDA`, `QI_RX_SCL` (MCU to Qi receiver); `MCU_3V3`, `VDD_3V3`, `USB_ADC`, `BAT_ADC`, `VBUS`, `VBUS_5V`, `CHARGE_FULL`, `INSERT` (dock insertion sense, inferred), `NTC`, `VBAT`, `LDO_ON`, `TX`, `RX` | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP5 p29-p31 |
 
 ## Sensor board
@@ -112,11 +111,9 @@ contacts through a slot, although the pogo board has 8; why is not known <span c
   inferred), dated `20250611`, three wires to `J3`, a protection board under yellow tape. A second
   700 mAh cell, `FH364045` (dated `20241201`), appears in the teardown layout photo; whether a Touch holds
   one cell or two is not known <span class="tag doc">DOC</span> CRL IP5 p33-p34; CRL IP4 p28[^fcc-crl]
-  ([details](../open-questions.md#oq-h20)). naya-create-kb attributes `FH364046` 700 mAh to the
-  Track[^kb-exhibits][^kb-manual].
+  ([details](../open-questions.md#oq-h20)).
 - **Capacity figures disagree.** Filed sample 700 mAh (or 2 x 700 if two cells), website and 2023
-  campaign spec sheet 800 mAh, v1.1.0 manual 1500 mAh <span class="tag doc">DOC</span>[^man-to][^ks-camp]. naya-create-kb's "Touch
-  FH202030, 1000 mAh class" is the Tune's pack[^kb-hardware].
+  campaign spec sheet 800 mAh, v1.1.0 manual 1500 mAh <span class="tag doc">DOC</span>[^man-to][^ks-camp].
 - **Qi coil.** A single-layer spiral about 29-30 mm outer diameter on a ferrite disc of about 33 mm,
   unmarked <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>.
 - **Carrier frame.** A black plastic ring with 6 silver rectangular plates (magnets or steel, not
@@ -131,13 +128,13 @@ contacts through a slot, although the pogo board has 8; why is not known <span c
 
 <!-- touch facts 22-32 -->
 - **Dock address.** `0x10` on the left, `0x11` on the right <span class="tag measured">MEASURED</span> (a second board, 3.28.7, 2026-09-19;
-  also the nayactl maintainer's board, 3.30.1[^nx-pr2]; also listed by naya-create-kb[^kb-modules]).
+  also the nayactl maintainer's board, 3.30.1[^nx-pr2]).
 - **LED.** A Touch lights through exactly the first index of its bay's LED block (88 on the left, 112 on
-  the right); lighting only 111 or 135 left it dark <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-10) (also noted
-  by naya-create-kb). See [Layout and positions](layout.md#the-led-map).
+  the right); lighting only 111 or 135 left it dark <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-10).
+  See [Layout and positions](layout.md#the-led-map).
 - **Gesture vocabulary.** NayaCore 6.11.0 names for the Touch: `vertical`, `horizontal`, `tap`,
   `double_tap` and four `swipe_*` directions at 1-4 fingers, plus `pinch`, `spread` and `pinch&spread`
-  at 2 fingers <span class="tag static">STATIC</span>[^nc] (also listed by naya-create-kb). NayaCore refuses double-tap bindings for the
+  at 2 fingers <span class="tag static">STATIC</span>[^nc]. NayaCore refuses double-tap bindings for the
   Touch, so the double-tap names are not usable <span class="tag static">STATIC</span>[^nc].
 - **Manual defaults.** One-finger tap = left click, tap and drag = drag, drag = cursor, two-finger tap =
   right click; macOS behavior applies to the macOS layout in NayaFlow <span class="tag doc">DOC</span>[^man-to].
@@ -182,10 +179,6 @@ contacts <span class="tag doc">DOC</span>[^um106].
 [^jlc]: JLCPCB parts listing for `CST3640H` (third-party catalog).
 [^cst3240]: Hynitron CST3240 datasheet (third-party copy).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
-[^kb-manual]: naya-create-kb, [official manual claims](https://nemezzizz.github.io/naya-create-kb/device/manual/) (third party).
-[^kb-modules]: naya-create-kb, [modules](https://nemezzizz.github.io/naya-create-kb/protocol/modules/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-08]: Kickstarter update 8, [2023-11-28](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3964585).
 [^ks-13]: Kickstarter update 13, [2024-05-08](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4061393).

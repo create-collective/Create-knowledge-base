@@ -53,12 +53,11 @@ for Batch 1 (April 2025) <span class="tag doc">DOC</span>[^ks-17][^ks-18][^ks-20
 
 The main board is `Track_MB_20250305_V13`, part number `408-06028-000`, 1.0 mm, stamp `25 15`, about
 60-66 mm outer diameter with a 40-43 mm opening for the ball (sizes inferred) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP7
-p44-p46[^fcc-crl]. naya-create-kb names the ring `Y08_06025_20250227_V00`, which is the Touch board's
-number with `408` misread[^kb-exhibits].
+p44-p46[^fcc-crl].
 
 | Part | Identity and marking | Evidence |
 |---|---|---|
-| MCU | ST STM32F411CEU6, marked `STM32F` / `411CEU6` / `GQ26Y17VQ` / `CHN GQ 443`; the modules moved from a Holtek MCU to the STM32F411 in May 2024 | <span class="tag doc">DOC</span> CRL IP7 p45[^ks-13] (also named by naya-create-kb) |
+| MCU | ST STM32F411CEU6, marked `STM32F` / `411CEU6` / `GQ26Y17VQ` / `CHN GQ 443`; the modules moved from a Holtek MCU to the STM32F411 in May 2024 | <span class="tag doc">DOC</span> CRL IP7 p45[^ks-13] |
 | Qi receiver | Maxic MT5705, lot `245303` (a different lot from the Tune and Touch parts) | <span class="tag doc">DOC</span> CRL IP7 p46 |
 | Charger | SG Micro SGM41523 (`U8`, `SGM` / `41523DF` / `S2GPC`); no SGM62117 buck-boost was seen on the Track | <span class="tag doc">DOC</span> |
 | Other parts | 16 MHz crystal `YC16.0` (`Y1`, load caps `C102`, `C103`); two `SL` Schottky diodes and one `T4` switching diode; a 1.0 uH inductor; larger capacitors at the Qi coil pads (a resonant or filter bank, inferred); unmarked ESD parts; two `S1D`-marked SOT-23 parts of unknown type; a small unmarked QFN and a leaded IC near `S3` | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP7 p45-p46 |
@@ -103,8 +102,7 @@ or assumed capacitive sensing; two boards were each photographed front and back 
 - **Haptic motor.** A flat coin vibration motor about 7-9 mm, unmarked, on red and blue leads to a white
   2-pin plug (mates `M1`); whether it is an ERM or an LRA is open (the enable net reads `TRACK_?RA_EN`,
   where `LRA_EN` would suggest an LRA). Marketing did not advertise Track haptics <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP6
-  p41[^fcc-crl] ([details](../open-questions.md#oq-h18)). naya-create-kb lists the coin motor among the
-  module extras without naming the Track[^kb-hardware].
+  p41[^fcc-crl] ([details](../open-questions.md#oq-h18)).
 - **Ball assembly.** A black hemispherical cup with a central hole and a translucent carrier holding the
   two sensor boards; the ring opening is about 40 mm <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP6 p37-p38.
 - **Pogo board.** `Track_Pogo_Pin_20241122_V08` (about 17 x 10 mm), 8 gold domed dock contacts in a 2 x 4
@@ -121,10 +119,8 @@ or assumed capacitive sensing; two boards were each photographed front and back 
 The pack is `QS801630 1S2P`, 3.7 V 600 mAh 2.22 Wh, made of two `QS801630` pouch cells of 300 mAh
 1.11 Wh each in parallel, bent around the ring under yellow tape, with three wires (red, yellow, black)
 to a white 3-way plug; date codes `25H09` (lab photo) and `25G24` (a second photo) <span class="tag doc">DOC</span> CRL IP6 p38; CRL
-IP7 p42-p43[^fcc-crl]. naya-create-kb gives the same pack on its hardware page[^kb-hardware], but its
-exhibit page gives the Track the Touch's `FH364046` 700 mAh cell and a separate cylindrical "ICR" 300 mAh
-cell[^kb-exhibits]. The "300 mAh, 1.11 Wh" cell in the photos is one of the two pouch cells inside the
-Track pack; there is no fourth module battery and no cylindrical cell <span class="tag doc">DOC</span>.
+IP7 p42-p43[^fcc-crl]. The "300 mAh, 1.11 Wh" label seen on its own in the photos belongs to one of
+the two pouch cells inside the pack; the Track has no other battery <span class="tag doc">DOC</span>.
 
 Capacity figures disagree: the filed sample has 600 mAh; the website and the 2023 campaign spec sheet
 said 800 mAh; the v1.1.0 manual says 700 mAh <span class="tag doc">DOC</span>[^man-tr][^ks-camp] ([details](../open-questions.md#oq-h21)).
@@ -153,7 +149,7 @@ mark <span class="tag doc">DOC</span> CRL IP6 p37-p38[^fcc-crl] ([details](../op
 
 <!-- track facts 24-33 -->
 - **Dock address.** `0x20` on the left, `0x21` on the right <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-03; also
-  nayactl pull requests 2 and 5[^nx-pr2][^nx-pr5]; also listed by naya-create-kb[^kb-modules]).
+  nayactl pull requests 2 and 5[^nx-pr2][^nx-pr5]).
 - **Buttons.** The four buttons arrive at the host as mouse buttons with masks 1, 2, 4 and 8 <span class="tag measured">MEASURED</span> (owner's
   Track, 2026-09-06).
 - **LED indices.** How many LED indices a Track follows is not settled: the board has one LED; an early
@@ -164,7 +160,7 @@ mark <span class="tag doc">DOC</span> CRL IP6 p37-p38[^fcc-crl] ([details](../op
 - **Gesture vocabulary.** NayaCore 6.11.0 names for the Track: `horizontal`, `vertical`, `rotate`;
   `track_up/down/left/right`; `clockwise_rotate` and `counter_clockwise_rotate`; for buttons 1-3
   `press`, `tap`, `double_tap`, `hold`, `tap_hold`; for button 4 the same without `press` <span class="tag static">STATIC</span>[^nc].
-  naya-create-kb lists `press` for all four buttons[^kb-hardware]. The per-direction names (`track_up`
+  The per-direction names (`track_up`
   and so on) are how an older NayaFlow database stored a split axis as separate rows <span class="tag static">STATIC</span>.
 - **Defaults.** The manual: vertical and horizontal = cursor; rotate clockwise = scroll down;
   counterclockwise = scroll up. NayaFlow's stock profiles "Naya Track Left" and "Naya Track Right":
@@ -202,9 +198,6 @@ opening the module risks bending or puncturing the cells <span class="tag doc">D
 [^nf-beta]: Vendor beta release notes, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.24.0).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
-[^kb-modules]: naya-create-kb, [modules](https://nemezzizz.github.io/naya-create-kb/protocol/modules/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-13]: Kickstarter update 13, [2024-05-08](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4061393).
 [^ks-16]: Kickstarter update 16, [2024-10-06](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4216739).

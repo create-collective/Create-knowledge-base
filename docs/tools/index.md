@@ -18,19 +18,19 @@ its bootloader, and each was measured only on the firmware versions named below.
    OpenFlow's ports before running a script. On Windows a busy port reports "Access is denied"; a
    killed script can leave a Python process holding the port, which looks like a dead keyboard
    <span class="tag measured">MEASURED</span> (owner's machine, Windows, 3.41.0 and 3.28.7,
-   2026-09-10 to 09-19). naya-create-kb gives the same rule[^kb-toolkit].
+   2026-09-10 to 09-19).
 2. **Wake the halves first.** The first connect can take about 1 s; nayactl retries its opener at
-   0.3, 0.7 and 1.0 s <span class="tag static">STATIC</span>[^nx]. naya-create-kb reports that the
-   first command after idle is lost and keeps the halves awake
-   <span class="tag reported">REPORTED</span>[^kb-toolkit]; a timing check on our boards is open.
+   0.3, 0.7 and 1.0 s <span class="tag static">STATIC</span>[^nx]. The first `fe/1001` on a freshly
+   opened port often gets no reply even with both halves awake on USB (23 of 30 nayactl connections),
+   so retry it <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01; see
+   [Transport](../protocol/transport.md)). How an idle or sleeping half answers is not measured yet.
 3. **Check the firmware of both halves.** Read `fe/1002` on each half's own port and through the
    left at `dst 0x51`: halves can run different firmware, and a half can miss a vendor update
    without any warning (a board arrived with left 3.41.0 and right 3.35.4). While they differ, the
    right half's own port answers with empty payloads, but the version read through the left port at
    `dst 0x51` still reaches it <span class="tag measured">MEASURED</span>[^nh-hw].
-4. **Read before you write.** naya-create-kb's tools default to a dry run and write only with
-   `--apply` <span class="tag reported">REPORTED</span>[^kb-toolkit] (its published scripts match,
-   code read 2026-09-23); OpenFlow reads only until you flash <span class="tag static">STATIC</span>.
+4. **Read before you write.** Save a read of every store you are about to change; OpenFlow reads
+   only until you flash <span class="tag static">STATIC</span>.
 
 ## Comparison
 
@@ -41,7 +41,6 @@ its bootloader, and each was measured only on the firmware versions named below.
 | Create Companion | Maps module gestures (sent as F13-F24) to per-app actions on the host | Windows, macOS | MIT | module 2.3.3 | needs one module flash first |
 | create-legacy-firmware | Archive of every stable NayaFlow release and the firmware images carved from them; flashing procedure | any | Apache-2.0 (its own files) | 3.35.4 and 3.41.0 (flashes of 2026-09-20) | installers kept out of git |
 | createflow-dongle | Open firmware and flasher turning an nRF52840 stick into a Bluetooth-to-USB bridge | macOS, Windows, Ubuntu 24.04 (flasher) | Apache-2.0 | keyboard 3.41 | fixed report map; no configuration over Bluetooth |
-| naya-create-kb | Community knowledge base with a Python toolkit and a web client | macOS | no license file | 3.41.0 on macOS | see its toolkit list below |
 
 Which tool for which job: read the state of a board (nayactl `status`, OpenFlow, the
 [Python recipes](recipes-python.md)); change the keymap or LEDs (OpenFlow, NayaFlow); flash firmware
@@ -153,46 +152,7 @@ flasher is tested on macOS, Windows and Ubuntu 24.04 <span class="tag doc">DOC</
 - Its published Bluetooth measurements on 3.41 (the GATT table, the idle `0x1234`/`0x5678` pipe that
   answers no configuration frame, the 212-byte HID report map, encryption level 2 with a Just Works
   central, the stock dongle's behavior) are cited on [Bluetooth](../connectivity/bluetooth.md)
-  <span class="tag measured">MEASURED</span> (third party)[^cfd].
-
-## naya-create-kb
-
-naya-create-kb (github.com/NemeZZiZZ/naya-create-kb, by Aleksei Ilin; site
-nemezzizz.github.io/naya-create-kb) is a community knowledge base written from live probing on macOS
-and a disassembly of NayaCore; its ground truth is keyboard 3.41.0, module 2.3.3, NayaFlow 1.25.1 and
-NayaCore 6.11.0 on macOS arm64. It has no license file. This site credits it on every page where it
-states a fact first <span class="tag doc">DOC</span>[^kb].
-
-Its toolkit, as its toolkit page describes it (tested on 3.41.0, macOS)
-<span class="tag reported">REPORTED</span>[^kb-toolkit], with the published scripts read by us as
-code on 2026-09-23 (they match the description; nothing was run):
-
-| Script | What it does |
-|---|---|
-| `cdc-client.py` | `left dump`, `left set KK spec` (`hid:`/`cons:`/`vend:`/`raw:`), `left ledmap`, `left ledset KK H S`, `left dump100b`, `aux`, `raw TYPE C0C1 [params]` |
-| `naya-backup.py` | read-only snapshot of the left half to one JSON (keymaps and LED maps of layers 0-2 plus telemetry) |
-| `naya-restore.py` | `--snap f.json`, dry run by default, `--apply` writes per-record `30/1004` + `30/100e` with layer-echo ack checks and a read-back per section |
-| `naya-undark.py` | LED revival: the `ed/1013` ceiling plus its "ff phase"; `--port` default left; `--apply` |
-| `naya-led-recover.py` | `--phase ff/bare/t00/t01` |
-| `naya-maxbrt.py` | `--level 100 --apply` (sets the `ed/1013` ceiling; it assumes no read path exists) |
-| `naya-t10-spike.py`, `naya-modules-spike.py`, `naya-effect-spike.py` | write spikes (double-tap records; module-config writes; `ed/1011` in three forms) |
-| `smp-unwedge.py`, `smp-probe*.py`, `boot-trap.py` | bootloader echo then reset; bootloader probes; capture of the cold-boot log |
-| `cdc-sniff.py`, `monitor.py` | passive logger; telemetry poll |
-| `extract_fw.py` | carves the MCUboot images out of NayaFlow's NayaCore |
-| `build-stock-backup.py` | builds a NayaFlow-importable backup from device dumps (`--verify` compares only) |
-| `ble-scan.py` | Bluetooth advertisement scan (bleak) |
-| `verify-signing-key.py` | checks a claimed signing key against the images' KEYHASH |
-| `interposer.c` | a macOS `DYLD_INSERT_LIBRARIES` tap on NayaCore's serial I/O; needs a re-signed copy because the hardened runtime strips `DYLD_*` (confirmed from NayaCore's code signature <span class="tag static">STATIC</span>) |
-
-Corrections to that list <span class="tag doc">DOC</span> <span class="tag static">STATIC</span>: the
-published toolkit also has `naya-brt-wrap-spike.py`, `naya-led-batch-spike.py` and
-`smp-probe4.py` to `smp-probe8.py`; the modules spike's later verdict is `30/100c` (c1 `0x0c`), not
-the `0x0b` hypothesis its table still names, and the T10 spike is recorded as a success on its keymap
-page; `extract_fw.py`'s images are Qt resources in the native NayaCore binary, which on Windows sat
-inside `app.asar` only up to 1.17.3 and on macOS has been outside it since at least 1.11.11. Its raw
-captures are six published serial logs of
-1-3 MB each, three of them with writes <span class="tag reported">REPORTED</span> (raw data checked
-by us, 2026-09-23)[^kb-toolkit].
+  <span class="tag reported">REPORTED</span> (createflow-dongle's own measurements)[^cfd].
 
 ## The vendor's release repositories
 
@@ -206,15 +166,12 @@ disappear; create-legacy-firmware mirrors the stable channel's assets and record
 The canonical never-send list is on [Troubleshooting](../troubleshooting.md) and the recovery steps on
 [Recovery](../recovery.md). For tool authors, two notes:
 
-- naya-create-kb's own list is `ee/10be`, `ee/10ae`, `fa/1002`, `fa/1006`, the text commands
-  `clear_bonds` and `mcuboot_reset`, and replayed `fe/100a` bytes
-  <span class="tag reported">REPORTED</span>[^kb-toolkit]. Our reading: `ee/10be` (DFU reset),
-  `fa/1002` (format partition) and `fa/1006` (erase chip) stay never-send; `ee/10ae` parks a half in
-  its bootloader (no lights, no typing, looks bricked) but is the first step of every stock update
-  and is undone by an SMP `os reset` sent to the port that answers SMP (back in about 8 s)
-  <span class="tag measured">MEASURED</span>[^nh-hw]; `clear_bonds` and `mcuboot_reset` are text
-  commands, answered only by firmware older than 3.31.1 <span class="tag doc">DOC</span>; `fe/100a` is
-  SET ACTIVITY TIMEOUTS, not a commit, and NayaFlow sends it on every flash
+- `ee/10be` (DFU reset), `fa/1002` (format partition) and `fa/1006` (erase chip) are never-send.
+  `ee/10ae` parks a half in its bootloader (no lights, no typing, looks bricked) but is the first step
+  of every stock update and is undone by an SMP `os reset` sent to the port that answers SMP (back in
+  about 8 s) <span class="tag measured">MEASURED</span>[^nh-hw]. The text commands `clear_bonds` and
+  `mcuboot_reset` are answered only by firmware older than 3.31.1 <span class="tag doc">DOC</span>.
+  `fe/100a` is SET ACTIVITY TIMEOUTS, and NayaFlow sends it on every flash
   <span class="tag measured">MEASURED</span> (captures, 2026-09-01).
 - Hazards to add to any tool's list (each measured): a hold-tap flavor byte of 4 or more (stops every
   key until the board is unplugged, 3.41.0); any write needing three frames on 3.28.7 (the half
@@ -222,9 +179,7 @@ The canonical never-send list is on [Troubleshooting](../troubleshooting.md) and
   power cycle, 3.41.0); `&tog 0` from a higher layer; `ed/1013` value 0 (persistent dark keys); a
   one-byte ED payload (zero-filled); nayactl's `raw` sends `30/10ca` and Bluetooth unpair or clear
   without `--force` <span class="tag measured">MEASURED</span> (owner's board 3.41.0, 2026-09-03/11;
-  donor board 3.28.7, 2026-09-19) <span class="tag static">STATIC</span>[^nx]. naya-create-kb adds a
-  right-port ED "ff ladder" that parked its right half dark on 3.41.0
-  <span class="tag reported">REPORTED</span>[^kb-toolkit].
+  donor board 3.28.7, 2026-09-19) <span class="tag static">STATIC</span>[^nx].
 
 ## Open questions
 
@@ -240,7 +195,5 @@ The canonical never-send list is on [Troubleshooting](../troubleshooting.md) and
 [^nh]: create-legacy-firmware, [github.com/create-collective/create-legacy-firmware](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb) (README, `MANIFEST.json`, `FIRMWARE-HISTORY.md`, `firmware-history-beta/MANIFEST.json`, `FLASHING-PROCEDURE.md`, `LICENSE`).
 [^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^cfd]: createflow-dongle, [github.com/mediaandmerch/createflow-dongle](https://github.com/mediaandmerch/createflow-dongle) (README, `firmware/VERSION`, `firmware/src/usb_hid.c`, `docs/findings.md`, releases).
-[^kb]: naya-create-kb, [github.com/NemeZZiZZ/naya-create-kb](https://github.com/NemeZZiZZ/naya-create-kb) (README), read 2026-09-22.
-[^kb-toolkit]: naya-create-kb, [toolkit](https://nemezzizz.github.io/naya-create-kb/toolkit/).
 [^rel]: [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases).
 [^beta]: [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).

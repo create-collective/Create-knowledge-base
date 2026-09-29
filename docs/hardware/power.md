@@ -20,8 +20,7 @@ batteries.
 <!-- power facts 1-4, 51-52 -->
 A half runs from one of two sources: a computer USB port, or a docked module with enough charge. Its own
 small cell only keeps it on while a module is swapped and "is not intended to power normal operation";
-it charges while the half draws power <span class="tag doc">DOC</span>[^um106][^man-c] (also reported by naya-create-kb as
-user-confirmed[^kb-power]). Power therefore flows both ways through the dock: on USB the half feeds and
+it charges while the half draws power <span class="tag doc">DOC</span>[^um106][^man-c]. Power therefore flows both ways through the dock: on USB the half feeds and
 charges the docked module; off USB the module's pack powers the half <span class="tag doc">DOC</span>[^um106][^man-c] (dock nets
 `MZ_VBAT`/`VBAT` and `USB_5V`/`POGOPIN_5V`; see [Module dock](dock.md)).
 
@@ -59,9 +58,9 @@ reports declare the half's two power sources as "1# Supplied from battery. Model
 reports say 50 mAh <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^um106].
 
 The filed units are pre-production, so retail capacities are not confirmed
-([details](../open-questions.md#oq-h21)); naya-create-kb's module-pack attributions differ from these
-(its "Touch FH202030 1000 mAh" is the Tune's pack, its "Track FH364046 700 mAh" the Touch's cell, and its
-separate cylindrical "ICR" 300 mAh cell is one of the Track's two pouch cells)[^kb-hardware][^kb-exhibits].
+([details](../open-questions.md#oq-h21)). This differs from naya-create-kb, which gives the Tune's `FH 202030`
+1000 mAh pack to the Touch and the Touch's `FH364046` 700 mAh cell to the Track[^kb-hardware][^kb-exhibits];
+check a replacement against the table above.
 Cell makers are not identified (label prefixes `FH` and `QS` only); module retail boxes carry a UN 3480
 lithium-ion battery label <span class="tag doc">DOC</span>[^wb-naya]. For decoded sizes, connectors, thermistors and replacement
 cells, see [Battery replacement](batteries.md).
@@ -96,16 +95,13 @@ host from millivolts, not sent by the device <span class="tag measured">MEASURED
 
 | Command | What it reads | Reply (site byte convention) | Units | Evidence |
 |---|---|---|---|---|
-| `fe/1006` (NayaCore: GET KB BATTERY LEVEL) | the half's own cell; NayaFlow shows it as "Internal Battery Voltage (mV)" | `00 <mV hi> <mV lo>`, for example `00 0f f5` = 4085 mV | mV, big-endian | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-11)[^nc] (also reported by nayactl[^nx] and naya-create-kb) |
+| `fe/1006` (NayaCore: GET KB BATTERY LEVEL) | the half's own cell; NayaFlow shows it as "Internal Battery Voltage (mV)" | `00 <mV hi> <mV lo>`, for example `00 0f f5` = 4085 mV | mV, big-endian | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-11)[^nc] (also reported by nayactl[^nx]) |
 | `de/100b` (GET PRECISE BATTERY LEVEL) | the docked module's cell | `00 <mV hi> <mV lo> <valid>` (`valid` `00` = good) | mV, big-endian | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, module 2.3.3, 2026-09-07)[^nx-i4][^nx-pr5] |
 | `de/1009` (GET BATTERY) | the module's cell and its charging rail (USB or Qi input) | `00 <b0> <batt hi> <batt lo> <rail hi> <rail lo>`, for example `00 00 a2 37 c8 f6` = 4.1527 V battery, 5.1446 V rail | 0.1 mV, big-endian | <span class="tag measured">MEASURED</span>[^nx-i4] |
 
 - **`de/100b` is the cell, not the rail.** Back to back on the same modules: Track `de/100b` 4152 mV
   versus the `de/1009` battery field 4142.3 mV, and Tune 4236 mV versus 4257.2 mV; the rail read 4.58-5.14
-  V on USB <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, module 2.3.3)[^nx-i4]. naya-create-kb calls `de/100b` the module
-  rail[^kb-power]. Its four-byte payload `[00, HI, LO, 00]` is exactly this site's reply form (status,
-  value, validity byte); only its reading of the value is wrong. Its `de/1009` layout `[00][batt][usb]`
-  misses the `b0` byte between the status and the battery value <span class="tag measured">MEASURED</span>. See
+  V on USB <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, module 2.3.3)[^nx-i4]. See
   [Transport](../protocol/transport.md) for the byte convention and [Modules](../protocol/modules.md)
   for the commands.
 - **Module firmware differences.** 2.1.2 does not implement `de/100b` (no payload and about 1.09 s of
@@ -115,39 +111,40 @@ host from millivolts, not sent by the device <span class="tag measured">MEASURED
 - **Units.** Feeding the millivolt value into tenth-of-a-millivolt math shows every module at 1 %; tools
   must use the right unit per command (fixed in nayactl pull request 5) <span class="tag measured">MEASURED</span>[^nx-pr5].
 - **Readings.** Half cells: 4.152 V and 4.066 / 4.094 V (right / left) on the owner's halves, 4.21 V on a
-  half after recharge <span class="tag measured">MEASURED</span> (owner's board, 3.41.0; a second board, 3.28.7). The nayactl maintainer reports
+  half after recharge <span class="tag measured">MEASURED</span> (owner's board, 3.41.0; a second board, 3.28.7). How high a half's cell
+  sits on USB depends on the keyboard firmware: after 30 minutes on USB with the readings flat, a board
+  on 3.28.7 held its halves at 4193 and 4206 mV and a board on 3.41.0 at 4067 and 4091 mV <span class="tag measured">MEASURED</span>
+  (owner's boards, 2026-09-26), so a reading near 4.1 V on 3.41.0 can be a full cell; the newer firmware
+  most likely stops charging earlier <span class="tag inferred">INFERRED</span>. The nayactl maintainer reports
   4.173, 4.176 and 4.194 V on full halves and 2.771 V on a drained right half that tools show as 1 %
-  <span class="tag reported">REPORTED</span>[^nx][^nx-pr2][^nx-pr5]. naya-create-kb's dumps read about 4088 / 4087 mV and later 4091 / 4098 mV,
-  rising on USB charge <span class="tag reported">REPORTED</span> (raw data checked: its maintainer's published dumps show 4084-4098 mV left and
-  4094-4105 mV right)[^kb-power]. Modules: full modules 4.12-4.26 V; a Tune on module 2.1.2 read 4000 mV
+  <span class="tag reported">REPORTED</span>[^nx][^nx-pr2][^nx-pr5]. Modules: full modules 4.12-4.26 V; a Tune on module 2.1.2 read 4000 mV
   through `de/1009` <span class="tag measured">MEASURED</span>[^nx-i4]; a module at 1 % read 2.8311 V with its USB rail at 4.8706 V (nayactl
   thread) <span class="tag reported">REPORTED</span>[^nx-pr2].
-- **Noise.** The nayactl maintainer saw a full keyboard cell swing between about 90 and 100 %, and tools
-  read it five times and take the median <span class="tag reported">REPORTED</span> <span class="tag static">STATIC</span>[^nx-i4][^nx]. Other public raw data (6 s polls at rest)
-  show smaller spreads of 13-31 mV per session, which is 1.5-3.5 points on the vendor's 9 mV-per-point
-  scale; this has not been measured on our boards.
+- **Noise.** Read repeatedly over 30 minutes flat on USB, each half's cell reading spread 8-15 mV, under
+  2 points on the vendor's 9 mV-per-point scale <span class="tag measured">MEASURED</span> (owner's boards, 3.28.7 and
+  3.41.0, 2026-09-26). The nayactl maintainer saw a full keyboard cell swing between about 90 and 100 %,
+  and tools read it five times and take the median <span class="tag reported">REPORTED</span> <span class="tag static">STATIC</span>[^nx-i4][^nx].
+  How steady the reading is on battery has not been measured.
 - **Host facts.** NayaCore tracks per device `InternalBatteryVoltage`, `ModuleBatteryVoltage`,
   `ChargingSource` (`Battery` or `USB_Qi`) and `USBVoltage`; the protocol also has a category `0xCA`
   named IC_CHARGER with no known subcommands <span class="tag static">STATIC</span>[^nc]. nayactl labels a module's rail "Qi" below 4.5 V
   and "USB" at or above (a tool heuristic, thresholds unverified) <span class="tag static">STATIC</span>[^nx].
 
-**Rails at a glance on a healthy board on USB** (labels corrected): module cell about 4.1-4.26 V full
+**Rails at a glance on a healthy board on USB**: module cell about 4.1-4.26 V full
 (`de/100b`, mV; `de/1009` on older module firmware); module charging rail about 4.6-5.1 V on USB
-(`de/1009` second field, 0.1 mV); half cell about 4.1-4.2 V (`fe/1006`, mV) <span class="tag measured">MEASURED</span>. naya-create-kb labels the
-module cell as the "module rail" and gives about 4200 mV full, 3700 mV low[^kb-power].
+(`de/1009` second field, 0.1 mV); half cell about 4.1-4.2 V (`fe/1006`, mV), the top depending on the
+keyboard firmware (see Readings above) <span class="tag measured">MEASURED</span>.
 
 ### Presence versus voltage
 
 <!-- power facts 32-33 -->
-Take presence from the handshake (`de/1001`), not from a voltage. With an empty dock naya-create-kb saw
-the right half report `de/100b` as zeros while the left floated near `0x1060` (it reads this as an
-unloaded charger rail) <span class="tag reported">REPORTED</span> (raw data checked)[^kb-power]. In its maintainer's published dumps the right
-half's zero reply carries the invalid flag (`00 00 00 01`), while the left half's phantom 4192 mV is
-flagged valid (`00 10 60 00`). `de/1001` replies `00 01 <addr>` for a docked, booted module <span class="tag measured">MEASURED</span> (owner's
+Take presence from the handshake (`de/1001`), not from a voltage: with both docks empty, both halves
+answered `de/100b` with `00 00 00 00`, a zero reading that still carries the valid flag <span class="tag measured">MEASURED</span>
+(owner's board, 3.41.0, 2026-09-01). `de/1001` replies `00 01 <addr>` for a docked, booted module <span class="tag measured">MEASURED</span> (owner's
 board, 3.41.0). A docked module that has not booted (at about 0-1 % on pogo power) stays dark and answers
 as `0xF0`/`0xF1` with firmware 0.0.0, the same reply an empty dock gives <span class="tag measured">MEASURED</span> (a second board, 3.28.7,
 2026-09-19); the nayactl maintainer reports that it boots and lights at about 1 % <span class="tag reported">REPORTED</span>[^nx-pr2]. See
-[Module dock](dock.md#what-the-host-sees).
+[Module dock](dock.md#what-the-host-sees) and [Modules](../protocol/modules.md).
 
 ## Percentages
 
@@ -160,29 +157,25 @@ percentage for the half's own cell; it shows that cell in millivolts <span class
 
 | Point | Source | Reading | NayaFlow showed | Formula gives |
 |---|---|---|---|---|
-| naya-create-kb sample | <span class="tag static">STATIC</span> (also reported by naya-create-kb[^kb-power]) | about 4222 mV | 100 % | 100 % |
-| naya-create-kb sample | same | 3910 mV | 67 % | 67 % |
-| naya-create-kb sample | same | 3709 mV | 45 % | 45 % |
 | a Tune on module 2.3.3 | <span class="tag measured">MEASURED</span>[^nx-i4] | 4228 mV | 100 % | 100 % |
 | the same Tune | <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>[^nx-i4] | 4127 mV | 92 % | 91 % (the displayed reading was probably at least 4128 mV) |
 
-naya-create-kb published NayaFlow's calibration points first; its slope estimate from them, "about
-9.3 mV per percent", is close, but the exact slope is 9 mV. Its
-samples: a full Touch read `0x1064` = 4196 mV and a discharged Track `0x0E82` = 3714 mV <span class="tag reported">REPORTED</span> (raw data
-checked). NayaFlow 1.20.0's notes acknowledge a 5-10 point fluctuation in module percentages
-<span class="tag doc">DOC</span>[^nf-rel]. nayactl and OpenFlow use the same linear 3.3-4.2 V scale as NayaCore (nayactl floors,
-OpenFlow clamps to 1-100 %) <span class="tag static">STATIC</span>[^nx].
+NayaFlow 1.20.0's notes acknowledge a 5-10 point fluctuation in module percentages
+<span class="tag doc">DOC</span>[^nf-rel]. nayactl uses the same linear 3.3-4.2 V scale as NayaCore and floors the result
+<span class="tag static">STATIC</span>[^nx]. OpenFlow uses NayaCore's formula for modules, so a module reads the same percentage there as
+in NayaFlow; for the half's own cell, which NayaFlow shows only in millivolts, it uses a lithium-ion
+resting-voltage curve scaled so that the level the keyboard firmware charges to reads 100 % (see
+Readings above) <span class="tag static">STATIC</span>[^openflow].
 
 ## Flat modules and module recovery mode
 
 <!-- power facts 34-37, 42 -->
 Long docking can drain a module until its battery protection makes it unchargeable ("Battery Zero"); the
 vendor answered with firmware and hardware changes and a recovery mode, and the manual advises undocking
-modules for long storage <span class="tag doc">DOC</span>[^ks-21][^man-c][^man-tu]. naya-create-kb found that unplugged with modules
-docked, the module packs drain slowly, and that the half's cells only sag when the modules are undocked
-overnight <span class="tag reported">REPORTED</span>[^kb-power]. Its maintainer's published overnight dumps show the first part (raw data
-checked): a docked Touch fell from 4184 to 3920 mV and a docked Track from 4166 to 3714 mV while the half
-cells held near 4.10 V; the second part has not been tested.
+modules for long storage <span class="tag doc">DOC</span>[^ks-21][^man-c][^man-tu]. Off USB a docked module powers its half, and the
+drain overnight can be large: in the naya-create-kb maintainer's published overnight dumps, off USB, a
+docked Touch fell from 4184 to 3920 mV and a docked Track from 4166 to 3714 mV (98 to 68 % and 96 to 46 %
+on NayaFlow's scale) while the half cells held near 4.10 V <span class="tag reported">REPORTED</span> (raw data checked)[^kb-raw].
 
 ### Module recovery mode and the indicator
 
@@ -216,7 +209,7 @@ The manual gives sleep after 1.5 min and deep sleep after 10 min (deep sleep dro
 timeouts; NayaCore names them `idle_time_ms`, `sleep_time_ms` and `sleep_battery_time_ms`, and the third
 stayed 30 s in every one of our captures <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span> (owner's board, 3.41.0, 2026-09-11). A board not yet
 written by NayaFlow held 90 000 / 600 000 / 15 000 ms, which matches the manual's 1.5 and 10 minutes <span class="tag reported">REPORTED</span>
-(raw data checked: the naya-create-kb maintainer's capture of 2026-09-15). The firmware refuses values
+(raw data checked)[^kb-raw]. The firmware refuses values
 under 30 s and treats 0 as off <span class="tag measured">MEASURED</span>. Details on [Settings and timing](../protocol/settings.md).
 
 The LED idle timeout did not run with the cable in and USB output selected, and ran on battery (LEDs off
@@ -232,18 +225,18 @@ and LED wear; the vendor's 3.31.1 LED PWM control cut consumption at full bright
 | Action | A real reset? | How to see it | Evidence |
 |---|---|---|---|
 | Power switch OFF, then ON, with USB connected | yes: OFF shuts the half off, ON restarts it | the half drops off USB | <span class="tag measured">MEASURED</span> (owner's board, 2026-09-23); <span class="tag doc">DOC</span> "Create will respect the ON/OFF state even while connected over USB"[^man-c] |
-| "True cold boot": USB out, modules undocked, switches off, then on | yes, like any power-on | bootloader PID for about 1-1.7 s | <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span> (also reported by naya-create-kb[^kb-power]) |
+| Cold boot: USB out, modules undocked, switches off, then on | yes, like any power-on | bootloader PID for about 1-1.7 s | <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span> |
 | `ee/10ae` into the bootloader, then SMP `os reset` on the data port | yes; the application is back in about 8 s | bootloader PID, then application PID | <span class="tag measured">MEASURED</span> (a second board, 3.28.7, 2026-09-19; owner's board, 2026-09-20) |
-| `ee/10ce` (NORMAL_RESET) | yes; the half reboots, most likely through MCUboot like every other boot | its port drops at once (a transport error 7.7 ms after the command; owner's board, 3.35.4, 2026-09-20); a bootloader PID for about 1-2 s is expected but was not watched | <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span> ([details](../open-questions.md#oq-f03)) |
+| `ee/10ce` (NORMAL_RESET) | yes; the half reboots through MCUboot like every other boot | its port drops at once (a transport error 7.7 ms after the command; owner's board, 3.35.4, 2026-09-20); the bootloader PID shows from about 0.7 s to about 2 s and the application is back after about 3 s (left half, 3.41.0, 2026-09-23, OpenFlow's restart probe); from the third restart in a row it needed a cable replug | <span class="tag measured">MEASURED</span> ([closed question](../open-questions.md#oq-f03)) |
 | One half powers on and re-links | yes, for the central: it reboots through the bootloader | about 2 s off USB | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-22) |
 
 Every boot shows the half's bootloader PID (`0x006F` left, `0x00D3` right) for about 1-1.7 s (right 0.98 s
-and left 1.40 s on 3.41.0; 1.6-1.7 s on 3.28.7) <span class="tag measured">MEASURED</span> (2026-09-19, 2026-09-22). naya-create-kb says the only
-real reset besides `ee/10ce` is the cold boot, that a switch flip on USB is not a reset, and that
-`ee/10ce` reboots both halves with USB dropping for about 0.13 s[^kb-power][^kb-recovery]. The first two
-are contradicted above. For the third, its own notes give 0.13 s as the delay before USB drops, not the
-length of the outage, which lasts through the 1-2 s bootloader pass. See
-[Bootloader](../firmware/bootloader.md) and [Recovery](../recovery.md).
+and left 1.40 s on 3.41.0; 1.6-1.7 s on 3.28.7) <span class="tag measured">MEASURED</span> (2026-09-19, 2026-09-22). `ee/10ce` goes the
+same way: the left half left USB at once, showed its bootloader PID from about 0.7-0.8 s to about 2 s
+after the command, and was back at its application PID after about 3 s. The first two restarts in a row
+came back by themselves; from the third on the half stayed off USB after the same bootloader pass until
+its cable was unplugged and replugged <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, Windows 11, 2026-09-23, two runs
+on different cables and ports). See [Bootloader](../firmware/bootloader.md) and [Recovery](../recovery.md).
 
 The half's LEDs can stay lit on its internal cell while it has no data connection to the host, so a lit
 half is not proof of a working link <span class="tag inferred">INFERRED</span> (follows from the power model).
@@ -291,7 +284,7 @@ Float; marketing later claimed a 14-day runtime for the Tune. None is measured <
 - <span class="tag open">OPEN</span> The meaning of the red-red-red-green module blink ([details](../open-questions.md#oq-h32)).
 - <span class="tag open">OPEN</span> The half's power-tree ICs and rail voltages ([details](../open-questions.md#oq-h03)).
 - <span class="tag open">OPEN</span> Recovery mode per side on firmware other than 3.28.7 ([details](../open-questions.md#oq-f22)).
-- <span class="tag open">OPEN</span> Whether the half cells sag overnight only when the modules are undocked; how noisy the half-cell reading is on our boards.
+- <span class="tag open">OPEN</span> How steady the half-cell reading is on battery (on USB it spreads 8-15 mV), and whether the half cells sag overnight only when the modules are undocked ([details](../open-questions.md#oq-h38)).
 
 ## Sources
 
@@ -310,10 +303,8 @@ Float; marketing later claimed a 14-day runtime for the Tune. None is measured <
 [^nx-i4]: nayactl, [issue #4](https://github.com/Qonfused/nayactl/issues/4) (module battery readings from the owner's board on 3.41.0 with modules on 2.3.3, and the maintainer's comments).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) and its comments (maintainer's board on 3.30.1, modules on 2.2.2).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (the unit fix; maintainer's comments on 2.2.2).
-[^kb-power]: naya-create-kb, [power architecture](https://nemezzizz.github.io/naya-create-kb/device/power/) (third party).
 [^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
 [^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
-[^kb-recovery]: naya-create-kb, [recovery](https://nemezzizz.github.io/naya-create-kb/recovery/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet and Risks section, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-11]: Kickstarter update 11, [2024-02-15](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4029736).
 [^ks-15]: Kickstarter update 15, [2024-09-03](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4095301).
@@ -322,3 +313,5 @@ Float; marketing later claimed a 14-day runtime for the Tune. None is measured <
 [^reddit-j34wi1g]: Reddit, vendor comment [j34wi1g](https://www.reddit.com/comments/101pr7o/_/j34wi1g/) (2023-01-06); archived text, not live-verified.
 [^reddit-jn3wrmk]: Reddit, vendor comment [jn3wrmk](https://www.reddit.com/r/ErgoMechKeyboards/comments/13jydnp/_/jn3wrmk/) (2023-06-06); archived text, not live-verified.
 [^wb-naya]: The vendor's former website, archived by the Wayback Machine ([naya.tech captures](https://web.archive.org/web/2025*/naya.tech/*)); cited only, images not reproduced.
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its battery percentages (modules on NayaCore's formula; the half's cell on a lithium-ion curve, from the release after 0.5.0).
+[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (an overnight pair of device dumps of 2026-09-16 with modules docked, and USB CDC captures of 2026-09-15 before NayaFlow wrote any timeouts); raw data decoded by us, never copied.

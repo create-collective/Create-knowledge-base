@@ -15,12 +15,12 @@ trial run and no automatic way back.
     differently: see [Module firmware](modules.md).
 
 !!! warning "Correction: no trial boot, no automatic revert"
-    naya-create-kb's signing page says a new image boots on trial and that the bootloader reverts
-    automatically if it fails or crashes before confirming itself, which would make firmware
-    experiments safe on a daily driver. On the Create the upload itself arms a **permanent** swap
-    (every stock resource carries a pre-written trailer), and the bootloader refuses the
-    `image state` write that could request a test swap (rc 8). A signed image that boots badly stays;
-    the way back is another upload through serial recovery <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured]. See
+    On the Create the upload itself arms a **permanent** swap (every stock resource carries a
+    pre-written trailer), and the bootloader refuses the `image state` write that could request a
+    test swap (rc 8). A signed image that boots badly stays; the way back is another upload through
+    serial recovery <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured]. This differs from
+    naya-create-kb, which says a new image boots on trial and is reverted automatically if it fails,
+    so that firmware experiments would be safe on a daily driver[^kb-signing]. See
     [There is no test mode](#there-is-no-test-mode).
 
 !!! note "At a glance"
@@ -81,7 +81,7 @@ The sequence as measured <span class="tag measured">MEASURED</span>[^fp-measured
 | 1 | `ee/10ae` MCU_BOOT_RESET, params `00`, on the half's own port (left: `aa 00 50 00 ee 03 10 ae 00 be 04`) | leaves the application; lights go out | immediate | nothing: the half is supposed to go dark |
 | 2 | watch USB for the MCUboot PID (`0x006F` left, `0x00D3` right) | re-enumerates with two CDC ports | a few seconds | no bootloader PID: the command did not reach the half |
 | 3 | `os echo` on each of the two ports | one port answers (data), the other swallows frames (log) | seconds | neither answers: see [Bootloader](bootloader.md#smp-over-the-serial-console) |
-| 4 | `image state` read | reports each slot's hash; name the running image | 4 to 69 s through OpenFlow's retries (right about 25 s, left about 65 s) | a long silence here is normal (cause open) |
+| 4 | `image state` read | reports each slot's hash; name the running image | 4 to 69 s through OpenFlow's retries, reopening the port per request (right about 25 s, left about 65 s); about 20 s on the left with both ports held open ([Bootloader](bootloader.md#slow-answers-parking-and-confirming-the-exit)) | a long silence here is normal (cause open) |
 | 5 | `image upload`, the whole 663 552-byte resource to `image: 2`, 512-byte chunks | erases the secondary slot on the first chunk, then stores the chunks | 57.6 to 77.7 s by hand; 124 to 207 s in the interface runs | a pause after the first chunk is the erase |
 | 6 | (nothing) | the trailer in the last chunk arms a permanent swap | at the last chunk | |
 | 7 | wait | MCUboot swaps the slots and decrypts; the port throws or times out, then re-enumerates | about 100 s | silence is the swap; do not unplug |
@@ -210,8 +210,7 @@ protocol on that firmware, not of the flash <span class="tag measured">MEASURED<
 A firmware flash does not touch the data store. Keymap records (both banks), LED maps,
 layer identities, module configuration slots and Bluetooth bond tables were byte-identical before
 and after two slot erases, writes and swaps per half <span class="tag measured">MEASURED</span>[^fp-measured] (bonds; the rest measured on
-the owner's board, 2026-09-20 and 2026-09-22). naya-create-kb also reports that a reflash leaves the
-data partition alone.
+the owner's board, 2026-09-20 and 2026-09-22).
 
 The keymap record format did not change between 3.35.4 and 3.41.0: 82 records times 3
 layers, zero differing positions, and the layer identities were identical after two flashes <span class="tag measured">MEASURED</span>.
@@ -282,7 +281,7 @@ primary <span class="tag inferred">INFERRED</span>. MCUboot can be built to decr
 failed rescue attempts had gone to the primary slot; that report is private and not cited.)
 
 Custom or unsigned firmware cannot be flashed this way: the signature check refuses it
-<span class="tag static">STATIC</span> ([Images](images.md#custom-firmware-consequences-only)). naya-create-kb says the same.
+<span class="tag static">STATIC</span> ([Images](images.md#custom-firmware-consequences-only)).
 
 ## Client notes
 
@@ -325,21 +324,15 @@ NayaCore 5.8.1 (NayaFlow 1.15.0) made keyboard flashing "up to 2.5x faster"; Nay
 
 Not yet done by anyone we know of: a generation-B flash; a flash onto a half whose primary
 image is invalid ([Recovery R2](../recovery.md#r2-bootloader-device-only-primary-image-not-valid-untested));
-a power loss during either risk window; a module-bundle flash ([Module firmware](modules.md)) <span class="tag measured">MEASURED</span>
+a power loss during either risk window <span class="tag measured">MEASURED</span>
 (absence; status 2026-09-23). Done: both halves in both directions between 3.35.4 and 3.41.0, a
-deliberate mismatch and re-match, and the lighting restore afterwards.
-
-## Where this differs from naya-create-kb
-
-| naya-create-kb says | What the evidence shows |
-|---|---|
-| Serial image upload is unavailable, so stock updates go through the application's CDC protocol (download, secondary slot, reboot, swap) (bootloader and signing pages) | Stock updates go over MCUboot serial recovery with SMP `image upload` to `image: 2`, then `os reset`; the configuration protocol only sends `ee/10ae` |
-| New images boot on trial and revert automatically; experiments are safe on a daily driver; a bad build costs one extra reboot (signing page) | Every stock upload is a permanent swap and no test swap can be requested; a bad signed image stays until another upload |
+deliberate mismatch and re-match, the lighting restore afterwards, and module-bundle updates on the
+left half (3.41.0, from 2026-09-23; see [Module firmware](modules.md)).
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> NayaCore's own upload timing; only our flasher was timed on this bootloader ([details](../open-questions.md#oq-f05)).
-- <span class="tag open">OPEN</span> Why identifying the running image takes up to 69 s after entering the bootloader ([details](../open-questions.md#oq-f05)).
+- <span class="tag open">OPEN</span> NayaCore's own keyboard-image upload timing; only our flasher was timed uploading keyboard images ([details](../open-questions.md#oq-f05)).
+- <span class="tag open">OPEN</span> Why the bootloader takes so long to name the running image after entry: about 20 s on the left half with both ports held open, 4 to 69 s when the port is reopened for each request ([details](../open-questions.md#oq-f05)).
 - <span class="tag open">OPEN</span> How a generation-B half behaves, including `image slot info` ([details](../open-questions.md#oq-f06)).
 - <span class="tag open">OPEN</span> What a power loss does in either window ([details](../open-questions.md#oq-f07)).
 - <span class="tag open">OPEN</span> Whether the Create application would confirm a test swap by itself; moot while none can be requested.
@@ -358,3 +351,4 @@ deliberate mismatch and re-match, and the lighting restore afterwards.
 [^cl-340]: create-legacy-firmware, [`CHANGELOG.md` L340](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L340) (NayaCore 5.8.1).
 [^cl-113]: create-legacy-firmware, [`CHANGELOG.md` L113](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L113) (NayaCore 6.11.0).
 [^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its flasher and firmware catalog.
+[^kb-signing]: naya-create-kb, [firmware/signing](https://nemezzizz.github.io/naya-create-kb/firmware/signing/).

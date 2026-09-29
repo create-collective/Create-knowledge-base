@@ -12,7 +12,9 @@ and a NayaFlow flash always re-sends the timeouts but never sends the LED settin
       with status `ea`.
     - Tapping term and flavor are bytes inside each hold-tap record; moving NayaFlow's slider
       rewrites every hold-tap record on every layer.
-    - Flavor `02` = tap-preferred (measured); `04` or more stops every key until the board is unplugged.
+    - Flavor `00` behaves as hold-preferred, `01` as balanced, `02` as tap-preferred (measured on
+      3.41.0), so NayaFlow's default "Balanced", written as `00`, types as hold-preferred; `04` or
+      more stops every key until the board is unplugged.
     - `ed/1012` scan mode, `ed/1013` max brightness and `ed/1014` action override are real,
       persistent device settings with no read command.
 
@@ -27,7 +29,7 @@ start with the flag or status byte.
 | Sleep Timeout (0-6000 s) | 300 s | `fe/100a` field 2 (`sleep_time_ms`) | `fe/100b` |
 | (no control) | 30 s | `fe/100a` field 3 (`sleep_battery_time_ms`) | `fe/100b` |
 | Tapping Term (10-1000 ms) | 200 ms | term u16 inside every hold-tap record | `30/1003` |
-| Interrupt Flavor (4 choices) | Balanced | flavor byte inside every hold-tap record | `30/1003` |
+| Interrupt Flavor (4 choices) | Balanced (written as `00`, which behaves as hold-preferred) | flavor byte inside every hold-tap record | `30/1003` |
 | LED scan mode | on | `ed/1012` | none |
 | LED max brightness (1-100) | 100 | `ed/1013` | none |
 | LED action override | until keyboard restart | `ed/1014` | none |
@@ -41,8 +43,6 @@ the params of `100a` are `00` followed by three u32 little-endian millisecond va
 with no data; the reply to `100b` (params `00`) is `00` followed by the same 12 bytes. NayaCore names
 the fields `idle_time_ms`, `sleep_time_ms` and `sleep_battery_time_ms`.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 + <span class="tag static">STATIC</span>[^nc].
-naya-create-kb calls the fields idle, sleep and deep and reads the leading `00` as a status
-byte[^kb-settings][^kb-commands]; it is the request's flag byte.
 
 !!! note "Read-only"
     `aa 00 50 00 fe 03 10 0b 00 1b 04` reads the three timeouts and changes nothing.
@@ -52,15 +52,12 @@ byte[^kb-settings][^kb-commands]; it is the request's flag byte.
 `led_layer_override` <span class="tag static">STATIC</span>[^nc]. NayaFlow describes sleep as a deep
 sleep "disabling lighting, bluetooth and memory"[^nf], and the manual gives sleep after 1.5 minutes
 idle and deep sleep (Bluetooth disconnected) after 10 minutes, both configurable[^man-c].
-<span class="tag doc">DOC</span> naya-create-kb quotes the same manual defaults[^kb-manual].
+<span class="tag doc">DOC</span>
 
 <!--ST-02-->NayaFlow's defaults are params `00 90 5f 01 00 e0 93 04 00 30 75 00 00`: idle 90 000,
 sleep 300 000, third field 30 000 ms. Other captured values are 88 000 / 304 000 / 30 000 and
 69 000 / 264 000 / 30 000. NayaFlow never changed the third field in any capture.
-<span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09. naya-create-kb's user
-sample 6 000 000 / 6 000 000 / 30 000 is params `00 80 8d 5b 00 80 8d 5b 00 30 75 00 00`
-<span class="tag reported">REPORTED</span> (raw data checked: its maintainer's captures carry
-exactly these bytes[^kb-raw]; [^kb-settings]).
+<span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09.
 
 The default write and its ack, as whole frames:
 
@@ -72,8 +69,8 @@ aa 50 00 00 fe 03 10 0a 00 1a 04
 To build the params, convert seconds to milliseconds and write each value as four bytes, least
 significant first: 90 s = 90 000 ms = `0x00015f90` = `90 5f 01 00`.
 
-<!--ST-03-->In the naya-create-kb maintainer's earliest captures (2026-09-15, 3.41.0, before NayaFlow
-wrote any timeouts) the board held 90 000 / 600 000 / 15 000 ms: `fe/100b` replied
+<!--ST-03-->The naya-create-kb maintainer's earliest captures (2026-09-15, 3.41.0, before NayaFlow
+had written any timeouts) show the board holding 90 000 / 600 000 / 15 000 ms: `fe/100b` replied
 `00 90 5f 01 00 c0 27 09 00 98 3a 00 00` <span class="tag reported">REPORTED</span> (raw data
 checked[^kb-raw]). That matches the manual's "sleep after 1.5 min idle, deep sleep after 10 min"
 <span class="tag doc">DOC</span>[^man-c], and the third value is below the 30 s floor that writes
@@ -100,14 +97,9 @@ sessions), and then reads `fe/100b` as its verify ("Settings mismatch: X Write=%
 no commit step in this protocol. `fe/100b` is stable across reboots because the timeouts are
 persistent, and it changes whenever the timeouts change (captured at 88 s / 304 s after a UI change).
 <span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09-01, 2026-09-17 +
-<span class="tag static">STATIC</span>[^nc]. naya-create-kb agrees that `fe/100a` is not a commit but
-calls `fe/100b` a token that never changes[^kb-settings]; it changes with the settings. Re-sending
+<span class="tag static">STATIC</span>[^nc]. Re-sending
 valid `fe/100a` bytes is not a hazard in our records (see the never-send list on
 [Command map](commands.md)).
-
-<!--ST-06-->naya-create-kb reports `fe/100b` unchanged across reboots and across a factory
-restore[^kb-littlefs]. <span class="tag reported">REPORTED</span> (the reboot part matches our
-measurement; the factory part needs a donor-board test).
 
 <!--ST-07-->NayaFlow's Behavior Settings map onto the first two fields: Idle Timeout and Sleep
 Timeout sliders, 0-6000 s, stored in seconds in NayaFlow's database; NayaFlow 1.25.1 has no control
@@ -115,7 +107,7 @@ for the third field <span class="tag static">STATIC</span>[^nf]. The timeout set
 unannounced, in NayaFlow beta 1.22.0 (keyboard 3.39.4; its note says 3.39.3), and keyboard 3.40.4
 fixed three activity-timeout bugs: the right half waking the left when entering idle, a Track not
 keeping the keyboard awake, and LEDs stuck half on and half off[^beta].
-<span class="tag doc">DOC</span> naya-create-kb describes the same two sliders[^kb-settings].
+<span class="tag doc">DOC</span>
 
 <!--ST-08-->The first field's idle timer turns the key LEDs off. It did not run with the cable in
 and USB output selected, and it did run on battery (LEDs off at 90 s, one tap restores them). Whether
@@ -129,15 +121,13 @@ the u16 inside every hold-tap record (once in a `03` record, twice in a `10` rec
 record and per bank. NayaFlow writes its single global term and flavor into every hold-tap record,
 so moving its slider rewrites every hold-tap record on every layer; nothing else carries the term
 (`fe/100a` does not). <span class="tag measured">MEASURED</span> NayaFlow 1.25.1 capture on 3.41.0,
-2026-09-17. naya-create-kb derives a tapping term of 200 ms, flavor 0 and "transparent-as-default 1"
-from a stock profile header[^kb-settings]; the record bytes are on [Keymap records](keymap.md).
+2026-09-17. The record bytes are on [Keymap records](keymap.md).
 
 <!--ST-10-->NayaFlow's Tapping Term slider defaults to 200 ms with a range of 10-1000 ms. Its only
 timing controls are Tapping Term, Idle Timeout, Sleep Timeout and the Interrupt Flavor dropdown;
 there is no double-tap window, hold-start, wait-for-release or overlap setting in its UI, in its
 settings schema, or on the wire. <span class="tag static">STATIC</span>[^nf] +
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09. naya-create-kb agrees, and has
-retracted an earlier claim of timing presets[^kb-settings].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09.
 
 !!! danger "Flavor `04` or higher stops every key"
     A hold-tap record with flavor `04` or more is accepted and stored, and then no key works until
@@ -149,25 +139,30 @@ Tap-Preferred, Tap-Unless-Interrupted; schema default "balanced")
 record, both banks (byte 5 of a `03` record, byte 8 of a `10` record): switching only the dropdown to
 Tap-Preferred changed every layer-0 hold-tap record from `00` to `02`, and NayaFlow's reset flash
 wrote `00`. Valid values are 0-3; `04` stops every key until the board is unplugged; `02` is
-tap-preferred (measured); the mapping of 0, 1 and 3 is open.
-<span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09-01, 2026-09-03.
-naya-create-kb's settings page lists the same four choices and leaves the wire encoding open[^kb-settings].
+tap-preferred.
+<span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09-01, 2026-09-03. A home-row typing
+test settles `00` and `01`: with `00` holds fired on fast rolls (hold-preferred), with `01` fast
+rolls typed cleanly (balanced) <span class="tag measured">MEASURED</span> owner's board, 3.41.0,
+2026-09-25[^of-flavor]. So NayaFlow's default "Balanced" is written as `00` and behaves as
+hold-preferred; `03` is not measured.
 
-<!--ST-12-->Two orders fit the unmeasured flavor values. ZMK's order (0 hold-preferred, 1 balanced,
-2 tap-preferred, 3 tap-unless-interrupted)[^zmk-ht] is supported by NayaFlow re-rendering unread
-records as flavor 1, its default "balanced". The UI's order (0 balanced, ...) is supported by the
-default and reset flashes writing `00`. NayaCore's own name list reads "balanced, tap-preferred,
-tap-unless-interrupted, hold-preferred"; indexed 0-3 it contradicts the one measured point, so it is
-not the wire enum. <span class="tag measured">MEASURED</span> (one point) +
-<span class="tag static">STATIC</span>[^nc] + <span class="tag inferred">INFERRED</span>
+<!--ST-12-->The measured bytes follow ZMK's order (0 hold-preferred, 1 balanced, 2 tap-preferred,
+3 tap-unless-interrupted)[^zmk-ht], not the order of NayaFlow's dropdown, whose first entry
+"Balanced" is written as `00`. What NayaFlow writes for Hold-Preferred and Tap-Unless-Interrupted
+has not been captured. NayaFlow's verify read-back shows every record as flavor 1, whatever the
+board holds (see [Keymap records](keymap.md)).
+NayaCore's own name list reads "balanced, tap-preferred, tap-unless-interrupted, hold-preferred";
+indexed 0-3 it contradicts the measured bytes, so it is not the wire enum.
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-25[^of-flavor] +
+<span class="tag static">STATIC</span>[^nc] + <span class="tag inferred">INFERRED</span> (`03`)
 
-| Byte | Measured | ZMK order (candidate) | NayaFlow UI order (candidate) | NayaCore name list (ruled out) |
-|---|---|---|---|---|
-| `00` | written by default and reset flashes | hold-preferred | balanced | balanced |
-| `01` | shown for unread records by NayaFlow's verify | balanced | hold-preferred | tap-preferred |
-| `02` | tap-preferred | tap-preferred | tap-preferred | tap-unless-interrupted |
-| `03` | not seen | tap-unless-interrupted | tap-unless-interrupted | hold-preferred |
-| `04`+ | stops every key | (invalid) | (invalid) | (invalid) |
+| Byte | Behavior on 3.41.0 | NayaFlow writes it for | ZMK order |
+|---|---|---|---|
+| `00` | hold-preferred (holds fire on fast rolls) | "Balanced", its default (default and reset flashes) | hold-preferred |
+| `01` | balanced (fast rolls type cleanly) | not captured; its verify read-back shows every record as `01` | balanced |
+| `02` | tap-preferred | "Tap-Preferred" | tap-preferred |
+| `03` | not measured | not captured | tap-unless-interrupted |
+| `04`+ | stops every key until the board is unplugged | never | (invalid) |
 
 <!--ST-13-->"transparent-as-default" is a NayaCore setting for unset host slots: it decides whether
 NayaCore writes an unassigned key as `0e 00` or `07 00`. On the device, an unbound position reads
@@ -187,9 +182,7 @@ action override (0 = an LED action pressed on a key lasts until restart, NayaFlo
 keyboard restart"; 1 = until the next layer change). <span class="tag measured">MEASURED</span>
 3.41.0, 2026-09-13, 2026-09-16. NayaCore 6.11.0 added protocol support for them (NayaFlow 1.25.0
 release notes)[^nh-cl] <span class="tag doc">DOC</span>. A NayaFlow keymap flash sends none of them;
-when NayaCore does send them has never been captured. naya-create-kb calls the three dead host-side
-controls because a settings flash sent no LED frame[^kb-settings]; the missing frame is right, the
-"dead" is not. Commands, params and the dark-board hazard of `ed/1013` 0 are on [LEDs](led.md).
+when NayaCore does send them has never been captured. Commands, params and the dark-board hazard of `ed/1013` 0 are on [LEDs](led.md).
 
 !!! warning "`ed/1013` with 0, or with short or empty params, darkens the keys persistently"
     Short `ed` params are zero-filled, so an empty or one-byte `ed/1013` is a write of 0. The
@@ -202,8 +195,7 @@ strings each such message sits beside a `SELECT value FROM settings WHERE correl
 query. They say nothing about where the keyboard stores a value. The device side is known only by
 behavior: the values persist across reboots, and whether a firmware flash changes the LED ceiling
 was not recorded. <span class="tag static">STATIC</span>[^nc] +
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09. naya-create-kb uses these messages as
-proof of device storage keys[^kb-littlefs]. See [App data](../software/app-data.md).
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09. See [App data](../software/app-data.md).
 
 <!--ST-17-->NayaFlow's setting correlation ids are vendor constants in its database: interrupt
 flavor `24de8555-1a56-4e02-a1c3-3641603a5ac9`, tapping term `8fe34f61-df0c-48c9-b0f7-ee9bfbaa2a05`,
@@ -219,13 +211,13 @@ third timeout's id was not recovered. NayaFlow 1.25.1 also has "Hold layer LED a
 <!--ST-18-->`fe/1005` SET HOST OS takes one data byte below 2: 0 = Windows, 1 = macOS (params
 `00 00` / `00 01`). It has never been sent by us and is not in the captured connect sequence.
 NayaFlow ships separate Windows and macOS templates (see [Keymap records](keymap.md)).
-<span class="tag static">STATIC</span>[^nc] naya-create-kb lists the name[^kb-commands].
+<span class="tag static">STATIC</span>[^nc]
 
 <!--ST-19-->`fe/1007` SET RELEASE MODE takes one data byte: `00` and `01` were accepted, `ff` was
 refused (`ea`), and nothing changed on USB. NayaCore re-asserts release mode only through the text
 command `keyboard_mode_release_toggle` in its port-broker fallback; the captured connect sequence has
 no `fe/1007`. <span class="tag measured">MEASURED</span> left half, 3.41.0, 2026-09-02 +
-<span class="tag static">STATIC</span>[^nc] naya-create-kb lists the name[^kb-commands].
+<span class="tag static">STATIC</span>[^nc]
 
 <!--ST-20-->`fe/1008` TOGGLE KEYSCAN MODE and `fe/1009` KEYSCAN EVENT are described on
 [Command map](commands.md). <span class="tag static">STATIC</span>[^nx] +
@@ -240,9 +232,8 @@ cleared, and key `22`'s color back to hue 171. <span class="tag measured">MEASUR
 
 ## Module settings
 
-<!--ST-22-->naya-create-kb lists "9 host gesture slots" (0 MOUSE_HORIZONTAL ... 8
-STATIC_ZOOM)[^kb-settings]. They are the categories of the two-word (`0f`) record, its first u32,
-used in module fields and on keys, not slots. See [Module fields](module-fields.md).
+<!--ST-22-->NayaCore's nine motion categories (0 MOUSE_HORIZONTAL ... 8 STATIC_ZOOM) are the first u32
+of the two-word (`0f`) record, used in module fields and on keys. See [Module fields](module-fields.md).
 <span class="tag static">STATIC</span>[^nc] + <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 
 <!--ST-23-->Module settings (pointer speed, scroll speed, acceleration and its switch, the Tune's
@@ -261,8 +252,9 @@ detent spacing, strength and on/off) are one-byte fields inside each module conf
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> Flavor values 0, 1 and 3; one captured NayaFlow flash per
-  dropdown value settles it ([details](../open-questions.md#oq-p09)).
+- <span class="tag open">OPEN</span> Whether flavor `03` is tap-unless-interrupted, and which byte
+  NayaFlow writes for Hold-Preferred and Tap-Unless-Interrupted; one captured NayaFlow flash per
+  dropdown value settles the second ([details](../open-questions.md#oq-p09)).
 - <span class="tag open">OPEN</span> What the second and third timeout fields do on the device;
   whether 0 is accepted for the third; whether USB power or USB output gates the idle timer; how
   "Hold layer LED activation delay" reaches the keyboard; who wrote the 90 / 600 / 15 s state seen
@@ -272,10 +264,6 @@ detent spacing, strength and on/off) are one-byte fields inside each module conf
 
 ## Sources
 
-[^kb-settings]: naya-create-kb, [protocol/settings](https://nemezzizz.github.io/naya-create-kb/protocol/settings/) (commit 7668067).
-[^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
-[^kb-manual]: naya-create-kb, [device/manual](https://nemezzizz.github.io/naya-create-kb/device/manual/) (commit 7668067).
-[^kb-littlefs]: naya-create-kb, [storage/littlefs](https://nemezzizz.github.io/naya-create-kb/storage/littlefs/) (commit 7668067).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs, including a settings flash); raw data decoded by us, never copied.
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): settings field names, verify messages, settings-table queries, validation messages.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings, and its settings schema (static reading).
@@ -284,3 +272,4 @@ detent spacing, strength and on/off) are one-byte fields inside each module conf
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.17.0, 1.22.0, 1.23.0, 1.24.0).
 [^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.25.0).
 [^zmk-ht]: ZMK documentation, [hold-tap behavior, flavors](https://zmk.dev/docs/keymaps/behaviors/hold-tap).
+[^of-flavor]: [OpenFlow](https://github.com/create-collective/openflow/releases), commit 036d04c: a home-row typing test on the owner's board (3.41.0, 2026-09-25) with hold-tap records at flavor `00` and `01`.

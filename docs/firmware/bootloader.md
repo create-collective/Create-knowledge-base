@@ -7,11 +7,10 @@ and how to tell a half that is only passing through it from one that is parked t
 know first: a half parked in its bootloader has no lights and does not type, so it looks bricked, but
 its firmware is untouched, and one SMP `os reset` sent to the right port brings it back.
 
-!!! warning "Correction: no trial boot, no automatic revert"
-    naya-create-kb's signing page says new images boot on trial and that the bootloader reverts
-    automatically if one fails. This bootloader does neither for stock uploads: every stock resource
-    carries a pre-written trailer that arms a **permanent** swap, and `image state` writes, which
-    could request a test swap, return rc 8 (not supported) <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured]. See
+!!! warning "No trial boot, no automatic revert"
+    This bootloader neither boots a stock upload on trial nor reverts one automatically: every stock
+    resource carries a pre-written trailer that arms a **permanent** swap, and `image state` writes,
+    which could request a test swap, return rc 8 (not supported) <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured]. See
     [What the bootloader does not offer](#what-the-bootloader-does-not-offer) and
     [Images](images.md#the-swap-trailer-every-stock-upload-is-permanent).
 
@@ -27,13 +26,14 @@ its firmware is untouched, and one SMP `os reset` sent to the right port brings 
 The keyboard bootloader is MCUboot. Its banner reads `*** Booting MCUboot 9ddeffa8169c ***`,
 and the images are MCUboot images that imgtool reads <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span> (owner's board, left half entering
 recovery, 3.41.0, 2026-09-08). The second banner line is
-`*** Using Zephyr OS build v3.7.0-5411-g31fea97e05fd ***` <span class="tag measured">MEASURED</span>. naya-create-kb reports both lines too.
+`*** Using Zephyr OS build v3.7.0-5411-g31fea97e05fd ***` <span class="tag measured">MEASURED</span>.
 
 Where that build comes from: Zephyr `31fea97e05fd` is an upstream Zephyr `main` commit
 dated 2024-10-25, between v3.7.0 and v4.0.0, not an nRF Connect SDK tag. MCUboot `9ddeffa8169c` is in
 none of `mcu-tools/mcuboot`, `nrfconnect/sdk-mcuboot` or `zephyrproject-rtos/mcuboot`, and Zephyr's
 manifest at that commit pins a different MCUboot. So this is a vendor-local MCUboot build on an
 upstream Zephyr tree <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^zephyr] (commit lookups made 2026-09-23).
+The keyboard application it starts is itself a fork of ZMK <span class="tag doc">DOC</span> ([ZMK](zmk.md)).
 
 It is a single-image build: `image slot info` lists only image 0, with two slots <span class="tag measured">MEASURED</span>
 (owner's board, left half, 3.41.0, generation A, 2026-09-16)[^fp-slots].
@@ -47,19 +47,16 @@ bootloader do not fit the nRF52840's 1 MB internal flash, and NayaCore's flash s
 The banner line `Primary image: magic=good, swap_type=0x3, copy_done=0x1, image_ok=0x1`
 records how the running image arrived. In MCUboot's enumeration, swap type 3 is
 `BOOT_SWAP_TYPE_PERM` (NONE 1, TEST 2, PERM 3, REVERT 4): the running image came in by a permanent
-swap, which is what the stock trailer produces <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot]. naya-create-kb reports the same
-line.
+swap, which is what the stock trailer produces <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot].
 
 `Scratch: magic=unset` is printed by MCUboot's swap-using-scratch code path, so this build
 swaps through a scratch area <span class="tag inferred">INFERRED</span>[^mcuboot].
 
-Our capture (left half entered with `ee/10ae`, 3.41.0, 2026-09-08) continues with
-`Boot source: none` <span class="tag measured">MEASURED</span>. naya-create-kb's capture, which it gives as 361 bytes read on the extra
-USB node (macOS, 3.41.0), goes on to `Image index: 0, Swap type: none` and
-`I: Enter the serial recovery mode` <span class="tag reported">REPORTED</span>[^kb-bootloader]. Raw data checked: MCUboot of that period
-prints the first inside `boot_go` and the second when it enters serial recovery on a boot-mode
-request, in that order[^mcuboot-2024]. The 361-byte count is as it reports; the lines it lists add up
-to 347 bytes with LF line ends or 355 with CRLF.
+Our capture of 2026-09-08 (left half entered with `ee/10ae`, 3.41.0) continues with
+`Boot source: none`; OpenFlow's console capture of 2026-09-23 (same half and firmware, entered the same
+way) shows the lines after it, `Image index: 0, Swap type: none` and `I: Enter the serial recovery mode`
+<span class="tag measured">MEASURED</span>. MCUboot of that period prints the first of these inside `boot_go` and the second
+when it enters serial recovery on a boot-mode request, in that order <span class="tag doc">DOC</span>[^mcuboot-2024].
 
 ## USB identity
 
@@ -90,16 +87,13 @@ recovery window on reset or power-up <span class="tag reported">REPORTED</span>[
 
 In MCUboot, each half is one USB device with **two** CDC interfaces: a data port that
 answers SMP, and a log port that streams the banner, accepts an open, swallows frames and replies
-nothing. The interfaces are not labeled, so a tool must try both <span class="tag measured">MEASURED</span>[^fp-measured]. naya-create-kb
-describes the same split (an extra node beside the usual one; one channel answers, the other only
-logs).
+nothing. The interfaces are not labeled, so a tool must try both <span class="tag measured">MEASURED</span>[^fp-measured].
 
 ## Passing through versus parked
 
 Every power-on passes through the bootloader for about 1 to 1.7 s before the application
 starts: the right half sat at `0x00D3` for 0.98 s and the left at `0x006F` for 1.40 s (3.41.0,
-2026-09-22); 1.6 to 1.7 s per half on 3.28.7 (2026-09-19) <span class="tag measured">MEASURED</span>. naya-create-kb reports a window of
-about 2.2 s on macOS <span class="tag reported">REPORTED</span>[^kb-bootloader].
+2026-09-22); 1.6 to 1.7 s per half on 3.28.7 (2026-09-19) <span class="tag measured">MEASURED</span>.
 
 Powering one half on sends **both** through the bootloader: when the peer re-links, the
 central (left) half re-enumerates USB for about 2 s, and that is a full reboot through MCUboot (the
@@ -128,8 +122,8 @@ primary image is untouched <span class="tag measured">MEASURED</span> (owner's b
 **In.** The configuration command RESET/MCU_BOOT `ee/10ae` sends a half into its
 bootloader: it re-enumerates at its MCUboot PID with two CDC ports and answers none of the
 configuration protocol. This is the first step of every stock firmware update <span class="tag measured">MEASURED</span> (owner's boards,
-2026-09-08, 2026-09-16, 2026-09-20). It is on naya-create-kb's never-send list; here it is a
-handle-with-care command ([Troubleshooting](../troubleshooting.md#the-never-send-list)).
+2026-09-08, 2026-09-16, 2026-09-20). It is a handle-with-care command, not a never-send one
+([Troubleshooting](../troubleshooting.md#the-never-send-list)).
 
 !!! warning "Only send `ee/10ae` with the way out at hand"
     Without the exit recipe below, the half stays dark until it is power-cycled, which also works
@@ -137,8 +131,7 @@ handle-with-care command ([Troubleshooting](../troubleshooting.md#the-never-send
 
 **Out.** SMP `os reset` (group 0, id 5) sent to the port that answers SMP returns the half
 to its application in about 8 s. It schedules nothing. The port drops as the half reboots, so a
-transport error on the reset is the reset working <span class="tag measured">MEASURED</span>[^fp-measured]. naya-create-kb also reports the
-reset rebooting into the application and the port disappearing.
+transport error on the reset is the reset working <span class="tag measured">MEASURED</span>[^fp-measured].
 
 A reset sent to the log port looks sent and does nothing. Earlier claims that "a power
 cycle is required" to leave the bootloader came from exactly that mistake <span class="tag measured">MEASURED</span>[^fp-measured].
@@ -154,10 +147,13 @@ slot is not valid", do not rely on it: see [Recovery R2](../recovery.md#r2-bootl
 The configuration protocol has three reset commands: `ee/10ae` MCU_BOOT_RESET, `ee/10be`
 DFU_RESET (never observed by anyone we know of) and `ee/10ce` NORMAL_RESET; NayaCore logs them as
 "MCU BOOT RESET", "DFU RESET" and "NORMAL RESET" <span class="tag static">STATIC</span>[^nx][^nc]. `ee/10ce` reboots through the
-bootloader: MCUboot runs on every reset and starts its console before it boots the image <span class="tag doc">DOC</span>[^mcuboot-2024],
-and we measured the pass on power-on and on the central's software reboot at re-link <span class="tag measured">MEASURED</span>; for
-`ee/10ce` itself it is inferred, not watched <span class="tag inferred">INFERRED</span>. Also reported by naya-create-kb. A one-reset watch
-of the USB ids would make it a measurement ([open question](../open-questions.md#oq-f03)).
+bootloader: after it the left half left USB, showed its MCUboot id `0x006F` from about 0.7 s to about
+2 s, and was back at its application id about 3 s after the command <span class="tag measured">MEASURED</span> (owner's board,
+3.41.0, Windows 11, OpenFlow's restart probe, 2026-09-23). That is MCUboot's design: it runs on every
+reset and starts its console before it boots the image <span class="tag doc">DOC</span>[^mcuboot-2024]. In the same runs only
+the first two restarts in a row came back by themselves (4 of 11 over two runs, on different cables
+and ports); from the third on, the half reappeared on USB only after the cable was unplugged and
+plugged in again <span class="tag measured">MEASURED</span>.
 
 ## SMP over the serial console
 
@@ -165,27 +161,30 @@ A request is framed like this: a 2-byte big-endian length (covering the body **a
 2-byte CRC), the 8-byte SMP header, the CBOR body and a CRC16, all base64-encoded. The first line is
 prefixed with the bytes `06 09`, continuation lines with `04 14`, and every line ends with a newline.
 NayaCore's binary carries the same `06 09` and `04 14` markers next to `sendFramedCommand`
-<span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>[^fp-slots] (OpenFlow's codec, used live 2026-09-08 to 2026-09-22). naya-create-kb describes
-the same request form. Replies come back the same way: MCUboot of this period splits an outgoing
+<span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>[^fp-slots] (OpenFlow's codec, used live 2026-09-08 to 2026-09-22). Replies come back the same way: MCUboot of this period splits an outgoing
 frame into lines of at most 124 base64 characters (127 minus the 2-byte prefix and the newline),
-continuing with `04 14` <span class="tag doc">DOC</span>[^mcuboot-2024]. naya-create-kb also reports lines of about 124
-characters; its tools expect the continuation prefix `04 00`, which is wrong.
+continuing with `04 14` <span class="tag doc">DOC</span>[^mcuboot-2024]. This differs from naya-create-kb, which gives the
+continuation prefix as `04 00`[^kb-bootloader].
 
 Header byte 0 carries the operation in bits 0 to 2 and the SMP protocol version in bits 3
 and 4 (`(version << 3) + op`). Reference clients send version 1: an image-state read is
-`08 00 00 01 00 01 00 00` followed by the CBOR `a0` (an empty map). Our first probes, with a version-0
-header (`00 00 ...`), got no reply at all, and switching to version 1 was followed by answers
-(owner's board, 2026-09-08) <span class="tag measured">MEASURED</span>. But the same runs also hit a Windows port-open race that kept the
-data port untested, MCUboot's 2024 source does not check the version bits, and naya-create-kb's
-version-0 echo was answered, so what caused that silence is **open** <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> <span class="tag open">OPEN</span>[^mcuboot-2024].
-Send version 1, as the reference clients do.
+`08 00 00 01 00 01 00 00` followed by the CBOR `a0` (an empty map). NayaCore sends version 0 (the same
+read as `00 00 00 01 00 01 00 00`), and this bootloader answers both versions <span class="tag measured">MEASURED</span> (our USB
+capture of a NayaFlow 1.25.1 module update, left half, 3.41.0, 2026-09-23; OpenFlow's version-1
+requests, 2026-09-08 to 2026-09-23). Our first probes, with a version-0 header (`00 00 ...`), got no
+reply at all, and switching to version 1 was followed by answers (owner's board, 2026-09-08)
+<span class="tag measured">MEASURED</span>. Since version 0 is answered, the version bits were not the cause (MCUboot's 2024
+source does not check them either); the same runs also hit a Windows port-open race that kept the data
+port untested, which may explain the silence <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot-2024]
+([closed question](../open-questions.md#oq-f25)).
+Either version works; OpenFlow sends version 1, as the reference clients do.
 
 A length prefix that leaves out the CRC got no reply either <span class="tag measured">MEASURED</span> (2026-09-08).
 
 The CRC16 is XMODEM: polynomial `0x1021`, initial value 0 (check value `0x31C3` for the
 ASCII string "123456789"); reply CRCs verify with the same routine <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>. MCUboot seeds its CRC
 with 0 and drops a frame whose CRC fails <span class="tag doc">DOC</span>[^mcuboot-2024], so an echo sent with a CRC seeded
-`0xFFFF` goes unanswered; also reported by naya-create-kb.
+`0xFFFF` goes unanswered.
 
 Some Zephyr builds reply with indefinite-length CBOR, so a decoder should accept it <span class="tag static">STATIC</span>.
 
@@ -235,19 +234,17 @@ Measured on 3.35.4 and 3.41.0 <span class="tag measured">MEASURED</span> (owner'
 | enumeration | 10 / - | not supported |
 | os parameters, bootloader info | 0 / - | not supported |
 
-We send echo and reset as op 2 (write) with a version-1 header <span class="tag measured">MEASURED</span>. naya-create-kb reports
-echo as op 0 (`{"d":"naya"}` answered by `{"r":"naya"}`) and reset as op 1 <span class="tag reported">REPORTED</span>[^kb-bootloader]. In
-mcumgr's numbering op 1 is a read response, and MCUboot drops any request whose op is neither 0 (read)
-nor 2 (write) <span class="tag doc">DOC</span>[^mcuboot-2024]; its published reset script falls back to op 0 when op 1 fails, so op
-0 most likely did the reset <span class="tag inferred">INFERRED</span>. Not tested by us ([open question](../open-questions.md#oq-f02)).
+We send echo and reset as op 2 (write) with a version-1 header <span class="tag measured">MEASURED</span>. MCUboot drops any
+request whose op is neither 0 (read) nor 2 (write) <span class="tag doc">DOC</span>[^mcuboot-2024], so a request sent as op 1,
+which is a read response in mcumgr's numbering, gets no answer <span class="tag inferred">INFERRED</span>. Whether echo and reset
+also answer as op 0 has not been tested by us.
 
-naya-create-kb's image-state read got no reply even while echo answered, and it concluded
-that the image group is compiled out. The silence is a real observation, but the conclusion does not
-hold: the image group answers here. Which host fault silenced its read is **open** <span class="tag open">OPEN</span>. Its published
-probes differ from ours in the version bits, the sequence number and the body, and they listen for
-only 1.2 to 1.5 s, while MCUboot checks both slots (a signature check, and decryption of an encrypted
-secondary) before it answers an image-state read, which can take seconds; a listening window that is
-too short is a likely cause <span class="tag reported">REPORTED</span> <span class="tag inferred">INFERRED</span>[^mcuboot-2024] ([open question](../open-questions.md#oq-f01)).
+Right after entry an `image state` read can take many seconds to answer (see the slow first answers
+below), and MCUboot checks both slots (a signature check, and decryption of an encrypted secondary)
+before it answers one, so a client that listens for only a second or two sees silence although the
+image group is present <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot-2024]. This differs from naya-create-kb, which
+concludes from such silence that the image group is compiled out and that stock updates must go
+through the application's configuration protocol[^kb-bootloader].
 
 ## Slots and upload ids
 
@@ -326,7 +323,7 @@ NayaCore's bootloader client is `naya_serial::MCUBootWorker` (`openSerialDevice`
 from the log port; it only uploads (it never reads `image state`); `doStart` calls only
 `uploadImageToCreateSlot` and then `restartDevice`; `testImage` and `confirmImage` exist in the binary
 and are never called. Its source files are `MCUBootWorker`, `_CreateLeft`, `_CreateLeft_Modules` and
-`_CreateRight` <span class="tag static">STATIC</span>[^nc][^fp-trailer]. naya-create-kb names the `MCUBootWorker_*` classes too.
+`_CreateRight` <span class="tag static">STATIC</span>[^nc][^fp-trailer].
 
 NayaCore's firmware-update state machine runs through OffsetInitialization, Initialize,
 SpawnBroker, CheckIfDoneBrokering, Brokering, SpawnSystem, SpawnProtocol, RestartingInMCUBoot,
@@ -346,49 +343,32 @@ does not recognize the command"), so drain by reading instead. A second open of 
 milliseconds is refused, so use a single discovery path <span class="tag measured">MEASURED</span> (owner's boards, 2026-09-08 and
 2026-09-20). More on [Platforms](../tools/platforms.md).
 
-## naya-create-kb's observations, reconciled
+## Slow answers, parking and confirming the exit
 
 **Slow first answers.** After `ee/10ae`, the first SMP answer (identifying the running
-image) came 4 to 69 s later across nine runs while OpenFlow re-probed about every 2 s: about 25 s on
-the right half, about 65 s on the left, with one 3.8 s outlier (owner's board, 2026-09-20 and
-2026-09-22) <span class="tag measured">MEASURED</span>. The cause is **open** <span class="tag open">OPEN</span>. naya-create-kb reports a console that revives after its
-ports sit idle for 20 to 50 s <span class="tag reported">REPORTED</span>[^kb-bootloader]; possibly the same effect <span class="tag inferred">INFERRED</span>. Idling was not needed
-on Windows.
+image) came 4 to 69 s later across nine runs while OpenFlow re-probed about every 2 s, opening the port
+afresh for each request: about 25 s on the right half, about 65 s on the left, with one 3.8 s outlier
+(owner's board, 2026-09-20 and 2026-09-22) <span class="tag measured">MEASURED</span>. Holding both of the half's ports open for
+the whole visit and reading the console port, as NayaCore does, cut it: the left half named its
+running image 19.7 s after entry in each of seven module-bundle updates (3.41.0, 2026-09-23 and
+2026-09-24) <span class="tag measured">MEASURED</span>. Why the bootloader answers late at all is **open** <span class="tag open">OPEN</span>.
 
-**Parking.** naya-create-kb says that a valid frame arriving during the boot window keeps
-the half in its bootloader indefinitely. That matches MCUboot's design, with a different mechanism:
-a valid request during the boot-time wait latches serial recovery, and from then on the bootloader
-is never exited until a reset; it does not restart a timeout <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot-2024]. It also fits
-our measured 1 to 1.7 s pass. Also reported by naya-create-kb, which adds, from macOS, that flooding
-frames into that window can wedge the USB CDC driver (the console goes mute on both nodes), and gives
-a recipe: let the ports sit idle for 20 to 50 s, send an echo as a canary, then reset; it reports the
-recipe proven three times <span class="tag reported">REPORTED</span>[^kb-bootloader]. Ours describes the explicit `ee/10ae` entry, which
-never times out either. Do not flood a booting half with frames.
+**Parking.** A valid request that reaches the bootloader during its boot-time wait latches
+serial recovery: from then on MCUboot does not leave for the application until a reset, and it does
+not restart a timeout <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^mcuboot-2024]. That wait is the 1 to 1.7 s pass measured above,
+so a tool that sends frames to a booting half can park it; the explicit `ee/10ae` entry never times
+out either. Do not flood a booting half with frames.
 
-naya-create-kb checks the exit with `fa/1001`. That command is the read-only SPI-flash
-self-test, not "device info"; an answer does show that the application is up. OpenFlow confirms with
-`fe/1002` (firmware version) <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> ([Flash layout](../storage/flash-layout.md#the-spi-flash-self-test)).
-
-## Where this differs from naya-create-kb
-
-| naya-create-kb says (bootloader page) | What the evidence shows |
-|---|---|
-| The `image state` read never responds, so the image group is compiled out: no serial upload, list or slot info | `image upload`, `image state` read and `image slot info` answer on 3.35.4 and 3.41.0; only the `image state` write is not supported |
-| Stock updates go through the application's CDC protocol because serial upload is unavailable | Stock updates are SMP `image upload` to `image: 2` over serial recovery |
-| Multi-line responses continue with `04 00` | Continuation lines start `04 14`, in MCUboot's source and in NayaCore's binary |
-| A valid frame resets an inactivity timeout, so the half parks | The frame latches serial recovery until a reset; no timeout is restarted |
-| `ee/10ae` is never to be sent | It is the first step of every update; handle it with care, with `os reset` at hand |
-| The Zephyr 3.7 base means a ZMK port is a board-definition exercise on the same nRF Connect SDK generation | The Zephyr build is an upstream `main` commit, the MCUboot build is vendor-local, and the stock firmware is itself a ZMK fork ([ZMK](zmk.md)) |
+To confirm the exit, OpenFlow reads `fe/1002` (firmware version) in the application; any
+application answer, the read-only SPI-flash self-test `fa/1001` included, shows that the application
+is up <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> ([Flash layout](../storage/flash-layout.md#the-spi-flash-self-test)).
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> Why naya-create-kb's `image state` read was silent: version bits, a port race, the op code, or something else ([details](../open-questions.md#oq-f01)).
-- <span class="tag open">OPEN</span> Whether echo and reset are accepted with op 0 and op 1 ([details](../open-questions.md#oq-f02)).
-- <span class="tag open">OPEN</span> What silenced our first, version-0 probes on 2026-09-08: the version bits or the Windows port-open race.
-- <span class="tag open">OPEN</span> Whether `ee/10ce` passes through the bootloader ([details](../open-questions.md#oq-f03)).
+- <span class="tag open">OPEN</span> Why some `ee/10ce` restarts in a row come back on USB only after a cable replug ([open question](../open-questions.md#oq-f27)). (That `ee/10ce` passes through the bootloader is answered: [closed question](../open-questions.md#oq-f03).)
 - <span class="tag open">OPEN</span> What the third-mode PIDs `0x07A` / `0x0DE` are and what `ee/10be` does; any generation-B PID on real hardware ([details](../open-questions.md#oq-f06)).
 - <span class="tag open">OPEN</span> What NayaCore's "data port connection test" sends.
-- <span class="tag open">OPEN</span> Why identifying the running image takes up to 69 s after entry (about 25 s on the right half, 65 s on the left), and whether it relates to the idle revive ([details](../open-questions.md#oq-f05)).
+- <span class="tag open">OPEN</span> Why the bootloader takes so long to name the running image after entry: about 20 s on the left half with both ports held open, 4 to 69 s when the port is reopened for each request ([details](../open-questions.md#oq-f05)).
 - <span class="tag open">OPEN</span> Whether the dongle's MCUboot (its `0x0137` pass) has a serial-recovery window, and which key it checks ([details](../open-questions.md#oq-f04)).
 
 ## Sources
@@ -399,7 +379,6 @@ self-test, not "device info"; an answer does show that the application is up. Op
 [^fp-transport]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Transport to the device"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L82-L95).
 [^fp-slots]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195) (device slot map and NayaCore's wrappers; request keys and console markers).
 [^fp-trailer]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "The resource is a whole slot, trailer included"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L197-L226).
-[^fp-pid]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Product ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L228-L248) (x86_64 `0x10017e600`, arm64 `0x10014d710`; create-legacy-firmware's table labels the third mode "DFU").
 [^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384) (commit cdd897c).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings and macOS symbols (`MCUBootWorker`, flash self-test partition names, update state machine, reset names).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py` reset opcodes; `discovery.py` PID table).

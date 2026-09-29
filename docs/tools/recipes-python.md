@@ -57,14 +57,12 @@ calls the rest `payload`; the full convention is on [Transport](../protocol/tran
 
 - **The checksum excludes the size byte.** NayaCore's own port probe is
   `aa 00 50 00 fe 03 10 01 00 11 04`: `10 ^ 01 ^ 00 = 11`, while a sum that also covered the size
-  byte would give `03 ^ 10 ^ 01 ^ 00 = 12` <span class="tag static">STATIC</span>[^nc]. naya-create-kb's
-  Python and JavaScript sketches XOR from the size byte, so every frame they build carries a wrong
-  checksum; its own parser and its web client compute it correctly[^kb-python].
+  byte would give `03 ^ 10 ^ 01 ^ 00 = 12` <span class="tag static">STATIC</span>[^nc].
 - **Reply header.** A left reply starts `aa 50 00`, a right reply `aa 51 00`: in our own USB
   captures of NayaFlow 1.25.1 all 396 left replies and all 226 right replies had that header
   <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, captures of 2026-09-03 and
   2026-09-17), and NayaCore's port detector expects `aa 50 00 00 fe 03 10 01 00 11 04` from a left
-  half <span class="tag static">STATIC</span>[^nc]. Also reported by naya-create-kb[^kb-python].
+  half <span class="tag static">STATIC</span>[^nc].
 - **Size.** One frame carries at most 243 params bytes: the flags byte plus 242 payload bytes (for a
   chunked store write, the index byte and 241 record bytes) <span class="tag measured">MEASURED</span>
   (NayaFlow captures, 2026-09-01).
@@ -236,15 +234,14 @@ channel), then `fe/1002` (GET_FW_VERSION), retried with waits of 0.3, 0.7 and 1.
 <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span> (first two frames of a
 NayaFlow capture, 2026-09-01; nayactl's transport[^nx-transport]).
 
-naya-create-kb's `Session` performs a `30/1001` "handshake" and says `30/10xx` needs it on the same
-handle <span class="tag reported">REPORTED</span>[^kb-python]; `30/1001` is READ LAYER LIST. That
-rule is contradicted per connection: our captures show fresh connections answering `30/1003`,
-`30/1009`, `30/100d` and `30/1005` after the session opener alone (`fe/1001`, `fe/1002`), with no
-`30/1001` on that connection <span class="tag measured">MEASURED</span> (owner's board, 3.41.0,
-2026-09-01). Whether one `30/1001` is needed after power-up is untested; a read-only keyboard check
-settles it <span class="tag open">OPEN</span> ([details](../open-questions.md#oq-p02)). The recipes
-below open with `fe/1001` and `fe/1002` only; NayaCore also reads `30/1001` before its other REMAP
-reads.
+No `30/1001` is needed before other REMAP reads on a connection: our captures show fresh connections
+answering `30/1003`, `30/1009`, `30/100d` and `30/1005` after the session opener alone (`fe/1001`,
+`fe/1002`), with no `30/1001` on that connection <span class="tag measured">MEASURED</span> (owner's
+board, 3.41.0, 2026-09-01). This differs from naya-create-kb, whose `Session` sends a `30/1001` "handshake"
+first and says `30/10xx` needs it on the same handle <span class="tag reported">REPORTED</span>[^kb-python]. Whether one `30/1001` is needed after power-up is untested; a read-only
+keyboard check settles it <span class="tag open">OPEN</span> ([details](../open-questions.md#oq-p02)).
+The recipes below open with `fe/1001` and `fe/1002` only; NayaCore also reads `30/1001` (READ LAYER
+LIST) before its other REMAP reads.
 
 ## Reading the firmware, battery, module and flash state
 
@@ -265,7 +262,7 @@ def kb_battery_mv(link: Link) -> int:
 | `fe/1002` firmware version | `00 00 03 29 00` = status `00`, then `00`, major, minor, patch: 3.41.0; followed on the wire by the checksum `38` (`10 ^ 02 ^ 00 ^ 00 ^ 03 ^ 29 ^ 00 = 38`). Another board replied `00 00 03 1e 01` = 3.30.1 | <span class="tag measured">MEASURED</span> (owner's board); nayactl pull request #5[^nx-pr5]; see [Firmware versions](../firmware/versions.md) |
 | `fe/1006` the half's own cell | millivolts, big-endian (`[mV hi][mV lo]`) | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0); nayactl `status` |
 | `de/1001` module on the dock | `00 01 <address>` when a booted module answers: bit 0 = side, high nibble = type (`10` Touch, `20` Track, `40` Tune; `80` Float unconfirmed); `00 00 f0` when nothing booted answers (`f0`/`f1` = not booted). `de/1002` only says "present" | <span class="tag measured">MEASURED</span> (owner's board 3.41.0; donor board 3.28.7); nayactl pull request #2[^nx-pr2]; [Modules](../protocol/modules.md) |
-| `fa/1001` SPIFLASH_TEST | a read-only SPI-flash self-test, not "device info": 2 header bytes, then 6 bytes per partition (state 0 not detected, 1 detected, 2 formatted, 3 mounted, 4 erased, then five return codes); 32 bytes on the left (five partitions), 20 on the right (three) on a healthy 3.41.0 board. Safe as a liveness probe; NayaCore sends it right after the opener | <span class="tag static">STATIC</span>[^nc] <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-10); differs from naya-create-kb, which calls it "device info"[^kb-python] |
+| `fa/1001` SPIFLASH_TEST | a read-only SPI-flash self-test: 2 header bytes, then 6 bytes per partition (state 0 not detected, 1 detected, 2 formatted, 3 mounted, 4 erased, then five return codes); 32 bytes on the left (five partitions), 20 on the right (three) on a healthy 3.41.0 board. Safe as a liveness probe; NayaCore sends it right after the opener | <span class="tag static">STATIC</span>[^nc] <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-10) |
 
 ## Chunked reads
 
@@ -317,8 +314,7 @@ Layer records are `[position][type][len][param...]`; LED map entries are 4 bytes
 `[position][hue lo][hue hi][saturation]` (hue in degrees 0-360, saturation 0-100, 150 = no color
 set); a KEY_PRESS param is `[usage lo][usage hi][page][modifier bits]`
 <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01 to 09-08). Record types
-are on [Keymap](../protocol/keymap.md), the LED map on [LEDs](../protocol/led.md). naya-create-kb
-reads a layer in "both parts"; a 3.41.0 layer takes 3 to 4 chunks[^kb-python].
+are on [Keymap](../protocol/keymap.md), the LED map on [LEDs](../protocol/led.md).
 
 ## Writes
 
@@ -379,11 +375,11 @@ def led_entry(position: int, hue: int, sat: int) -> bytes:
 | Fact | Evidence |
 |---|---|
 | Writes to the REMAP stores start their payload with the index (layer or slot): `30/1004` params `00 <layer> <records...>`; a sparse write of a few records is normal (NayaFlow sends them). | <span class="tag measured">MEASURED</span> (NayaFlow captures, 2026-09-01) |
-| A missing layer byte gives an ack `19 KK` (the device takes KK as the layer) and nothing is applied. | <span class="tag reported">REPORTED</span> by naya-create-kb[^kb-keymap]; a donor-board check is open |
-| A write ack echoes the layer (or slot): `00 00` for layer 0, `00 01` for layer 1 (status, then echo). naya-create-kb accepts `00 00` or `00 <layer>`. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-07); also reported by naya-create-kb[^kb-python] |
+| The layer byte is mandatory: without it the firmware takes the first record's position as the layer index, and for an index that is no layer it answers status `19` with that index (`19 KK`) and stores nothing. | <span class="tag inferred">INFERRED</span> (the write form above; status `19` answered reads of layers that do not exist, owner's board, 3.41.0, 2026-09-01, see [Transport](../protocol/transport.md)); a donor-board check is open |
+| A write ack echoes the layer (or slot): `00 00` for layer 0, `00 01` for layer 1 (status, then echo). | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-07) |
 | A payload bigger than one frame goes out as several frames: each frame's params are `00 <index>` plus a slice of up to 241 record bytes (slices may split records), and byte 3 counts the frames still to come (`02 01 00`). Continuation frames are acked with status `01`, the last with `00`; a writer that accepts only `00` stops after the first frame and leaves the store half written. | <span class="tag measured">MEASURED</span> (NayaFlow captures, 2026-09-01; owner's board, 3.41.0) |
 | Firmware 3.28.7 wedges (stops answering and typing until replugged) on any write that needs three frames; two frames are fine. Split on record boundaries into writes of at most 482 record bytes; writes land by record index, so the parts can be sent one after another. | <span class="tag measured">MEASURED</span> (donor board, 3.28.7, 2026-09-19) |
-| A single LED entry is one sparse `30/100e` write: params `00 <layer> <KK> <hue lo> <hue hi> <sat>`. The layer byte is mandatory. | <span class="tag measured">MEASURED</span> (NayaFlow capture, 2026-09-01); also reported by naya-create-kb[^kb-python] |
+| A single LED entry is one sparse `30/100e` write: params `00 <layer> <KK> <hue lo> <hue hi> <sat>`. The layer byte is mandatory. | <span class="tag measured">MEASURED</span> (NayaFlow capture, 2026-09-01) |
 | A write ack means "parsed", not "applied". | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0) |
 
 ## LED settings and activity timeouts
@@ -470,7 +466,7 @@ built the same way as `30/1001`'s index byte <span class="tag static">STATIC</sp
 This differs from naya-create-kb, which read the byte array's size argument as its value, so its own tool sends `01`
 (`aa 00 50 00 30 03 10 ca 01 db 04`) to the left half, gets status `00`, and afterwards `30/1001`
 and `30/1003` answer status `16` (nothing stored) until a profile is written again
-<span class="tag reported">REPORTED</span>[^kb-python]. Status `16` as "nothing stored" is ours
+<span class="tag reported">REPORTED</span>[^kb-python]. Status `16` means "nothing stored"
 <span class="tag measured">MEASURED</span> (donor board, 3.28.7, 2026-09-19). Whether `00 00` and
 `01` behave the same stays a donor-board test <span class="tag open">OPEN</span>
 ([details](../open-questions.md#oq-f16)). NayaFlow's "Clear all keymap data" sends `clear_data`,
@@ -481,16 +477,6 @@ pairing command; see [Recovery](../recovery.md) and [Troubleshooting](../trouble
 the never-send list. A hold-tap flavor byte of 4 or more stops every key until the board is
 unplugged (a power cycle) <span class="tag measured">MEASURED</span> (owner's board, 3.41.0): never
 sweep hold-tap header bytes.
-
-## The community KB's own recipes
-
-naya-create-kb's Python page describes its own client (`transact(port, dst, type_, c0, c1, params,
-timeout)`, `Session(port, dst, timeout)`, `cmd`, `read_layer`, `write_key`; example port
-`/dev/cu.usbmodem1101`) and its snapshot and recovery commands (`naya-backup.py`,
-`naya-restore.py --snap snap.json` as a dry run and `--apply`, `naya-undark.py --apply`,
-`naya-maxbrt.py --level 100 --apply`) <span class="tag reported">REPORTED</span>[^kb-python]
-(its published scripts match that description, code read 2026-09-23). Those names
-belong to its client, not to this page's code.
 
 ## Test vectors
 
@@ -512,7 +498,7 @@ All pass with the module above (`test_naya_cdc.py`, run 2026-09-23):
 ## Open questions
 
 - <span class="tag open">OPEN</span> Whether one `30/1001` is needed after power-up; per connection it is not (contradicted by our captures) ([details](../open-questions.md#oq-p02)).
-- <span class="tag open">OPEN</span> Whether `30/10ca` with `00 00` (NayaCore, STATIC) and `01` (naya-create-kb's tool) behave the same: a donor-board test ([details](../open-questions.md#oq-f16)).
+- <span class="tag open">OPEN</span> Whether `30/10ca` with `00 00` (NayaCore, STATIC) and with `01` behave the same: a donor-board test ([details](../open-questions.md#oq-f16)).
 - <span class="tag open">OPEN</span> Whether the third timeout field accepts 0 (the recipe keeps 30 s or more).
 - <span class="tag open">OPEN</span> The status bytes for the vendor names Busy, Memory Full, Invalid Format, Save Failed, Load Failed, NVS, No Data and Invalid ID ([Transport](../protocol/transport.md)).
 
@@ -526,4 +512,3 @@ All pass with the module above (`test_naya_cdc.py`, run 2026-09-23):
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (a board on 3.30.1).
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6) (LED settings; a contributor's measurements).
 [^kb-python]: naya-create-kb, [toolkit/python](https://nemezzizz.github.io/naya-create-kb/toolkit/python/).
-[^kb-keymap]: naya-create-kb, [protocol/keymap](https://nemezzizz.github.io/naya-create-kb/protocol/keymap/).

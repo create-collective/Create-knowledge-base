@@ -8,7 +8,7 @@
   "Every photographed unit is a pre-production sample received by the lab on 2025-06-20; no firmware version is printed in the filings; retail boards may differ.",
   "Serial-number fields, QR and 2D codes, lab sample tags and handwriting visible in the exhibits are not reproduced here; blur or crop them in any reused image.",
   "Grant dates and grant lines come from the FCC EAS record for grantee 2BQ4V (read 2026-09-23); ISED numbers from the ISED Radio Equipment List, company 34320.",
-  "Rows measured on hardware read \"measured on one <unit>, <firmware>, <date>\". Rejected readings are published only where they appeared in another public source (naya-create-kb); readings from our own earlier working notes are omitted.",
+  "Rows measured on hardware read \"measured on one <unit>, <firmware>, <date>\". Rejected readings are not published.",
   "Module and cable photos are the same image files in both halves' filings (left page N = right page N-3 for modules, N-1 for cables): a CRL/CRR pair of citations is one photograph of one sample."
  ],
  "conventions": {
@@ -16,7 +16,7 @@
    "confirmed": "reading and identity hold",
    "corrected": "a different or fuller value, given in the row",
    "unverifiable": "not legible or no identity; only what is legible is given",
-   "refuted": "contradicted by the photos or report text",
+   "refuted": "contradicted by the photos or report text; refuted readings are not published",
    "new (2026-09-23 exhibits)": "read from an exhibit obtained on 2026-09-23 in one extraction pass; not yet blind re-read"
   },
   "tags": {
@@ -261,14 +261,7 @@
   "boards": 20,
   "unconfirmed_readings": 47,
   "rejected_readings_total": 50,
-  "rejected_readings_published": 16,
-  "open_questions": 26,
-  "naya_create_kb_comparison_when_built": {
-   "new": 142,
-   "agrees": 55,
-   "corrects": 18,
-   "of_rows": 215
-  }
+  "open_questions": 26
  },
  "boards": [
   {
@@ -1026,7 +1019,7 @@
    "verdict_note": "",
    "tag": "DOC",
    "source": "CRL IP1 p8, p9; declared HW version CRL BLE p10, CRL SRD p10, CRR BLE p10, CRR SRD p10, CRR MPE p1",
-   "notes": "naya-create-kb's exhibit page calls this board V11; both faces read V13 (V11 is the wing).",
+   "notes": "Both faces read V13 (V11 is the wing).",
    "image": "../images/fcc/parts/hm-01.jpg",
    "image_source": "CRL IP1 p8, upper photo (switch-side silkscreen)"
   },
@@ -3842,7 +3835,7 @@
    "verdict_note": "",
    "tag": "DOC; INFERRED (chemistry, size)",
    "source": "CRL IP2 p13, p14; CRL IP1 p7; CRR IP1 p10, p11; CRL BLE p10; CRL SRD p10; CRR BLE p10; CRR SRD p10; CRR UM1 p4",
-   "notes": "Manual v1.0.6 spec sheet says 'Internal Battery Capacity 45mA' (repeated by naya-create-kb); the cell and the report say 50 mAh (45 is a typo or a minimum, INFERRED).",
+   "notes": "Manual v1.0.6 spec sheet says 'Internal Battery Capacity 45mA'; the cell and the report say 50 mAh (45 is a typo or a minimum, INFERRED).",
    "image": "../images/fcc/batteries/half.jpg",
    "image_source": "battery photo (see Battery replacement)"
   },
@@ -4605,136 +4598,6 @@
    "why": "No manufacturer, distributor or datasheet hit for FH301217, FH202030, FH364046, FH364045 or QS801630",
    "source": "BAT-01, BAT-06, BAT-09, BAT-10, BAT-13",
    "verdict": "unverifiable"
-  }
- ],
- "rejected": [
-  {
-   "id": "R-01",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Half SoC is an nRF52811 (`N5281?`, `N52811`)",
-   "where": "naya-create-kb device/hardware; naya-create-kb device/exhibits",
-   "replaced_by": "HM-04 (nRF52840 CKAA; CKAA is not an nRF52811 code; naya-create-kb's own photo shows `N528` cut off)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-02",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'USB MCU: unknown 2nd chip'; nRF has no USB; images exceed 192 KB flash",
-   "where": "naya-create-kb device/hardware",
-   "replaced_by": "No second MCU-class IC on either face; the nRF52840 has native USB 2.0 FS and 1 MB flash (HM-04)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-03",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Half mainboard `Create_L_KB 20250220_V11`",
-   "where": "naya-create-kb device/exhibits; naya-create-kb device/hardware",
-   "replaced_by": "HM-01 (V13 on both faces; V11 is the wing, WG-01)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-04",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Dongle `BOK17_Dongle` (letter O)",
-   "where": "naya-create-kb device/hardware; naya-create-kb device/exhibits",
-   "replaced_by": "DG-01 (`B0K17`, digit zero in the text layer)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-05",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Tune module ring is `Tune_Touch_20240926_V00`",
-   "where": "naya-create-kb device/exhibits",
-   "replaced_by": "TUM-01 (ring = `Tune_MB_20250227_V09`); TUX-01 (`Tune_touch` is the disc)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-06",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Track module ring `Y08_06025_20250227_V00`",
-   "where": "naya-create-kb device/exhibits",
-   "replaced_by": "TKM-01",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-07",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'Touch frontend: SGMicro `4T523DF`'",
-   "where": "naya-create-kb device/hardware",
-   "replaced_by": "TCM-06 (`41523DF` = SGM41523 charger); TCX-02 (CST3640 is the touch controller)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-08",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Module link 'VBUS/USB on test pads'",
-   "where": "naya-create-kb device/hardware",
-   "replaced_by": "PD-13 (UART + BOOT + power; no `D+`/`D-` on any dock contact)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-09",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'Touch FH202030 1000 mAh class'",
-   "where": "naya-create-kb device/hardware",
-   "replaced_by": "BAT-06 (Tune pack)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-10",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Track battery `FH364046` 700 mAh",
-   "where": "naya-create-kb device/exhibits; naya-create-kb device/manual",
-   "replaced_by": "BAT-09 (Touch cell); BAT-13 (Track 600 mAh 1S2P)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-11",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'Smallest puck ICR ... 300 mAh ... (cylindrical)'",
-   "where": "naya-create-kb device/exhibits",
-   "replaced_by": "BAT-14 (a pouch cell inside the Track pack; no fourth module battery)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-12",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "One grant date, 2025-08-29, for all filings",
-   "where": "naya-create-kb device/hardware; naya-create-kb device/exhibits",
-   "replaced_by": "LB-02a, LB-02b, LB-02c",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-13",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'The SRD report is a 2nd BLE grant'",
-   "where": "naya-create-kb device/hardware",
-   "replaced_by": "LB-02a (same FCC ID on the SRD report cover)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-14",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'nRF Connect SDK 5.1.0'",
-   "where": "naya-create-kb device/hardware",
-   "replaced_by": "LB-19 (`nrfconnect-setup-5.1.0-x64` = nRF Connect for Desktop installer)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-15",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "Switches 'clicky'",
-   "where": "naya-create-kb device/manual",
-   "replaced_by": "EN-01 (manual v1.0.6 does not state a switch type)",
-   "verdict": "refuted"
-  },
-  {
-   "id": "R-16",
-   "origin": "naya-create-kb (commit 7668067)",
-   "reading": "'Body: Aluminum + polycarbonate'",
-   "where": "naya-create-kb device/manual",
-   "replaced_by": "EN-05 (body/dock/wing aluminum); EN-03 (keycaps polycarbonate)",
-   "verdict": "refuted"
   }
  ],
  "open_questions": [

@@ -19,7 +19,7 @@ days; the modules have no FCC ID of their own.
 The FCC grantee code for Naya B.V. is `2BQ4V`. The official record is the FCC OET Equipment
 Authorization System (search for grantee code 2BQ4V; exhibits are served at
 `apps.fcc.gov/eas/GetApplicationAttachment.html?id=<id>` to a browser session); fccid.io mirrors the
-exhibits <span class="tag doc">DOC</span>[^eas][^fccid] (also listed by naya-create-kb[^kb-hardware]).
+exhibits <span class="tag doc">DOC</span>[^eas][^fccid].
 
 | FCC ID | Device | Grant lines | Final action date | ISED number | ISED approval |
 |---|---|---|---|---|---|
@@ -29,7 +29,7 @@ exhibits <span class="tag doc">DOC</span>[^eas][^fccid] (also listed by naya-cre
 
 All rows <span class="tag doc">DOC</span>[^eas][^ised]. There are exactly three FCC IDs, with four grant lines, all "Original
 Equipment"; there is no ID for the Tune, Touch, Track, a dock or a charger <span class="tag doc">DOC</span>[^eas]. The three IDs were
-granted on different days; naya-create-kb gives one date, 2025-08-29, for all[^kb-hardware][^kb-exhibits].
+granted on different days.
 The second CRL line (2404-2480 MHz) fits the 2 Mbps "SRD" report, whose data channels start at 2404 MHz
 <span class="tag inferred">INFERRED</span>. Each test report is marked "This report concerns: Original Grant" <span class="tag doc">DOC</span>.
 
@@ -53,14 +53,14 @@ Netherlands <span class="tag doc">DOC</span>[^fccid]. Samples were received on 2
 | DG | antenna report `BTL-OTA-1-2506C290` R00 | tested and issued 2025-07-14 | RF0401A gain and efficiency |
 | DG | SAR report `BTL-FCC SAR-1-2506C290` R00 | issued 2025-08-12, tested 2025-07-12 to 07-22 | SAR at 5 mm |
 
-All rows <span class="tag doc">DOC</span>[^fccid] (naya-create-kb names the CRL BLE report number[^kb-exhibits]).
+All rows <span class="tag doc">DOC</span>[^fccid].
 
 - **Rule part.** 47 CFR 15.247 (digital transmission system), 2402-2480 MHz, GFSK, for all three <span class="tag doc">DOC</span>.
 - **The halves' BLE reports** test 1 Mbps, 2 Mbps and coded 125 kbps (S=8); maximum peak output 9.30 dBm
   (left, 2M) and 8.36 dBm (right, 2M); maximum average 7.14 / 7.25 dBm (1M) <span class="tag doc">DOC</span> (text layers verified
-  2026-09-23). naya-create-kb's "about 0.007 W" is the right half's peak[^kb-hardware].
+  2026-09-23).
 - **The "SRD" report** in each half's filing carries the same FCC ID as the BLE report: it is a second
-  15.247 report inside the same grant, not a second grant (as naya-create-kb has it[^kb-hardware]). It
+  15.247 report inside the same grant, not a second grant. It
   tests 2 Mbps only, on data channels 2404-2478 MHz plus the advertising channels 2402, 2426 and 2480 MHz;
   left peak 9.27 dBm, average 4.35 dBm; right peak 8.33 dBm, average 5.57 dBm <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>. Its channel table,
   test modes and bandwidths are the same as the dongle's report, and the halves' RF-exposure reports list
@@ -77,14 +77,12 @@ All rows <span class="tag doc">DOC</span>[^fccid] (naya-create-kb names the CRL 
 - **Software.** Every sample declares `Naya_Temp_Flash_Pair.exe` as its EUT software; the lab's channel
   and power tool is `nrfconnect-setup-5.1.0-x64`, the installer name of Nordic's nRF Connect for Desktop
   5.1.0 (not the nRF Connect SDK); power setting 8 on every channel and PHY for the halves. No firmware
-  toolchain or firmware version is stated anywhere in the filings <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> (text layers). This corrects
-  naya-create-kb's "nRF Connect SDK 5.1.0"[^kb-hardware]. The dongle's SAR sample ran "2.4G SRD
+  toolchain or firmware version is stated anywhere in the filings <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> (text layers). The dongle's SAR sample ran "2.4G SRD
   engineering testing software" for continuous transmission at 100 % duty <span class="tag doc">DOC</span> DG SAR p7, p23.
 - **Hardware versions declared** on every report: `Create_L_KB_20250220_V13, Create_R_KB_20250221_V13` for
   the halves and `B0K17_Dongle_20241106_V01` for the dongle <span class="tag doc">DOC</span>. See [Board inventory](index.md#boards).
 - **Antennas filed.** Halves: Boen RF0400A, PCB, no connector, 0.8 dBi. Dongle: Boen RF0401A, PCB, no
-  connector, 3.11 dBi <span class="tag doc">DOC</span> CRL BLE p11; DG RF p10. naya-create-kb gives the dongle's antenna as a sweep
-  with no filed value[^kb-exhibits]; see [Speedlink dongle](dongle.md#the-board).
+  connector, 3.11 dBi <span class="tag doc">DOC</span> CRL BLE p11; DG RF p10. See [Speedlink dongle](dongle.md#the-board).
 - **RF exposure of the halves.** KDB 447498 SAR-exclusion calculations, "No SAR evaluation required".
   Right half (R01): 1.646 (BLE, 7.25 dBm) and 1.118 ("2.4G SRD", 5.57 dBm) against a limit of 3,
   reproduced with 5 mm at 2402 MHz. Left half (R00): 1.630 (BLE, 7.14 dBm) and 0.858 (2.4G SRD,
@@ -100,7 +98,7 @@ All rows <span class="tag doc">DOC</span>[^fccid] (naya-create-kb names the CRL 
 Confidential are exactly the block diagram, schematics and operational description for each ID. Naya's
 letters (CRL 2025-08-06; CRR and DG 2025-08-04) request confidentiality under 47 CFR 0.457 and 0.459 for
 these three only, as trade secrets, with no short-term request for anything else, so they are permanent
-and will not be released <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fccid] (also noted by naya-create-kb[^kb-hardware]).
+and will not be released <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fccid].
 
 The FCC lists 71 exhibits, all public: CRL 22, CRR 24, DG 25. We hold 54 (CRL 19, CRR 21, DG 14): every
 photo, report, label, antenna document and manual, and the three confidentiality letters. The dongle's
@@ -110,9 +108,8 @@ administrative or calibration exhibits (attestation, US-agent, authority and pow
 for the three IDs; the dongle SAR report's appendices A to C) <span class="tag doc">DOC</span>[^eas].
 
 There is no FCC filing under 2BQ4V after 2025-09-03 (no Naya Connect filing and no permissive changes) as
-of 2026-09-23 <span class="tag doc">DOC</span>[^eas]. Our copies of the exhibits match the files served elsewhere: the 15 CRL
-internal-photo parts are byte-identical to the copies in the naya-create-kb author's public research
-repository, and four manual parts match manuals.plus document hashes <span class="tag doc">DOC</span>.
+of 2026-09-23 <span class="tag doc">DOC</span>[^eas]. Our copies of the exhibits match files served elsewhere: four manual parts match manuals.plus
+document hashes <span class="tag doc">DOC</span>.
 
 ## Other regimes and marks
 
@@ -131,8 +128,7 @@ repository, and four manual parts match manuals.plus document hashes <span class
 | "ENERGY VERIFIED" with an N in an ellipse | yes | yes | no | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> |
 
 The PMNs registered with ISED are "Ergonomic detachable wireless mechanical keyboard" and "Wireless
-dongle", and each number is also on its label artwork <span class="tag doc">DOC</span>[^ised] (naya-create-kb gives "IC 34320" and the
-right half's MIC and KC numbers only[^kb-hardware]). The certification body behind MIC code 219 is not
+dongle", and each number is also on its label artwork <span class="tag doc">DOC</span>[^ised]. The certification body behind MIC code 219 is not
 identified. The BSMI number most likely identifies the importer rather than the product <span class="tag inferred">INFERRED</span>. Both half
 labels carry a CNS 15663-style restricted-substance table (cable, circuit assemblies, plastic, metal and
 rubber parts; every cell compliant; no battery row) <span class="tag doc">DOC</span>[^um106]. The issuer of the N-in-ellipse mark is
@@ -147,8 +143,7 @@ Label text (both halves): the FCC ID and IC number on one line; the maker's name
 name in Traditional Chinese and English ("Ergonomic detachable wireless mechanical keyboard"); "Model
 Name: NAYA-800-1(NAYA-CREATE)" and the HVIN with its side suffix (` L` on the left label, ` R` on the
 right; ISED registers the HVINs with the suffix); a serial-number field (template not reproduced);
-"Rating: 5V⎓1.5A"; and the six-line FCC Part 15 two-condition statement on the body plate <span class="tag doc">DOC</span>[^fccid][^ised]
-(naya-create-kb gives the rating and the maker[^kb-hardware]).
+"Rating: 5V⎓1.5A"; and the six-line FCC Part 15 two-condition statement on the body plate <span class="tag doc">DOC</span>[^fccid][^ised].
 
 The label artwork is a 1:1 laser-engraving sheet per half ("Create-L" and "Create-R Engraving Reference
 Sheet", 2025-08-20): the regulatory block sits on the wing's underside plate rotated 90°, and the logo on
@@ -168,7 +163,7 @@ The dongle's label artwork ("Dongle" engraving sheet, 2025-07-25, 12.55 x 12.00 
 Modules have no FCC ID: the Touch and Track base labels print empty `FCC ID:` and `IC:` fields and
 placeholder certification numbers, the maker's name and `Input: 5V⎓500mA`; their bases carry CE, UKCA,
 WEEE, KC, VCCI and other marks. The modules are photographed inside both halves' filings <span class="tag doc">DOC</span> CRL IP4 p27;
-CRL IP6 p37 (naya-create-kb notes that the modules have no radio[^kb-hardware]). See [Touch](touch.md)
+CRL IP6 p37. The modules have no radio of their own; see [Module dock](dock.md), [Touch](touch.md)
 and [Track](track.md).
 
 ## Bluetooth SIG
@@ -317,9 +312,7 @@ embedded JPEGs) <span class="tag doc">DOC</span>.
 | `DG SETUP` | 2BQ4V0825DG | Test setup photos | page |
 | `CL` | all three | Confidentiality letters | p1 |
 
-Every exhibit is listed under its FCC ID on the FCC record and on fccid.io[^eas][^fccid]. Earlier
-coordinates in naya-create-kb (such as `fullres p6-Im1`) point into its author's repository, not to the
-FCC record[^kb-exhibits].
+Every exhibit is listed under its FCC ID on the FCC record and on fccid.io[^eas][^fccid].
 
 ## Safety and privacy
 
@@ -340,5 +333,3 @@ or lab staff names from the reports or the labels are reproduced, although they 
 [^ised]: ISED Canada Radio Equipment List, company number 34320 ([search](https://sms-sgs.ic.gc.ca/equipmentSearch/searchRadioEquipments?lang=en)), read 2026-09-23.
 [^sig]: Bluetooth SIG qualification listing 311198 ([listing search](https://qualification.bluetooth.com/Listings/Search)), read 2026-09-23.
 [^um106]: Naya Create User Manual Version 1.0.6, FCC ID 2BQ4V0825CRR user manual exhibits, part 5 (regulatory statements) ([fccid.io](https://fccid.io/2BQ4V0825CRR)).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).

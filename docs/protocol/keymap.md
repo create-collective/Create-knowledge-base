@@ -36,8 +36,7 @@ half. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 | `52`-`9b` | the second bank: double tap and tap and hold for key `p` at `p + 52` |
 
 <!--KM-02-->The position byte is the key's index and equals NayaFlow's database `position_id`
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09. naya-create-kb calls the same byte
-"KK"[^kb-keymap].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09.
 
 <!--KM-03-->Layers are not fixed at three. They come from the layer list and can be added and
 deleted (NayaFlow created layers 3 and 4 in one captured flash); NayaCore names a `MAX_LAYERS`
@@ -48,15 +47,14 @@ constant whose value we have not recovered. See [Layers](layers.md).
 `1` (`1e`) and `2` (`1f`): the stock read on the owner's board begins `00 01 04 29 00 07 00`,
 `01 01 04 35 00 07 00`, `02 01 04 1e 00 07 00`, `03 01 04 1f 00 07 00`.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 + <span class="tag static">STATIC</span>
-(NayaFlow's default template[^nf]); also reported by naya-create-kb[^kb-keymap].
+(NayaFlow's default template[^nf]).
 
 ## The record format
 
 <!--KM-10-->Every record is `[position][type][len][param x len]`, so a record is `len + 3` bytes.
 Writes use exactly the read format. The rule closes over every layer read we have made, whether the
-layer returned 82 or 156 records, and over every third-party read we decoded.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17. naya-create-kb reports
-the same rule, proven by its own census of 1 776 records[^kb-keymap].
+layer returned 82 or 156 records.
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 to 2026-09-17.
 
 <!--KM-11-->The type byte is an index into NayaCore's behavior table: `00` bluetooth, `01`
 key_press, `02` macro, `03` mod_tap, `04` grave_escape, `05` mo, `06` naya_integrations, `07` none,
@@ -92,29 +90,25 @@ captured records. <span class="tag static">STATIC</span>[^nc] + <span class="tag
 ZMK's u32 `(mods<<24)|(page<<16)|usage`, stored little-endian. Page `07` is the keyboard page and
 `0c` the consumer page; NayaCore's key table also uses page `01` (Generic Desktop) for
 SYSTEM_POWER, SLEEP and WAKE_UP (`81`-`83`). Worked record: `22 01 04 07 00 07 00` is position `22`,
-key D. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09. naya-create-kb names the fields
-HID, PAGE_BE and MOD; its formula is right, but byte 1 is the usage's high byte and the page is a
-single byte[^kb-keymap].
+key D. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09.
 
-<!--KM-13-->`mods` is the HID modifier bitmap (naya-create-kb's MODMASK): `01` LCtrl, `02` LShift,
+<!--KM-13-->`mods` is the HID modifier bitmap: `01` LCtrl, `02` LShift,
 `04` LAlt, `08` LGui, `10` RCtrl, `20` RShift, `40` RAlt, `80` RGui. A bare modifier key is its own
 usage (`e0`-`e7`) with mods 0; a shifted glyph is the base usage plus LShift (`)` is key 0 plus
 `02`). <span class="tag measured">MEASURED</span> 3.41.0, 2026-09. In the stock profile the only
 records with modifiers are layer 1 positions `1c` and `1d`, the parentheses: `26 00 07 02` and
-`27 00 07 02` (param bytes). <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01; also
-reported by naya-create-kb[^kb-keymap]. Edited profiles carry other modifiers, and so do stock
+`27 00 07 02` (param bytes). <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. Edited profiles carry other modifiers, and so do stock
 module fields.
 
 <!--KM-14-->Consumer usages seen on the wire include `b5` Next, `b6` Previous, `cd` Play/Pause, `e2`
-Mute, `e9` Volume Up and `ea` Volume Down. naya-create-kb's example "C_MUTE `20 01 04 b6 00 0c 00`"
-is Previous Track: in the HID Consumer page `b6` is Scan Previous Track and Mute is `e2`[^hid]. The
-stock Tune fields confirm it (`e2 00 0c 00` for mute, `b6 00 0c 00` for previous).
+Mute, `e9` Volume Up and `ea` Volume Down. In the HID Consumer
+page `b6` is Scan Previous Track and Mute is `e2`[^hid], and the stock Tune fields agree (`e2 00 0c 00` for mute, `b6 00 0c 00` for previous).
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09 + <span class="tag doc">DOC</span>
 
 <!--KM-15-->A key press of four zero bytes (`pp 01 04 00 00 00 00`) presses nothing and is not
 the same record as NONE (`07 00`). The board carries it on an unset hold-tap half and on the two
-stock Tune gestures NayaFlow labels LED Brightness Up and Down. What the keyboard does with it is
-open. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
+stock Tune gestures NayaFlow labels LED Brightness Up and Down, where it gives no HID output and no
+LED change. What it does on a key is open. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 
 <!--KM-16-->Modifier-only records exist. NayaFlow flashes "LALT + CLICK" as usage 0, page 0, mods
 `04` (param `00 00 00 04`). A bracketed modifier in NayaFlow's chord syntax ("[LALT] + TAB") marks a
@@ -138,8 +132,7 @@ positions 67 and 68 (LH4, RH4) and `05` layer 2 on the two bottom-corner keys at
 RA5, "hold System" in the vendor template), whose keycap print differs from the action. On the
 owner's board the stock read holds `43 05 04 01 00 00 00`, `44 05 04 01 00 00 00`,
 `3e 05 04 02 00 00 00` and `49 05 04 02 00 00 00`. <span class="tag measured">MEASURED</span> 3.41.0,
-2026-09-01 + <span class="tag static">STATIC</span> (template[^nf]); also reported by
-naya-create-kb[^kb-keymap].
+2026-09-01 + <span class="tag static">STATIC</span> (template[^nf]).
 
 <!--KM-20-->**`06` Naya system action.** The param is a u32 LE command. The only value known on the
 wire is 401 = MODULE_FORCE_CHARGING, on the stock System layer at position 62:
@@ -147,15 +140,15 @@ wire is 401 = MODULE_FORCE_CHARGING, on the stock System layer at position 62:
 NayaCore's table also names TUNE_MODE_L / TUNE_MODE_R (150 / 151), WINDOWS_OS (200), MAC_OS (201),
 SCROLL_DIRECTION_L / _R (300 / 301) and MODULE_CHARGING (400); none has been seen on a board.
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-08; 3.28.7, 2026-09-19 +
-<span class="tag static">STATIC</span>[^nc]. naya-create-kb lists the same eight values but states
-that no genuine wire sample exists; the stock record above is one[^kb-keymap]. NayaFlow's key palette offers no MAC_OS action to flash: its only `naya`
-action is MODULE_FORCE_CHARGING, MAC_OS appears only as an icon (the MacOS tab and the OS badges),
+<span class="tag static">STATIC</span>[^nc]. NayaFlow's key palette offers no MAC_OS action to
+flash: its only `naya` action is MODULE_FORCE_CHARGING, MAC_OS appears only as an icon (the MacOS tab and the OS badges),
 and its macOS-labelled entries are ordinary keys and chords, such as Meta (`LGUI`, labelled Command
 on macOS) and `LGUI + C` <span class="tag static">STATIC</span>[^nf].
 
 <!--KM-21-->**`07` NONE** (`&none`) has no param. Every unbound position reads back as `07 00`; a
-board read returns about 220 NONE records. naya-create-kb calls it DISABLE[^kb-keymap].
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09
+board read returns about 220 NONE records.
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09. NayaCore's record reader treats a `07` tap as
+DISABLED <span class="tag static">STATIC</span>[^nc-mac].
 
 <!--KM-22-->**`08` outputs** (`&out`) takes a u32 LE selector: 1 = USB, 2 = wireless. The stock
 System layer holds `pp 08 04 02 00 00 00` (BT_OUT) at positions 47 and 71 and `pp 08 04 01 00 00 00`
@@ -168,13 +161,12 @@ wire, each with the target layer as a u32 LE param. A probe profile read back fo
 and a 2026-09-10 board read held seven TO and four sticky records among 182, all round-tripping byte
 for byte. NayaFlow calls them `layer_polite_oneshot`, `layer_rude_toggle` and
 `layer_polite_toggle`. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-08, 2026-09-10.
-naya-create-kb lists these three as dead types never seen on the wire[^kb-keymap].
 
 <!--KM-24-->**`0e` TRANS** (transparent) has no param. NayaCore writes a new layer's unassigned keys
 as `0e 00`. It picks `07` or `0e` for an unassigned key from the profile's "transparent as default"
 setting: its logs print "transparent as default" per profile and "(Transparent from default)" or
-"(Transparent from settings)" per key. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01
-+ <span class="tag static">STATIC</span>[^nc]; also reported by naya-create-kb[^kb-keymap].
+"(Transparent from settings)" per key. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01 +
+<span class="tag static">STATIC</span>[^nc].
 
 <!--KM-25-->**`00` bluetooth** (`&bt`) takes `[command u32 LE][argument u32 LE]`. `(3, n)` selects
 Bluetooth device n, ONE-based: keys Dev 1-4 read back `(3, 1)` to `(3, 4)`. `(0, 0)` is BT_CLEAR, a
@@ -192,14 +184,8 @@ gave a real left click at position 46. A short param (`pp 0f 04 01 00 00 00`) is
 verbatim, and ignored. The categories are on [Module fields](module-fields.md).
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-07
 
-<!--KM-28-->naya-create-kb's "vendor action" id `(A<<16)|(X<<8)|Y` for types `00`, `09` and `0f` is
-not a wire field: on the wire each of these records is the type byte plus two independent u32 LE
-words (for `0f` the second is signed)[^kb-keymap]. <span class="tag inferred">INFERRED</span> from
-the three measured forms above.
-
 <!--KM-29-->`03` and `10` are the two hold-tap forms (next section). `03` is the general
-two-behavior hold-tap (home-row modifiers, the stock layer-tap), not a "hold-only" record, and
-naya-create-kb's "`03` (macro)" is a different thing: NayaCore's macro index is `02`[^kb-keymap].
+two-behavior hold-tap (home-row modifiers, the stock layer-tap).
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 
 <!--KM-30-->`04` grave_escape and `0a` sticky_key are named in NayaCore's table but have no
@@ -241,11 +227,14 @@ have ever been seen, and the `10` form with a layer hold never. <span class="tag
     every key stops working until the board is unplugged (a power cycle). Rewriting the record does
     not help while it is powered. Measured on 3.41.0, 2026-09-03.
 
-<!--KM-42-->The byte after the two kinds is the flavor, NayaFlow's Interrupt Flavor setting. `02`
-is tap-preferred (measured). Valid values are 0-3; writing `04` or more stops every key until the
-board is unplugged. The mapping of 0, 1 and 3 is open; see [Settings and timing](settings.md).
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01, 2026-09-03. naya-create-kb leaves the
-flavor encoding open[^kb-settings].
+<!--KM-42-->The byte after the two kinds is the flavor, NayaFlow's Interrupt Flavor setting. Valid
+values are 0-3; writing `04` or more stops every key until the board is unplugged. `02` is
+tap-preferred. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01, 2026-09-03. `00` and
+`01` follow ZMK's order: in a home-row typing test, with `00` holds fired on fast rolls
+(hold-preferred), and with `01` fast rolls typed cleanly (balanced)
+<span class="tag measured">MEASURED</span> owner's board, 3.41.0, 2026-09-25[^of-flavor]. NayaFlow
+writes its default "Balanced" as `00`, so a stock flash types as hold-preferred; `03` is not
+measured. See [Settings and timing](settings.md).
 
 <!--KM-43-->The tapping term lives only inside hold-tap records, per record and per bank. Moving
 NayaFlow's slider from 200 to 180 ms rewrote `c8 00` to `b4 00` in every hold-tap record on every
@@ -253,11 +242,11 @@ layer; untouched second-bank records kept an older 200 / flavor 1 while their pr
 rewritten at 180 / 0. Both copies in a `10` record carry the same term. No double-tap window,
 hold-start, wait or overlap parameter exists anywhere on the wire.
 <span class="tag measured">MEASURED</span> NayaFlow 1.25.1 capture on 3.41.0, 2026-09-17.
-naya-create-kb reads the two `c8 00` as a hold threshold and a double-tap window; the second role is
-not supported by any capture[^kb-keymap].
 
-<!--KM-44-->The `03` byte inside every `10` param has been constant in every capture; its meaning
-is open. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
+<!--KM-44-->The `03` byte inside every 27-byte `10` param is the inner record type: the `10`
+wrapper holds `[term u16][inner type][inner param]`, and a bank with two behaviors is a `03` pair
+(KM-49), so the 27-byte form is the wrapper around a `03` record <span class="tag static">STATIC</span>[^nc-mac].
+It has read `03` in every capture of a two-behavior bank <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 
 <!--KM-45-->A key's four behaviors are two records `0x52` apart. The primary (position `p`) holds tap
 and hold; the second-bank record (`p + 52`) holds double tap in its tap slot and tap and hold in its
@@ -269,43 +258,49 @@ hold slot. A captured NayaFlow write of one key, as record bytes:
 ```
 
 Pressing it gave `b`, `zzz`, `x` and `yyy` for tap, hold, double tap and tap and hold.
-<span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09-03; the slot
-assignment is also reported by naya-create-kb[^kb-keymap].
+<span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09-03.
 
 | Record | Hold slot | Tap slot |
 |---|---|---|
 | primary, position `p` | hold | tap |
 | second bank, position `p + 52` | tap and hold | double tap |
 
-<!--KM-46-->Double tap and tap and hold fire only if the PRIMARY record is a hold-tap. A plain `01`
-primary with a double-tap second-bank record typed the tap twice ("aa") and never the double-tap
-binding. The fix is a hold-tap primary with an empty hold half (four zero bytes).
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-21
+<!--KM-46-->Double tap and tap and hold fire only if the PRIMARY record waits for a second tap. A
+plain `01` primary with a double-tap second-bank record typed the tap twice ("aa") and never the
+double-tap binding; a `10` primary with an empty hold half (four zero bytes) fixed it.
+<span class="tag measured">MEASURED</span> 3.35.4 or 3.41.0 (the board was upgraded between them
+that week), 2026-09-21. NayaCore's own form, the tap alone inside the `10` wrapper (KM-49), also
+works <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-26. Whether a `03` primary lets the
+second bank fire is untested.
 
 <!--KM-47-->An empty slot half (four zero bytes) means "not bound" in a key-press slot but "layer 0"
 (a real target) in a layer slot. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 
-<!--KM-48-->NayaFlow writes a user tap and hold as a `10` record; the stock layer-tap is `03`. A
-writer that emits `03` where the board holds `10` (or the reverse) makes every later flash rewrite
+<!--KM-48-->A key with only a tap and a hold is a `03` record, like the stock layer-tap; only a key
+that also has a double tap or a tap and hold gets the `10` wrapper. NayaCore's serializer draws that
+line (KM-49) <span class="tag static">STATIC</span>[^nc-mac], and so does the owner's board as
+NayaFlow left it (KM-50): every key with a tap and a hold was `03` except `35`, the one with a
+second-bank record. The two forms do not type alike: the `10` form's tap waits for a possible double
+tap, so in a home-row typing test `10` records at flavor `01` garbled 5 of 5 fast sentences, while
+`03` records at flavor `01` typed 6 of 7 cleanly <span class="tag measured">MEASURED</span> owner's
+board, 3.41.0, 2026-09-25[^of-flavor]. A writer that emits `03` where the board holds `10` (or the reverse) makes every later flash rewrite
 that key. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09
 
-<!--KM-49-->naya-create-kb describes the record shapes by behavior count: two behaviors are a single
-`03` record with no second-bank record; three are a `10` primary plus a 10-byte second-bank record
-(its "mini shadow", `74 10 07 c8 00 01 05 00 07 00`); four are a `10` primary plus a full 27-byte
-second-bank record[^kb-keymap]. Our USB capture of a four-behavior key shows full 27-byte records in
-both banks <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-03. For three behaviors, the second-bank position holds the
-double tap alone inside the `10` wrapper, `[pp+52] 10 07 c8 00 01 <key press>` (term 200, then the
-record type `01` and its four-byte param), behind a `[pp] 10 18 ...` primary that wraps the tap and
-hold pair. NayaCore writes a bank that holds one behavior as that record alone, wraps both banks when
-the key has a double tap or tap and hold, and writes no second-bank record for a key without them, so
-a stale second-bank record stays when the key drops back to a plain press
-<span class="tag static">STATIC</span>[^nc-mac]. Keys written in these forms typed as set and read
-back unchanged <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-26. The same shape is what
-NayaCore prints for a key in its own logs (`wire: 351007c800012a000700`)
-<span class="tag static">STATIC</span>[^nc]. The same page says NayaFlow's editor enforces the order
-tap, then hold, then double tap, then tap and hold; the renderer confirms it: hold depends on tap,
-double tap on tap and hold, and tap and hold on all three <span class="tag static">STATIC</span>[^nf];
-also reported by naya-create-kb.
+<!--KM-49-->NayaCore's key serializer decides the record shapes. A bank that holds two behaviors is
+one `03` pair, a bank that holds one is that record alone, and when the key has a double tap or a
+tap and hold both banks go inside the `10` wrapper; a key without either gets no second-bank record
+at all, so a stale second-bank record stays when the key drops back to a plain press
+<span class="tag static">STATIC</span>[^nc-mac]. So a key with only a tap and a hold is a single `03` record. A key that adds
+a double tap is a `[pp] 10 18 ...` primary that wraps the tap and hold pair, plus a 10-byte
+second-bank record holding the double tap alone, `[pp+52] 10 07 c8 00 01 <key press>` (term 200,
+then the record type `01` and its four-byte param); so NayaCore is the writer of that 10-byte record
+([closed question](../open-questions.md#oq-p12)). A key with all four behaviors has a full
+27-byte `10` record in both banks, as our USB capture shows <span class="tag measured">MEASURED</span> 3.41.0,
+2026-09-03. Keys written in these forms typed as set and read back unchanged
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-26. NayaCore prints the same shape for a key in its own logs
+(`wire: 351007c800012a000700`) <span class="tag static">STATIC</span>[^nc]. NayaFlow's editor enforces the order tap,
+hold, double tap, tap and hold: in its renderer the hold slot requires the tap slot, the double-tap
+slot requires both of those, and the tap-and-hold slot requires all three <span class="tag static">STATIC</span>[^nf].
 
 <!--KM-50-->The hold-tap keys of layer 0 as read from the owner's board on 2026-09-01 (term 194,
 flavor 0): `20` hold LCtrl / tap A (`03`); `21` hold LShift / tap S (`03`); `25` hold Backspace /
@@ -321,7 +316,7 @@ typing. <span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 20
 
 <!--KM-60-->At positions `4a`-`51` the type byte is a module-config SLOT number and the length is 0:
 `N` means "use config slot N", `78` means "inherit from the BASE layer (layer 0)", and `00` means
-disabled. naya-create-kb calls `78` an empty filler[^kb-keymap]. Details are on
+disabled. Details are on
 [Modules](modules.md). <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-03
 
 | Position | Bay | Position | Bay |
@@ -331,14 +326,11 @@ disabled. naya-create-kb calls `78` an empty filler[^kb-keymap]. Details are on
 | `4c` | Track left | `50` | Float left |
 | `4d` | Track right | `51` | Float right |
 
-<!--KM-61-->naya-create-kb describes a "tail index triplet" that changes from `4b 00 00` to
-`4b 02 00` once any `10` record exists, and reads it as a layout-version or dirty flag[^kb-keymap].
-It is the Touch-right bay record: `4b 02 00` means "the right Touch uses module-config slot 2". It
-changed when NayaFlow flashed a module assignment, not because of a `10` record, and setting `4b` to
+<!--KM-61-->`4b 02 00` is the Touch-right bay record: "the right Touch uses module-config slot 2".
+It changes when a module assignment is flashed, not when a `10` key is added, and setting `4b` to
 `02` by hand repoints that bay at whatever slot 2 holds. <span class="tag measured">MEASURED</span>
-3.41.0, 2026-09-03. The maintainer's own factory dump shows layer 0 bays `4a 00`, `4b 00`, `4c 01`,
-`4d 01` (Tune and Float `00`) and every bay `78` on layers 1 and 2
-<span class="tag reported">REPORTED</span> (raw data checked[^kb-raw]).
+3.41.0, 2026-09-03. On the owner's board every bay on layers 1 and 2 held `78`
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
 
 <!--KM-62-->A bay decoded through the behavior table invents bindings: slot 1 reads as a key press
 and slot 5 as a layer hold with no target. Decoders must treat `4a`-`51` separately, and a
@@ -358,7 +350,7 @@ the second bank: the read stops at `51` <span class="tag measured">MEASURED</spa
 records, highest `9b`), even for layers that had no second-bank record at all
 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. A third-party 3.41.0 capture of
 2026-09-15 returned 82 records per layer for layers that apparently never had a second bank written,
-and the same layers read 156 after NayaFlow flashed them <span class="tag reported">REPORTED</span>
+and 156 after NayaFlow flashed them <span class="tag reported">REPORTED</span>
 (raw data checked[^kb-raw]). So the length most likely follows what is stored, not only the firmware
 <span class="tag inferred">INFERRED</span>. A reader that stops at `51` drops every double tap and
 tap and hold; treat an absent position as NONE when comparing.
@@ -378,7 +370,7 @@ has its own 136-entry LED map, and has all eight bays at `00`.
 1, two keys: params `00 01 24 01 04 04 00 07 00 34 01 04 1e 00 07 00`, ack `00 01`. A NEW layer is
 written in full: 82 records `00`-`51`, unassigned keys `0e 00`, bays `78 00`; writes stop at `51`
 while reads pad to 156. <span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0,
-2026-09-01. naya-create-kb describes a per-key write[^kb-keymap].
+2026-09-01.
 
 One key, as a whole frame (layer 0, position `20`, key B), with its ack:
 
@@ -390,37 +382,31 @@ aa 50 00 00 30 04 10 04 00 00 14 04
 This frame is computed, not captured; its shape is the one NayaFlow sends.
 
 <!--KM-66-->Length-changing writes apply: a 7-byte `01` record replaced by a 27-byte `10` record plus
-its second-bank record, and back again, both read back correctly with a plain `30/1004`. An earlier
-"same-length rule" was a client bug. <span class="tag measured">MEASURED</span> 3.41.0, from
-2026-09-03; also reported by naya-create-kb, which retracted the same rule[^kb-keymap].
+its second-bank record, and back again, both read back correctly with a plain `30/1004`.
+<span class="tag measured">MEASURED</span> 3.41.0, from 2026-09-03.
 
 <!--KM-67-->When a key loses its double tap and tap and hold, its second-bank record must be
-written too, or the stale record keeps acting and NayaFlow's verify fails on every flash. The proven
-clear is `[pp+52] 07 00` (NONE): orphaned second-bank records cleared this way let NayaFlow's next
-flash verify. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-09. naya-create-kb clears
-with `[pp+52] 00 00` <span class="tag reported">REPORTED</span>[^kb-keymap]; that is the bay
-"disabled" idiom, and on a key position type `00` is the Bluetooth record, so a zero-length `00`
-there is untested.
+written too. NayaCore writes no second-bank record for such a key (KM-49), so the stale record stays
+stored and NayaFlow's verify fails on every flash. Behind a plain `01` primary it no longer fires
+(KM-46); behind a `03` primary that is untested. The proven clear is `[pp+52] 07 00` (NONE):
+orphaned second-bank records cleared this way let NayaFlow's next flash verify. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-09. This differs from
+naya-create-kb, which clears with `[pp+52] 00 00` <span class="tag reported">REPORTED</span>[^kb-keymap]: on a
+key position type `00` is the Bluetooth record, and with zero params it is BT_CLEAR (KM-25), so a
+zero-length `00` there may act as one <span class="tag inferred">INFERRED</span>; it is untested.
 
 <!--KM-68-->The layer byte is mandatory in `30/1004` params: `00 <layer>` followed by the records.
-Our own captures always carry it. naya-create-kb reports that without it the device answers status
-`19` with the key number and applies nothing (3.41.0, 2026-09-22, unchanged after `ee/10ce`)
-<span class="tag reported">REPORTED</span>[^kb-keymap]. The status itself is measured: reads of layer
-indices that do not exist (`81`, `e4`, `e5`) answered `19 <index>`
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. So a write without its layer byte
-reads the first position as a layer index. If a write acks but changes nothing, check the params
-prefix first (the maintainer's advice).
+Our own captures always carry it. Reads of layer indices that do not exist (`81`, `e4`, `e5`)
+answered `19 <index>` <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01, so a write without its layer
+byte most likely has its first position read as a layer index: for a position that is not a layer
+it answers `19` with that position and applies nothing, and for one that is (`00` up to the highest
+layer) the effect is untested <span class="tag inferred">INFERRED</span>.
 
 <!--KM-69-->`30/1004` writes take effect immediately and persist; there is no commit step.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09; also reported by
-naya-create-kb[^kb-keymap].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09.
 
 <!--KM-70-->Layer sizes vary with the bindings. The stock NayaFlow profile reads 764 / 636 / 660
-bytes for layers 0 / 1 / 2, both on the owner's board and in the naya-create-kb maintainer's factory
-dump <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. The maintainer's later board
-read 789 / 636 / 660, and a third-party capture shows a 772-byte layer 0
-<span class="tag reported">REPORTED</span> (raw data checked[^kb-raw]; [^kb-keymap]). Whatever the
-size, the record lengths must close exactly.
+bytes for layers 0 / 1 / 2 on the owner's board <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
+Whatever the size, the record lengths must close exactly.
 
 !!! warning "Never bind TOGGLE to layer 0"
     A `0d` record that toggles to the base layer strands the keyboard on the current layer until a
@@ -431,11 +417,10 @@ stand on; the keyboard stays stranded until a power cycle. NayaFlow removes the 
 Toggle target list. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09 +
 <span class="tag static">STATIC</span>[^nf]
 
-<!--KM-72-->naya-create-kb's writer recipe for a `10` key ("emit the primary and the second-bank
-record and set `4b` to `02`, exactly like stock") is right about the two records and wrong about
-`4b`, which repoints the right Touch's bay (see above)[^kb-keymap].
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09; the two-record part is also reported by
-naya-create-kb (live test of 2026-09-18).
+<!--KM-72-->Adding a `10` key writes its primary and its second-bank record and nothing else; the
+bays stay as they are <span class="tag measured">MEASURED</span> 3.41.0, 2026-09. This differs from naya-create-kb,
+whose writer recipe also sets `4b` to `02`, which repoints the right Touch's bay at config slot 2
+(see [Module bays](#module-bays-in-layer-data)) <span class="tag reported">REPORTED</span>[^kb-keymap].
 
 <!--KM-83-->NayaCore's serializer checks the record length for key_press, to_layer, toggle_layer,
 mo, sticky_layer, bluetooth, rgb_ug, outputs, naya_integrations and mouse, and none for sticky_key,
@@ -460,8 +445,8 @@ as a "(07-18-2026)" variant.
 <!--KM-82-->Position numbering (decimal) follows the vendor's key labels row by row: 0 LA1 ... 7 LH1,
 8 RH1 ... 15 RA1; 16-22 LA2-LG2, 23-29 RG2-RA2; 30-36, 37 LH2, 38 RH2, 39-45; 46-52, 53 LH3, 54 RH3,
 55-61; 62 LA5, 63 LB5, 64 LC5, 65 LD5, 66 LE5, 67 LH4, 68 RH4, 69 RE5, 70 RD5, 71 RC5, 72 RB5, 73 RA5.
-So the MODULE_FORCE_CHARGING key at 62 is LA5, and naya-create-kb's MO keys at 67 / 68 are the LH4 /
-RH4 thumbs[^kb-keymap]. Full geometry is on [Layout and positions](../hardware/layout.md).
+So the MODULE_FORCE_CHARGING key at 62 is LA5, and the MO keys at 67 / 68 are the LH4 /
+RH4 thumbs. Full geometry is on [Layout and positions](../hardware/layout.md).
 <span class="tag static">STATIC</span> (vendor labels[^man-c]) + <span class="tag measured">MEASURED</span>
 (stock positions, 3.41.0, 2026-09-10)
 
@@ -506,16 +491,16 @@ writing anything back.
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> Flavor values 0, 1 and 3, and the constant `03` inside every
-  `10` record ([details](../open-questions.md#oq-p09)).
+- <span class="tag open">OPEN</span> Whether flavor `03` is tap-unless-interrupted, as ZMK's order
+  predicts (`00`, `01` and `02` are measured) ([details](../open-questions.md#oq-p09)).
 - <span class="tag open">OPEN</span> Whether a per-key or per-bank tapping term behaves differently
   from the global one ([details](../open-questions.md#oq-p10)).
 - <span class="tag open">OPEN</span> Why some 3.41.0 layers read 82 records and others 156
   ([details](../open-questions.md#oq-p11)).
-- <span class="tag open">OPEN</span> Which writer produces the 10-byte second-bank record, and how
-  the firmware acts on it ([details](../open-questions.md#oq-p12)).
-- <span class="tag open">OPEN</span> What a zero-length `00` record on a key position does, and what
-  an empty key press does ([details](../open-questions.md#oq-p13)).
+- <span class="tag open">OPEN</span> What an empty key press (`01 04 00 00 00 00`) does on a key; on
+  the Tune's two LED gestures it does nothing ([details](../open-questions.md#oq-p13)).
+- <span class="tag open">OPEN</span> What a zero-length `00` record on a key position does (see
+  [Writing](#writing)).
 - <span class="tag open">OPEN</span> Hold-tap slot kinds other than `01` and `05`; a `10` record
   with a layer hold ([details](../open-questions.md#oq-p14)).
 - <span class="tag open">OPEN</span> The value of `MAX_LAYERS` ([details](../open-questions.md#oq-p15)).
@@ -523,12 +508,10 @@ writing anything back.
 ## Sources
 
 [^kb-keymap]: naya-create-kb, [protocol/keymap](https://nemezzizz.github.io/naya-create-kb/protocol/keymap/) (commit 7668067).
-[^kb-settings]: naya-create-kb, [protocol/settings](https://nemezzizz.github.io/naya-create-kb/protocol/settings/) (commit 7668067).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading): the behavior table, key table, Naya system action names, serializer checks and log formats.
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings, and its default templates (static reading).
 [^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs and device dumps, including a factory-default layer dump of 2026-09-15 and two probe dumps of 2026-09-17); raw data decoded by us, never copied.
 [^hid]: USB-IF, [HID Usage Tables](https://usb.org/document-library/hid-usage-tables-15) (Consumer page: `b5` Scan Next Track, `b6` Scan Previous Track, `cd` Play/Pause, `e2` Mute).
-[^zmk]: ZMK documentation, [behaviors](https://zmk.dev/docs/keymaps/behaviors).
 [^man-c]: Naya Create User Manual v1.1.x (key labels), see [Manuals](../product/manuals.md).
 [^nh-cl]: create-legacy-firmware, vendor release notes, [changelogs/](https://github.com/create-collective/create-legacy-firmware/tree/79eeefb/changelogs) (v1.3.8, v1.14.5, v1.25.0).
 [^ks-camp]: Kickstarter campaign page, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023), read 2026-09-23.
@@ -538,3 +521,4 @@ writing anything back.
 [^ks-21]: Kickstarter update 21, [2025-06-16](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4409531).
 [^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases).
 [^nc-mac]: NayaFlow 1.25.1 for macOS (x86_64), NayaCore 6.11.0: `Key::serializeBindingData`, `Key::serializeBindingPairData`, `Key::wrapDblTapRecord` and the record reader, our disassembly (2026-09-26); see [Disassembly](../software/disassembly.md).
+[^of-flavor]: [OpenFlow](https://github.com/create-collective/openflow/releases), commit 036d04c: a home-row typing test on the owner's board (3.41.0, 2026-09-25) with hold-tap records as `03` at flavor `00` and `01`, and as `10` at flavor `01`.

@@ -47,8 +47,7 @@ flow-bg-server -> (ZeroMQ publish/subscribe, ports exchanged through Qt shared m
 - **flow-bg-server**: Go 1.25.5 with gin, sqlc, goose, mattn/go-sqlite3 and pebbe/zmq4 (libzmq 4.3.5),
   about 25.7 MB. It serves the HTTP API and SSE, owns the SQLite user data (schema migrations and
   queries live in it), templates, backups, component updates, and the ZMQ bridge
-  <span class="tag static">STATIC</span>[^bg]. naya-create-kb calls it a "Go helper, HTTP bridge"
-  and says it runs with a fixed `-port 56486`; the port changes at every launch (below).
+  <span class="tag static">STATIC</span>[^bg]. Its port changes at every launch (below).
 - **NayaCore 6.11.0**: C++ with Qt 6 (Core, SerialPort, Sql with the qsqlite driver), built with MSVC
   on Windows, libzmq 4.3.6; 8.5 MB on Windows, 12.6 MB (Intel) and 11.9 MB (arm64) on macOS. It owns
   the USB serial ports and reads `user-data.db` itself. It was compiled "Jul 17 2026 14:20:59"; its
@@ -56,8 +55,7 @@ flow-bg-server -> (ZeroMQ publish/subscribe, ports exchanged through Qt shared m
   `enableFileLogging` <span class="tag static">STATIC</span>[^nc][^nc-mac].
 - NayaCore reaches Bluetooth state only through keyboard commands over USB (the `be/10xx` family); no
   use of the host's own Bluetooth stack was found <span class="tag inferred">INFERRED</span> (no host
-  Bluetooth API names in its strings). naya-create-kb says NayaCore owns "BLE" and SQLite; flow-bg-server
-  owns the database, and NayaCore only reads it.
+  Bluetooth API names in its strings).
 - NayaCore opens `user-data.db` with Qt's QSQLITE driver in a reader thread ("Spawned SQLReaderThread
   with dbPath: %1") when an `update_keymap` event hands it `db_path`, reads the profile whose `state`
   is `ON_BOARD`, and reads settings by correlation id with built-in defaults
@@ -68,7 +66,7 @@ flow-bg-server -> (ZeroMQ publish/subscribe, ports exchanged through Qt shared m
 | Platform | Layout | Evidence |
 |---|---|---|
 | Windows (1.25.1) | `resources/app.asar` (`dist/main`, `dist/renderer`); `flow/flow-bg-server.exe` + `libzmq-mt-4_3_5.dll`; `core/NayaCore/NayaCore.exe` + `Qt6Core.dll`, `Qt6SerialPort.dll`, `Qt6Sql.dll`, `libzmq-v143-mt-4_3_6.dll`, `sqldrivers/` (qsqlite, qsqlmimer, qsqlodbc, qsqlpsql) | <span class="tag static">STATIC</span> (installed tree of the public installer) |
-| macOS | `NayaFlow.app` (the dmg installs it in `/Applications`); `Contents/flow/flow-bg-server`; `Contents/core/NayaCore.app/Contents/MacOS/NayaCore`; `Contents/Resources/app.asar` | <span class="tag static">STATIC</span> (1.25.1 release zips); also reported by naya-create-kb[^kb-nayaflow] |
+| macOS | `NayaFlow.app` (the dmg installs it in `/Applications`); `Contents/flow/flow-bg-server`; `Contents/core/NayaCore.app/Contents/MacOS/NayaCore`; `Contents/Resources/app.asar` | <span class="tag static">STATIC</span> (1.25.1 release zips) |
 | Where NayaCore sits, by release | Windows: inside the asar up to 1.17.3, `core/NayaCore/` from 1.19.1. macOS: under `Contents/core` since at least 1.11.11 (`naya_core_project.app`; `NayaCore.app` from 1.14.3); the macOS asars of 1.14.5 to 1.17.3 also carry a leftover copy of the Windows `NayaCore.exe` | <span class="tag static">STATIC</span> (release installers and zips); details on [History](history.md) |
 
 **Build provenance.** The Windows NayaCore carries 60 source paths under `D:\a\NayaCore\NayaCore\...`
@@ -77,7 +75,7 @@ Windows runners, with NayaFlow a monorepo containing `apps/desktop/bg-server`
 <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span> (the CI reading). The
 macOS builds carry `/Users/runner/work/NayaCore/NayaCore/...` (62 paths in the arm64 NayaCore) and
 `/Users/runner/work/NayaFlow/NayaFlow/apps/desktop/bg-server`
-<span class="tag static">STATIC</span>[^nc-mac]; also reported by naya-create-kb[^kb-nayaflow].
+<span class="tag static">STATIC</span>[^nc-mac].
 
 **NayaCore's source tree** (60 files) <span class="tag static">STATIC</span>[^nc]: `Naya_Data`
 (Binding, Key, LED, Layer, ModuleConfig, Profile, Slot); `Naya_MainController`; `Naya_SQLReader`;
@@ -92,7 +90,7 @@ LED, META, Module, Remap, SysPower, System; Utility Command, MessageQueue, Messa
 
 | Fact | Evidence |
 |---|---|
-| At start-up the main process asks the OS for two free ports (it binds port 0): one for its own JSON-RPC server, one passed to flow-bg-server as `-port <n>`. The bg-server port therefore changes at every launch. naya-create-kb's fixed `56486` was one launch's value. | <span class="tag static">STATIC</span>[^main] |
+| At start-up the main process asks the OS for two free ports (it binds port 0): one for its own JSON-RPC server, one passed to flow-bg-server as `-port <n>`. The bg-server port therefore changes at every launch. | <span class="tag static">STATIC</span>[^main] |
 | Observed on Windows: the bg-server listened on port 61957 on 2026-09-01 (IPv6 loopback). Find the current port through the listening socket of the flow-bg-server process (PowerShell `Get-NetTCPConnection -OwningProcess <pid>`, state Listen). | <span class="tag measured">MEASURED</span> (owner's machine, 2026-09-01) |
 | The renderer learns the port from the preload (`window.EXPOSED.bgServerPort`, the second-to-last argv entry) and falls back to 3001 when it is absent; the update window also receives a `webSocketPort`. | <span class="tag static">STATIC</span>[^main][^rend] |
 | Environment given to flow-bg-server: `ELECTRON_USER_DATA_PATH`, `ELECTRON_APP_NAME`, `ELECTRON_APP_VERSION`, `NAYA_CREATE_FW_VERSION` (3.41.0), `NAYA_MODULE_FW_VERSION` (2.3.3), `NAYA_CORE_EXE_DIR` (`resources/../core`), `GIN_MODE`, `ELECTRON_RESTARTED`, `ELECTRON_JSON_RPC_SERVER_PORT_MAIN`, `ELECTRON_IS_PACKAGED`, `PATH`, `TMPDIR`, and a GitHub token variable whose value is an unsubstituted build placeholder (not reproduced here). | <span class="tag static">STATIC</span>[^main] |
@@ -112,11 +110,10 @@ HTTP routes the 1.25.1 renderer calls <span class="tag static">STATIC</span>[^re
   `/list-userdata-backups`, `/module-settings`, a `:symbol` route parameter (actions),
   `/open-log-folder`, `/factory-reset`, plus bg-server-only fragments
   `/components/start-naya-component-update`, `/diagnostics/serial-port-info`, `/rpc/debug`,
-  `/rpc/server` <span class="tag static">STATIC</span>[^bg]; also listed by naya-create-kb[^kb-rpc].
+  `/rpc/server` <span class="tag static">STATIC</span>[^bg].
 - `/factory-reset` has no caller in the 1.25.1 renderer (0 hits for `factory-reset`,
-  `factory_reset`, `factoryReset`); its string sits among the route strings. naya-create-kb found
-  it answers 404 as a bare GET, POST or OPTIONS on a live server
-  <span class="tag reported">REPORTED</span>[^kb-rpc]. How or whether it is registered is
+  `factory_reset`, `factoryReset`); its string sits among the route strings
+  <span class="tag static">STATIC</span>[^rend][^bg]. How or whether it is registered is
   <span class="tag open">OPEN</span> ([details](../open-questions.md#oq-s01)).
 - Server-sent events on `GET /sse`: the renderer listens for `sse:ui-state-change`,
   `sse:naya-devices-stream`, `sse:flash-keymap-state`, `sse:device-operation-options`,
@@ -167,16 +164,14 @@ reads the bg-server's publisher port from `ZMQ_FLOW_PUB_PORT_SHARED_MEM` and sub
 `FreePortFinder` and `BoundPortFinder`. Topics: `command` (requests and their replies),
 `stream:fw_update_status`, `stream:operation_status_normal`, `stream:operation_status_fwupdate`,
 `stream:device_list` <span class="tag static">STATIC</span>[^nc][^nc-mac]. nayactl carries the same
-shared-memory names and topics, found independently[^nx]. naya-create-kb describes a request/reply
-socket on `127.0.0.1:56500`; that was one run's value and the wrong socket model.
+shared-memory names and topics, found independently[^nx].
 
 - Messages are JSON. The renderer's only device-control path is
   `POST /rpc/send-nayacore-zmq-message` with the body `{"messages": [topic, event, ...frames]}`, topic
-  always `command` <span class="tag static">STATIC</span>[^rend]; also reported by naya-create-kb[^kb-rpc].
+  always `command` <span class="tag static">STATIC</span>[^rend].
 - A `{"status": "message sent"}` answer from that route only means the bg-server forwarded the
   message (the literal is in the binary); the outcome is in NayaCore's log ("ZMQ Command response:
-  Event=%1, ProcessID=%2, Status=..., Duration=...ms") <span class="tag static">STATIC</span>[^bg][^nc];
-  also reported by naya-create-kb[^kb-rpc].
+  Event=%1, ProcessID=%2, Status=..., Duration=...ms") <span class="tag static">STATIC</span>[^bg][^nc].
 - The bridge logs every message it sends as "Sending ZMQ message to NayaCore: %+v"
   <span class="tag static">STATIC</span>[^bg].
 
@@ -200,19 +195,17 @@ NayaCore accepts exactly **16 events** (enum 1-16; 0 is `invalid_command_event`)
 | `update_fw_files` | none found | | |
 | `set_handshake_frequency` | none found | `frequencyMs` | the periodic poll interval |
 
-- Anything else logs "Unknown command event:"; naya-create-kb reports the reply as error 4
-  <span class="tag reported">REPORTED</span>[^kb-rpc] (in the arm64 build the log entry itself
-  carries error code 0; the reply status needs a running NayaFlow to check). naya-create-kb lists 15
-  events; the 16th, `quit`, is missed by a `strings` pass because the compiler builds that 4-byte
-  name from an immediate <span class="tag static">STATIC</span>[^nc-mac].
+- Anything else logs "Unknown command event:" (in the arm64 build that log entry carries error
+  code 0; the status of the reply needs a running NayaFlow to check). A `strings` pass finds only 15
+  event names: the 16th, `quit`, is built by the compiler from an immediate
+  <span class="tag static">STATIC</span>[^nc-mac].
 - `clear_all_data` is not an event: it is the process name the ClearAllData operation gives to the
   `30/10ca` it queues <span class="tag static">STATIC</span>[^nc-mac].
 - **"Clear all keymap data" runs `30/10ca`.** The Danger Zone button sends `clear_data`; NayaCore's
   dispatcher maps `clear_data` (enum 5) to its `clearAllData` request, whose chain ends in
   `doClearAllDataOperations`, which queues category `0x30` subcommand `0x10ca`. Its step names are
   Clearing, ReadData, VerifyDataCleared, and it logs "Reconnected to device %1 after clear all data."
-  <span class="tag static">STATIC</span>[^nc-mac][^nc]. naya-create-kb calls the ClearAllData chain
-  dead code from the bridge's point of view[^kb-rpc]; it is not. The bytes the button sends are
+  <span class="tag static">STATIC</span>[^nc-mac][^nc]. The bytes the button sends are
   <span class="tag open">OPEN</span> until a USB capture ([details](../open-questions.md#oq-f16));
   NayaCore's own construction suggests params `00 00` (see [Disassembly](disassembly.md)).
 - Payload keys NayaCore parses: `db_path`, `target_devices`, `target_partitions`, `target_device`,
@@ -220,8 +213,7 @@ NayaCore accepts exactly **16 events** (enum 1-16; 0 is `invalid_command_event`)
   `frequencyMs`; the Go side uses a JSON tag `targetDevices`. Match the exact key per event
   <span class="tag static">STATIC</span>[^nc][^bg]. The renderer sends `clear_data` with the frames
   `["", "{\"targetDevices\":[]}"]` and `repair_flash` with `{"target_devices":[],"target_partitions":[]}`
-  <span class="tag static">STATIC</span>[^rend]; naya-create-kb saw the same messages in the bridge log,
-  `update_create_fw` with empty frames and `create_pairing_start` with the halves' USB serials[^kb-rpc].
+  <span class="tag static">STATIC</span>[^rend].
 - A target list must hold 0 or 2 hardware ids ("Invalid target device list (need 0 or 2 HWIDs)"). A
   hardware id is the half's USB serial string, which equals the `fe/1004` reply; NayaCore checks "HWID
   mismatch - provided port serial (%1) does not match device HWID (%2)"
@@ -266,30 +258,28 @@ LED map, then verification reads, and `fe/100a` + `fe/100b` on every flash wheth
 changed. Payloads over one frame are chunked with the byte-3 countdown
 <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span> (owner's board,
 3.41.0: three NayaFlow flashes captured 2026-09-01 and one 2026-09-17; NayaCore's
-`read_profile_before_write_profile` and step names[^nc]). naya-create-kb describes per-key `30/1004`
-writes each verified by a full read-back[^kb-nayaflow]; that holds only for a flash that changes one
-key.
+`read_profile_before_write_profile` and step names[^nc]).
 
 Example (two keys on layer 1): params `00 01 24 01 04 04 00 07 00 34 01 04 1e 00 07 00`, and the ack
 echoes layer `01` <span class="tag measured">MEASURED</span> (capture, 2026-09-01).
 
 | Fact | Evidence |
 |---|---|
-| The order of NayaCore's write steps is `_remapWriteLayerList`, `_remapReadLayerData` / `_remapWriteLayerData`, `_remapWriteModuleConfigList`, `_remapReadModuleData` / `_remapWriteModuleData`, `_remapReadColorData` / `_remapWriteColorData`; the captured order matches. | <span class="tag static">STATIC</span>[^nc] <span class="tag measured">MEASURED</span>; also reported by naya-create-kb[^kb-nayaflow] |
-| Every REMAP write NayaFlow sends goes to the left half (`dst 0x50`); zero REMAP frames went to `0x51` in any captured flash. The left half's LED map has 136 entries per layer and covers both halves (0-73 the keys of both halves, 74-80 and 81-87 the side bars, 88-111 the left bay, 112-135 the right bay), so there is no separate right-half color path. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, captures 2026-09-01; band painting 2026-09-08); answers an open question of naya-create-kb |
-| A single-key color change goes out as one sparse `30/100e` write with params `00 <layer> <KK> <hue lo> <hue hi> <sat>`. | <span class="tag measured">MEASURED</span> (capture, 2026-09-01); also reported by naya-create-kb[^kb-nayaflow] |
+| The order of NayaCore's write steps is `_remapWriteLayerList`, `_remapReadLayerData` / `_remapWriteLayerData`, `_remapWriteModuleConfigList`, `_remapReadModuleData` / `_remapWriteModuleData`, `_remapReadColorData` / `_remapWriteColorData`; the captured order matches. | <span class="tag static">STATIC</span>[^nc] <span class="tag measured">MEASURED</span> |
+| Every REMAP write NayaFlow sends goes to the left half (`dst 0x50`); zero REMAP frames went to `0x51` in any captured flash. The left half's LED map has 136 entries per layer and covers both halves (0-73 the keys of both halves, 74-80 and 81-87 the side bars, 88-111 the left bay, 112-135 the right bay), so there is no separate right-half color path. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, captures 2026-09-01; band painting 2026-09-08) |
+| A single-key color change goes out as one sparse `30/100e` write with params `00 <layer> <KK> <hue lo> <hue hi> <sat>`. | <span class="tag measured">MEASURED</span> (capture, 2026-09-01) |
 | NayaFlow never imports a board's keymap into its UI: it shows its own profile and reads the board only to verify, so "Flash Create" pushes its profile over whatever another tool stored. | <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span> (owner's machine, 2026-09-01) |
 | Only the profile marked active (`profiles.state = 'ON_BOARD'`) is flashed; the Flash button is disabled with unsaved changes and when the edited profile is not the active one. Labels since 1.19.x: "Active profile (flashes to Naya device)" / "Inactive profile (saves to NayaFlow only)". | <span class="tag static">STATIC</span>[^nc][^bg] <span class="tag doc">DOC</span>[^rel] |
 
-## Features called dead or host-only, revisited
+## Which features reach the keyboard
 
 | Feature | What reaches the keyboard | Evidence |
 |---|---|---|
-| Scan mode, LED maximum brightness, LED action override | A keymap flash sends no `ED` frame, but the three settings are real device commands: `ed/1012` scan-mode PWM, `ed/1013` persistent maximum brightness, `ed/1014` LED action override (0 until keyboard restart, 1 until the next layer change). NayaCore names them SET SCANMODE PWM, SET LED MAX BRIGHTNESS, SET LED LAYER OVERRIDE and checks `scanmode_pwm` and `led_layer_override` in its settings verify; the 1.25.0 notes say NayaCore 6.11.0 "added protocol support" for them. When NayaCore sends them is <span class="tag open">OPEN</span>. naya-create-kb calls these controls dead. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-13/16) <span class="tag static">STATIC</span>[^nc] <span class="tag doc">DOC</span>[^rel] |
-| Per-layer LED animations | Sent: byte 2 of each 20-byte layer-list entry `[idx][id][animation][10][uuid16]` holds the animation in ZMK underglow order (0 solid, 1 breathe, 2 spectrum, 3 swirl). Two NayaFlow flashes with known inputs read back 1, 3, 2 and 0, 1, 3. The `animation_id` column came with migration `20260421070750_add_animation_to_layers`; an unset animation reads NULL there. The registry names SOLID, SWIRL, BREATHE, SPECTRUM and the icons `LED_SOLID`, `LED_BREATHE`, `LED_SWIRL`, `LED_SPEC` exist. naya-create-kb says no call reaches the backend. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-08/09) <span class="tag static">STATIC</span> <span class="tag doc">DOC</span> (1.25.0 notes: "per-layer predefined animations"[^rel]) |
-| Macros | Host-only. The bg-server has full macro CRUD and macro tables, the renderer ships macros switched off, and NayaCore has no macro read, write, SQL query or serializer; a key bound to a macro is flashed as NONE (`[KK] 07 00`, captured `2e 07 00`). The firmware keeps no macro table: `30/1005` returns one status byte, macro writes are acked and dropped (3.41.0), and 3.28.7 answers the macro opcodes with status `11` (unimplemented). | <span class="tag measured">MEASURED</span> (owner's board 3.41.0, 2026-09-07; donor board 3.28.7, 2026-09-19) <span class="tag static">STATIC</span>; agrees with naya-create-kb[^kb-nayaflow] |
-| "naya" actions | The 1.25.1 catalog has one, MODULE_FORCE_CHARGING ("Activate Module Recovery Mode", group Configuration Toggles), and it reaches the board as record type `06` with id 401: `3e 06 04 91 01 00 00` at position 62 of the stock System layer. The MacOS, Windows and VS Code groups on the Integrations tab are chords flashed as ordinary `01` key presses, so plain HID is the intended result for them. naya-create-kb says the device gets DISABLE for these. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, read-back of a NayaFlow flash, 2026-09-08) <span class="tag static">STATIC</span> |
-| "Factory Reset" | No device factory-reset control exists in 1.25.1. The only "Factory Reset" string is an unused locale entry (`settings.general_tap.title.factory_reset`, described "Reset all changes to Naya Flow", beside Language, Theme and placeholder "example" blocks) that the renderer never references. The Danger Zone offers "Clear all keymap data" instead. | <span class="tag static">STATIC</span>[^rend]; also reported by naya-create-kb (as an app-settings reset)[^kb-nayaflow] |
+| Scan mode, LED maximum brightness, LED action override | A keymap flash sends no `ED` frame, but the three settings are real device commands: `ed/1012` scan-mode PWM, `ed/1013` persistent maximum brightness, `ed/1014` LED action override (0 until keyboard restart, 1 until the next layer change). NayaCore names them SET SCANMODE PWM, SET LED MAX BRIGHTNESS, SET LED LAYER OVERRIDE and checks `scanmode_pwm` and `led_layer_override` in its settings verify; the 1.25.0 notes say NayaCore 6.11.0 "added protocol support" for them. When NayaCore sends them is <span class="tag open">OPEN</span>. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-13/16) <span class="tag static">STATIC</span>[^nc] <span class="tag doc">DOC</span>[^rel] |
+| Per-layer LED animations | Sent: byte 2 of each 20-byte layer-list entry `[idx][id][animation][10][uuid16]` holds the animation in ZMK underglow order (0 solid, 1 breathe, 2 spectrum, 3 swirl). Two NayaFlow flashes with known inputs read back 1, 3, 2 and 0, 1, 3. The `animation_id` column came with migration `20260421070750_add_animation_to_layers`; an unset animation reads NULL there. The registry names SOLID, SWIRL, BREATHE, SPECTRUM and the icons `LED_SOLID`, `LED_BREATHE`, `LED_SWIRL`, `LED_SPEC` exist. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-08/09) <span class="tag static">STATIC</span> <span class="tag doc">DOC</span> (1.25.0 notes: "per-layer predefined animations"[^rel]) |
+| Macros | Host-only. The bg-server has full macro CRUD and macro tables, the renderer ships macros switched off, and NayaCore has no macro read, write, SQL query or serializer; a key bound to a macro is flashed as NONE (`[KK] 07 00`, captured `2e 07 00`). The firmware keeps no macro table: `30/1005` returns one status byte, macro writes are acked and dropped (3.41.0), and 3.28.7 answers the macro opcodes with status `11` (unimplemented). | <span class="tag measured">MEASURED</span> (owner's board 3.41.0, 2026-09-07; donor board 3.28.7, 2026-09-19) <span class="tag static">STATIC</span> |
+| "naya" actions | The 1.25.1 catalog has one, MODULE_FORCE_CHARGING ("Activate Module Recovery Mode", group Configuration Toggles), and it reaches the board as record type `06` with id 401: `3e 06 04 91 01 00 00` at position 62 of the stock System layer. The MacOS, Windows and VS Code groups on the Integrations tab are chords flashed as ordinary `01` key presses, so plain HID is the intended result for them. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, read-back of a NayaFlow flash, 2026-09-08) <span class="tag static">STATIC</span> |
+| "Factory Reset" | No device factory-reset control exists in 1.25.1. The only "Factory Reset" string is an unused locale entry (`settings.general_tap.title.factory_reset`, described "Reset all changes to Naya Flow", beside Language, Theme and placeholder "example" blocks) that the renderer never references. The Danger Zone offers "Clear all keymap data" instead. | <span class="tag static">STATIC</span>[^rend] |
 
 ## The UI
 
@@ -386,7 +376,7 @@ echoes layer `01` <span class="tag measured">MEASURED</span> (capture, 2026-09-0
 An `app.asar` file starts with u32 4 and a u32 header size, then a pickled string: its u32 JSON length
 sits at file offset 12 and the JSON at offset 16; file data starts at offset 16 + the JSON length
 rounded up to 4, and each entry's offset counts from there. `npx @electron/asar extract` does the same
-<span class="tag static">STATIC</span>; also described by naya-create-kb[^kb-nayaflow].
+<span class="tag static">STATIC</span>.
 
 Useful trees in the 1.25.1 asar: `dist/main/index.js`, `dist/renderer/assets/` (renderer bundle
 `index-mihUmo_8.js`), `assets/icons/action/` with 860 action icons. The firmware is not in the asar:
@@ -413,5 +403,3 @@ it is embedded as Qt resources in the NayaCore binary <span class="tag static">S
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
 [^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^nx]: nayactl, [`constants.py`](https://github.com/Qonfused/nayactl) (shared-memory names and topics).
-[^kb-nayaflow]: naya-create-kb, [software/nayaflow](https://nemezzizz.github.io/naya-create-kb/software/nayaflow/).
-[^kb-rpc]: naya-create-kb, [software/rpc-zmq](https://nemezzizz.github.io/naya-create-kb/software/rpc-zmq/).

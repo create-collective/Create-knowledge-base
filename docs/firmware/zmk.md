@@ -63,9 +63,11 @@ The indices were matched against records captured from the owner's board between
 **Hold-tap flavors are ZMK's four** (balanced, tap-preferred, hold-preferred,
 tap-unless-interrupted), stored per record next to the tapping term (default 200 ms) <span class="tag static">STATIC</span>[^nc].
 Valid values are 0 to 3. A value of 4 was accepted and stopped every key until the board was
-unplugged (a power cycle); `02` was measured as tap-preferred; which of 0, 1 and 3 is which is
-**open** <span class="tag measured">MEASURED</span> <span class="tag open">OPEN</span> (owner's board, 3.41.0, 2026-09-03 and 2026-09-17). See
-[Settings and timing](../protocol/settings.md).
+unplugged (a power cycle); `02` was measured as tap-preferred <span class="tag measured">MEASURED</span> (owner's board, 3.41.0,
+2026-09-03 and 2026-09-17). A home-row typing test fits ZMK's order for `00` and `01`: with `00` holds
+fired on fast rolls (hold-preferred), with `01` fast rolls typed cleanly (balanced)
+<span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-25). What `03` does is **open**
+<span class="tag open">OPEN</span>. See [Settings and timing](../protocol/settings.md).
 
 **Key names follow ZMK's `keys.h`**, aliases included (for example `K_LOCK`,
 `K_SCREENSAVER` and `K_COFFEE` all map to usage `0xF9`, and the LANG and INT aliases), and the 4-byte
@@ -76,12 +78,14 @@ modifiers <span class="tag static">STATIC</span> <span class="tag inferred">INFE
 color packing (`RGB_COLOR_HSB`) match ZMK <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span> (checked against captures, owner's board,
 2026-09-08 and 2026-09-10).
 
-**The Bluetooth HID report map is ZMK's, with a vendor mouse.** The 212-byte report map,
-read byte for byte identically by two independent third parties, contains ZMK's keyboard input items
-and a consumer collection identical to ZMK's, and its HID service attribute list is ZMK's `hog.c`.
-The mouse collection is vendor-modified: 8-bit X, Y, wheel and pan plus AC Zoom, where upstream ZMK
-uses 16-bit fields and no zoom. There is no boot protocol over Bluetooth. The reads are the third
-parties' <span class="tag reported">REPORTED</span>; the comparison with current ZMK is ours, made on their published bytes <span class="tag inferred">INFERRED</span>[^cfd-hid][^zmk-hid].
+**The Bluetooth HID report map is ZMK's, with a vendor mouse.** The 212-byte report map that
+createflow-dongle reads over Bluetooth, byte-identical to the left half's USB HID report descriptor in
+our own capture, contains ZMK's keyboard input items and a consumer collection identical to ZMK's, and
+its HID service attribute list is ZMK's `hog.c`. The mouse collection is vendor-modified: 8-bit X, Y,
+wheel and pan plus AC Zoom, where upstream ZMK uses 16-bit fields and no zoom. There is no boot
+protocol over Bluetooth. The Bluetooth read is createflow-dongle's <span class="tag reported">REPORTED</span>; the USB
+descriptor is ours <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-11); the comparison with
+current ZMK is ours, made on those bytes <span class="tag inferred">INFERRED</span>[^cfd-hid][^zmk-hid].
 
 **The Bluetooth qualification points to Zephyr.** The Bluetooth SIG listing 311198
 declares Zephyr's host subsystem (QDID 151074) and Zephyr's own nRF52 controller (QDID 150092), not
@@ -116,7 +120,8 @@ written over SWD, and the SWD route is only open if the debug port is not locked
     The carved stock images are encrypted, and the key that unwraps them exists only
     inside the stock bootloader. A mass erase (the only SWD action available if the debug port is
     locked, APPROTECT) destroys that key. After it, no bootloader you build can decrypt the stock
-    images, so there is **no way back to stock** from the archive. A real way back would need a
+    images, so there is **no way back to stock** from the archive. This differs from naya-create-kb,
+    which counts the carved stock images as a way back over SWD[^kb-zmk]. A real way back would need a
     complete dump of the internal flash (and ideally the QSPI) taken before any erase, which is only
     possible if the debug port is not locked. Whether shipped halves have it locked is **open**: the
     build code `D0` suggests revision 2 silicon, but the silicon revision and its APPROTECT default
@@ -171,7 +176,7 @@ bars, 88 to 111 the left module bay, 112 to 135 the right bay <span class="tag m
 2026-09-10). The LED driver chain and its pins are **open** <span class="tag open">OPEN</span>. See [LEDs](../protocol/led.md).
 
 **Modules.** Each module has its own STM32F411CEU6 running its own firmware, which is not
-an MCUboot image, so modules are not part of a keyboard port. They have no radio. The dock has 8
+an MCUboot image, so modules are not part of a keyboard port. They have no radio and no FCC ID of their own. The dock has 8
 contacts carrying UART, boot and power, no USB data. The dock address encodes type and side (Touch
 `0x10` and `0x11`, Track `0x20` and `0x21`, Tune `0x40` and `0x41`; `0xF0` and `0xF1` mean nothing has
 booted). Power flows both ways: a charged docked module can power the keyboard, and the keyboard
@@ -182,10 +187,13 @@ charges a docked module. The data protocol on the dock is **open** <span class="
 median of five samples) and `de/100b` the module cell in millivolts; percentages are computed on the
 host <span class="tag measured">MEASURED</span>. NayaFlow's module percentage is
 `(clamp(mV, 3300, 4200) - 3300) * 100 / 900`, truncated, then clamped to 1-100 %, from the `de/100b`
-millivolts <span class="tag static">STATIC</span> (NayaCore 6.11.0)[^nc]: 9 mV per point. nayactl and
-OpenFlow use the same range[^nx-4], and NayaFlow showed a Tune at 4228 mV as 100 %
-<span class="tag measured">MEASURED</span>. naya-create-kb published NayaFlow's calibration points
-first; its slope estimate of about 9.3 mV per percent is close, but the exact slope is 9 mV
+millivolts <span class="tag static">STATIC</span> (NayaCore 6.11.0)[^nc]: 9 mV per point. nayactl uses
+the same range for halves and modules <span class="tag static">STATIC</span>[^nx-4], and NayaFlow showed a Tune at 4228 mV as
+100 % <span class="tag measured">MEASURED</span>. A half's own cell stops charging at a firmware-dependent voltage: flat on USB,
+3.41.0 halves held about 4.07 to 4.09 V and 3.28.7 halves about 4.19 to 4.21 V
+<span class="tag measured">MEASURED</span> (owner's boards, 2026-09-26), so the same linear scale shows a full 3.41.0 half at
+about 85 to 88 % <span class="tag inferred">INFERRED</span>. OpenFlow keeps NayaCore's formula for modules and maps a half's
+voltage with a curve whose full point follows the firmware <span class="tag static">STATIC</span>[^openflow]
 ([Power and batteries](../hardware/power.md#percentages)).
 
 ## Known and unknown for a porter
@@ -205,29 +213,16 @@ first; its slope estimate of about 9.3 mV per percent is close, but the exact sl
 
 ## Verdict
 
-The two biggest blockers naya-create-kb lists, the SoC's size and an unknown USB MCU, do
-not apply. The signing gate and the erase cost do. A port means rebuilding a ZMK fork for the
-nRF52840 with QSPI and a Bluetooth split, with the LED engine, the dock protocol and the module side
-as the undocumented parts. Nobody has published one <span class="tag inferred">INFERRED</span>. naya-create-kb's own assessment, that a
-minimal build (keys and a basic split, no modules, no per-key RGB) is conceivable with an SWD probe,
-stays its report <span class="tag reported">REPORTED</span>[^kb-zmk]; it does not weigh the erase cost above.
-
-## Where this differs from naya-create-kb
-
-| naya-create-kb says (zmk and bootloader pages) | What the evidence shows |
-|---|---|
-| Both halves run the nRF52811, with 192 KB flash and 24 KB RAM; only a stripped-down ZMK build would fit; that is the biggest risk | nRF52840, 1 MB / 256 KB; every stock image is larger than 192 KB; the risk does not apply |
-| An unknown USB MCU; the mainboard's component side is in no filing | Native USB on the nRF52840; the SoC close-ups are in the CRL and CRR internal photos; no second MCU-class part |
-| A port is a board definition and driver exercise on the same nRF Connect SDK generation | The Zephyr build is an upstream `main` commit, not an NCS tag; the MCUboot build is vendor-local; the stock firmware is itself a ZMK fork |
-| Stock images are carved, so there is a return path via SWD | The images are encrypted and the unwrap key is only in the stock bootloader, which an erase destroys |
-| A "signed and encrypted bootloader"; no keys and no DFU path | The bootloader verifies and decrypts images; it is not shown to be encrypted itself; a USB update path exists for Naya-signed images |
-| Module radios are unknown | Modules have no radio and no FCC ID |
+The SoC is not a blocker: the nRF52840 has room for the stock images and native USB, with
+no separate USB MCU (above). The signing gate and the erase cost are the blockers. A port means
+rebuilding a ZMK fork for the nRF52840 with QSPI and a Bluetooth split, with the LED engine, the dock
+protocol and the module side as the undocumented parts. Nobody has published one <span class="tag inferred">INFERRED</span>.
 
 ## Open questions
 
 - <span class="tag open">OPEN</span> The debug-lock (APPROTECT) state and silicon revision of shipped halves ([details](../open-questions.md#oq-h05)).
 - <span class="tag open">OPEN</span> What a port would still need: the split-link payload protocol, the matrix pinout, the LED driver chain, the dock data protocol ([details](../open-questions.md#oq-f23)).
-- <span class="tag open">OPEN</span> Which flavor values 0, 1 and 3 are ([details](../protocol/settings.md)).
+- <span class="tag open">OPEN</span> What flavor value 3 does ([details](../protocol/settings.md)).
 - <span class="tag open">OPEN</span> Whether any shipped unit uses the wired link between the halves that update 10 describes.
 
 ## Sources
@@ -239,7 +234,7 @@ stays its report <span class="tag reported">REPORTED</span>[^kb-zmk]; it does no
 [^reddit-1]: Reddit, r/ErgoMechKeyboards, comment `jklwnhz` in thread `13jydnp` (2023-05-18), vendor staff account; quoted from archived copies, not verified live.
 [^reddit-2]: Reddit comments `j34yvw9` (thread `101pr7o`, 2023-01-06) and `l001rpv` (thread `1bqumqm`, 2024-04-17); quoted from archived copies, not verified live.
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (behavior names and table, key vocabulary, flavor names) and macOS symbols (`Naya_Device::getModuleBatteryPercentage`).
-[^cfd-hid]: createflow-dongle, [`firmware/src/usb_hid.c`](https://github.com/mediaandmerch/createflow-dongle/blob/main/firmware/src/usb_hid.c) (the stock report map, read from a Create); a second, byte-identical read was published by the naya-create-kb maintainer.
+[^cfd-hid]: createflow-dongle, [`firmware/src/usb_hid.c`](https://github.com/mediaandmerch/createflow-dongle/blob/main/firmware/src/usb_hid.c) (the stock report map, read from a Create over Bluetooth).
 [^zmk-hid]: ZMK, [`app/include/zmk/hid.h`](https://github.com/zmkfirmware/zmk/blob/main/app/include/zmk/hid.h) and [`app/src/hog.c`](https://github.com/zmkfirmware/zmk/blob/main/app/src/hog.c).
 [^zmk-holdtap]: ZMK documentation, [hold-tap behavior](https://zmk.dev/docs/keymaps/behaviors/hold-tap).
 [^sig]: Bluetooth SIG listing 311198 (Naya B.V., model `NAYA-800-1(NAYA-CREATE)`), read through the SIG's public listing search on 2026-09-23. Details on [Regulatory records](../hardware/regulatory.md).
@@ -252,3 +247,4 @@ stays its report <span class="tag reported">REPORTED</span>[^kb-zmk]; it does no
 [^man-create]: Naya Create User Manual v1.1.0, p4; see [Manuals](../product/manuals.md).
 [^nx-4]: nayactl, [issue #4](https://github.com/Qonfused/nayactl/issues/4).
 [^kb-zmk]: naya-create-kb, [firmware/zmk](https://nemezzizz.github.io/naya-create-kb/firmware/zmk/).
+[^openflow]: [OpenFlow](https://github.com/create-collective/openflow/releases): its battery percentages (NayaCore's linear formula for modules; for the halves, a curve whose full point follows the keyboard firmware).

@@ -21,19 +21,13 @@ names, offsets and behavior only, never decompiled code.
 | Build | Platform | How read | By |
 |---|---|---|---|
 | NayaCore 6.11.0 (NayaFlow 1.25.1) | Windows x64, `core/NayaCore/NayaCore.exe` | strings with a 2-character minimum, data tables with file offsets, the 60 source paths | us |
-| NayaCore 6.11.0 (NayaFlow 1.25.1) | macOS arm64, `NayaCore.app/Contents/MacOS/NayaCore`, 11 883 840 bytes, MD5 `84ded78022b6d312483aae0192584168` | symbols (about 1 800), code, guarded initializers, jump tables | us (2026-09-23); naya-create-kb (`otool -tV`) |
+| NayaCore 6.11.0 (NayaFlow 1.25.1) | macOS arm64, `NayaCore.app/Contents/MacOS/NayaCore`, 11 883 840 bytes, MD5 `84ded78022b6d312483aae0192584168` | symbols (about 1 800), code, guarded initializers, jump tables | us (2026-09-23) |
 | NayaCore 6.11.0 (NayaFlow 1.25.1) | macOS x86_64, 12 649 584 bytes | symbols and code (cross-check) | us |
 | NayaCore of NayaFlow 1.17.3 | Windows | strings | us |
 
 <span class="tag static">STATIC</span>[^nc-mac][^nc]. Our static work is on the Windows build, with a
 few functions read in both macOS builds (recorded in create-legacy-firmware[^nh-fp]) and, in 2026-09, the whole
-arm64 map and gate machinery. The community KB disassembled the macOS arm64 build: its "installed copy"
-has the MD5 of the public 1.25.1 arm64 asset, and it worked from a re-signed copy (MD5
-`b3dd3e14c255886d05b4a2728f61ffaa`) whose `otool -tV` dump of `(__TEXT,__text)` has 1 736 507 lines,
-1 735 023 of them instructions: the same count as our `__text` section (6 940 092 bytes / 4), and 3 000
-random addresses disassemble identically in our copy of the public asset, so the two copies differ
-only in the signature <span class="tag static">STATIC</span>; also reported by naya-create-kb[^kb-dis]
-(its dump: raw data checked).
+arm64 map and gate machinery.
 
 - **Re-derive it yourself.** Every stable installer is still public in `NayaTech/NayaFlow-releases`
   (25 releases, GitHub sha256 digests in the release metadata), and create-legacy-firmware mirrors them with a
@@ -50,14 +44,9 @@ only in the signature <span class="tag static">STATIC</span>; also reported by n
 
 ## Method and what static reading cannot settle
 
-- naya-create-kb's method <span class="tag reported">REPORTED</span>[^kb-dis]: `otool -tV` and
-  `strings`; every `construct*Commands` table cross-checked against at least one live frame (20 or
-  more); handler maps resolved from jump tables and `ldrsb`/`adrp`/literal-pool reads; extractor
-  scripts over the disassembly text (key batches v1-v4, 282 of 282 pairs); reader hunts by `adrp` page
-  census. Its jump-table readings hold: the LED builder switches on `w22 - 0x1003` compared with
-  `0x4d` (so `0x1003`-`0x1050`), and `operationMinFWVersion` is a switch on the operation
-  <span class="tag static">STATIC</span>. The ZMQ dispatch is a name-to-enum table followed by a
-  16-way jump table (below), not a compare chain.
+- **Jump tables** <span class="tag static">STATIC</span>[^nc-mac]: the LED builder switches on
+  `w22 - 0x1003` compared with `0x4d` (so `0x1003`-`0x1050`); `operationMinFWVersion` is a switch on
+  the operation; the ZMQ dispatch is a name-to-enum table followed by a 16-way jump table (below).
 - Our method in 2026-09: the arm64 symbol table and function starts, a reference index over the whole
   text section, a small register and stack tracker over the static initializers (it recovers every
   `(name, value)` pair of the maps), guarded-initializer and dyld-bind resolution for the
@@ -65,9 +54,9 @@ only in the signature <span class="tag static">STATIC</span>; also reported by n
   immediates, which makes it a convenient cross-check <span class="tag static">STATIC</span>.
 - **What static reading cannot settle**: values reached only through a run-time object (a base plus an
   offset). The `naya_fw::*_MinVersion` values are zero in the file's data section and have guard
-  variables, but they are **not** beyond static reading: each is an inline QString set at start-up by
+  variables, but static reading still recovers them: each is an inline QString set at start-up by
   a guarded initializer from a UTF-16 literal, or copied from another such variable
-  <span class="tag static">STATIC</span>. naya-create-kb calls them unrecoverable[^kb-dis].
+  <span class="tag static">STATIC</span>.
 
 ## Key functions
 
@@ -121,9 +110,15 @@ bytes; GET_BLE_STATUS reply at least 239 bytes; LEDS_INC/DEC amount under 101; L
 ("Invalid brightness"); LEDS_HUE_SAT hue under 361, saturation under 101; LEDS_RGB_BRT brightness under
 101; SEL_LEDS_EFF effect id below the effect count ("Empty effect_id parameter"); SET_HOST_OS one byte
 below a bound (0 Windows, 1 macOS by enum order); MODULE_FWUP one byte `module_type`, invalid values
-fall back to AUTO_DETECT; SET_RELEASE_MODE, TOGGLE_KEYSCAN_MODE and MODULE_BAT_RECOVERY one of two
-values; WAIT is a host-side meta command clamped to a maximum. naya-create-kb lists the brightness,
-hue, saturation and effect ranges[^kb-functions].
+fall back to AUTO_DETECT; SET_RELEASE_MODE and TOGGLE_KEYSCAN_MODE one of two values, MODULE_BAT_RECOVERY
+`00` (OFF) or `01` (ON); WAIT is a host-side meta command clamped to a maximum.
+
+**MODULE_FWUP numbering**: `Naya_DeviceManager::doUpdateModuleOperations` builds the type byte as 1
+for its Touch upload, 2 for the Tune and 3 for the Track <span class="tag static">STATIC</span>[^nc-mac],
+and our capture of NayaFlow's module updates shows the same bytes on the wire (`de/1005` with `01`
+Touch, `02` Tune, `03` Track) <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-23[^fp-modules].
+It is not nayactl's module numbering (1 Touch, 2 Track, 3 Tune): `03` sent to a Tune programmed it with
+the Track's app, and it stayed dark until `02` was forced.
 
 **LED command construction** (`_constructLEDMessages`): the target (`params[0][0]`) goes into a static
 payload and the command data into a dynamic payload, which the message queue joins, so NayaFlow never
@@ -132,7 +127,7 @@ LED command"); out-of-range values are clamped to 100 with a warning. The switch
 `1006`/`1007`, `1008`, `100e`, `1011` and `1050` have their own cases, the target-only commands share one,
 and `1012`-`104f` share another. FORCE LEDs ON and OFF are `ed/10d1` and `ed/10d2`, outside that
 range: NayaCore's LED command table lists them first and nayactl names them the same way
-<span class="tag static">STATIC</span>[^nc][^nc-mac][^nx]; also reported by naya-create-kb[^kb-functions].
+<span class="tag static">STATIC</span>[^nc][^nc-mac][^nx].
 
 **The remap path** <span class="tag static">STATIC</span>[^nc]: step functions `_remapReadLayerList`,
 `_remapWriteLayerList`, `_remapReadLayerData`, `_remapWriteLayerData`, `_remapReadModuleConfigList`,
@@ -167,8 +162,6 @@ each layer, which the wire shows as params `00 <layer>` <span class="tag static"
 - Display formats: `TO(%1)`, `TOG(%1)`, `MO(%1)`, `SL(%1)`; logs `ZMK Behaviour: (0x%1) %2`,
   `Unimplemented ZMK behaviour: %1`, `Unknown ZMK behaviour: (%1) %2` <span class="tag static">STATIC</span>[^nc].
 
-All of these agree with naya-create-kb's function page, which first named several of them[^kb-functions].
-
 **SPI flash flow** <span class="tag static">STATIC</span> <span class="tag doc">DOC</span>[^nc][^bg]:
 `_handleSpiflashTestFlash` -> `_handleConfirmation` -> `_handleSpiflashFormatPartition`; the TestSPIFlash
 operation's steps are VerifySPIFlashState, ReformatErrorPartitions, NormalRestart,
@@ -186,8 +179,8 @@ parser only in 1.25.1.
 
 - `doClearAllDataOperations` reads the board's profile, builds `naya_remap::Profile(ADD_DEFAULT_DATA)`
   and compares the two (`diffLayerMap`, later `diffConfigMap`); the only process it queues is category
-  `0x30` subcommand `0x10ca`, named `clear_all_data`, with an empty parameter list. naya-create-kb reads
-  it as also enqueueing the default profile[^kb-functions]; we find it compared, not written.
+  `0x30` subcommand `0x10ca`, named `clear_all_data`, with an empty parameter list, so the default
+  profile is compared, never written.
 - NayaCore sends `30/10ca` with params `00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`): in our
   disassembly of NayaCore 6.11.0 (macOS and Windows builds), `_remapClearFlash` passes one byte `00`
   <span class="tag static">STATIC</span>[^nc-mac]. The remap state machine's start step calls
@@ -201,8 +194,7 @@ parser only in 1.25.1.
   ([details](../open-questions.md#oq-f16)).
 - `ZMQHandler` has 17 request signals (`si_*_req_source`), `si_clearAllData_req_source` among them.
   `clear_all_data` is not an event name; the event `clear_data` (enum 5) is dispatched to
-  `si_clearAllData_req_source`. So the ClearAllData chain is reachable from NayaFlow's Danger Zone,
-  not dead code as naya-create-kb calls it[^kb-rpc]; the 17-signal count is also its reading.
+  `si_clearAllData_req_source`. So the ClearAllData chain is reachable from NayaFlow's Danger Zone.
 
 **The ZMQ event table** <span class="tag static">STATIC</span>[^nc-mac]: a static initializer builds the
 name-to-enum table 0 `invalid_command_event`, 1 `quit`, 2 `update_keymap`, 3 `flash_keymap`,
@@ -271,8 +263,7 @@ or "Unknown" otherwise. Keymap, ClearAllData, UpdateModule and operation 13 appl
 This matches what we measured on old firmware: 3.28.7 answers no Bluetooth opcode from `be/100c` up
 <span class="tag measured">MEASURED</span> (donor board, 3.28.7, 2026-09-19). The same literals appear
 in beta NayaCore builds from 1.17.1 on, which is why those builds carry version strings that match no
-image. naya-create-kb names the mechanism and some of the gates but lists ClearAllSplitLinks and
-ActivityTimeouts under the operation switch, and calls the values unrecoverable[^kb-functions]. How
+image. How
 NayaCore acts on a failed gate beyond these return values (refusal, warning) is
 <span class="tag open">OPEN</span>. CHECK_HANDSHAKE is "not implemented on version %1.%2.%3 of CORE"
 for some firmware <span class="tag static">STATIC</span>[^nc]. The same tables, read as firmware
@@ -306,9 +297,8 @@ USBVoltage. Device types: CreateLeft, CreateRight, Dongle, ModDock, TypeLeft, Ty
 ## Host maps
 
 NayaCore turns an action name into record parameters through nine QMap globals filled by one static
-initializer; they sit on one page of the arm64 build (the community KB's "statics on page
-`0x100af0000`", which it reads as members `+0x70` to `+0xb0` of one object) and are separate named
-globals <span class="tag static">STATIC</span>[^nc-mac]; also reported by naya-create-kb[^kb-maps]:
+initializer; they are separate named globals on one page of the arm64 build (`0x100af0000`)
+<span class="tag static">STATIC</span>[^nc-mac]:
 
 | Global | arm64 | x86_64 | Entries | Used by |
 |---|---|---|---|---|
@@ -327,8 +317,6 @@ The same page also holds `naya_remap::FW_KEY_POSITIONS`, `FW_MODULE_CONFIG_POSIT
 `FW_LED_LEFT_POSITIONS` and `FW_LED_RIGHT_POSITIONS` (not extracted here), and the word lists NayaCore
 uses to name each half (`naya_device_name::COLOR_ADJECTIVES`, `EMOTION_ADJECTIVES`,
 `HOUSEHOLD_APPLIANCES`, `ANIMALS`) sit just before it <span class="tag static">STATIC</span>[^nc-mac].
-naya-create-kb read `+0xb8`/`+0xc0` as a mutex-guarded lazy singleton with double-checked locking; the
-names confirm singleton and mutex, and `instance()` has no double check.
 
 ### Record types and bodies
 
@@ -351,17 +339,17 @@ body by bitmask <span class="tag static">STATIC</span>[^nc-mac]:
 | `0x8201` | `00`, `09`, `0f` | `[T][08][u32][u32]` |
 | `0x4080` | `07`, `0e` | no parameter |
 
-So the community KB's "Type-19" (action type 19, the naya integrations) is record type `06` in the
-`0x3962` group, as it says[^kb-maps]. `FLOW_AT_TO_ZMK` holds an older copy of that action-to-record
+So action type 19 (the naya integrations) becomes record type `06` in the `0x3962` group.
+`FLOW_AT_TO_ZMK` holds an older copy of that action-to-record
 table: {0:`01`, 1:`0c`, 2:`0d`, 3:`05`, 4:`0b`, 5:`02`, 6:`01`, 7:`0e`, 8:`07`, 9:`06`, 13:`00`,
 14:`09`, 15:`08`}; 11 entries match the live table and 5 -> `02`, 9 -> `06` differ. Its only references
-are its initializer and a teardown routine; `serializeBindingData` never touches it: a "write-only map",
-as naya-create-kb found <span class="tag static">STATIC</span>[^nc-mac][^kb-maps].
+are its initializer and a teardown routine; `serializeBindingData` never touches it, so it is filled
+and never read <span class="tag static">STATIC</span>[^nc-mac].
 
 Parameters: a two-word map value holds two u32 halves, and two-word wire records carry the high half
 first: `[T][08][high u32 LE][low u32 LE]` (for example BT_DEVICE_1 = `00 08 03000000 01000000`). In
 NayaCore's own names `Binding::param1()` returns the high half and is written first, `param2()` the low
-half; naya-create-kb labels them the other way round with the same wire result. The Windows tables store
+half. The Windows tables store
 pairs as (argument, command) in memory while the wire order is (command, argument)
 <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^nc-mac] (owner's
 board, 3.41.0, 2026-09-08).
@@ -373,24 +361,20 @@ board, 3.41.0, 2026-09-08).
   a u32: plain keys `0x0007HHHH` (A = `0x04`, F1-F12 = `0x3a`-`0x45`, F13-F24 = `0x68`-`0x73`), shifted
   `0x02..` (modifier bits in the top byte), consumer `0x000cHHHH` (C_MUTE `0xe2`, C_PREVIOUS `0xb6`),
   system `0x0001HHHH` (SYSTEM_POWER / SLEEP / WAKE_UP = `0x81`/`0x82`/`0x83`)
-  <span class="tag static">STATIC</span>[^nc-mac]; the 282 count is also naya-create-kb's[^kb-maps],
-  whose system-key pattern `0x000100HHHH` has two extra zeros. The Windows build's parameter table is a
+  <span class="tag static">STATIC</span>[^nc-mac]. The Windows build's parameter table is a
   different view: 249 four-byte entries `[usage lo][usage hi][page][mods]` at file offset `0x77a9d8` in
   ZMK `keys.h` order (page `0x07` 248 names, `0x01` system, `0x0C` consumer 27 names, of which the
   catalog exposes 11) <span class="tag static">STATIC</span>[^nc].
 - **Name quirks**: DELETE `0x4c` with alias DEL; KP_CLEAR `0xd8`; K_LOCK, K_SCREENSAVER, K_COFFEE all
   `0xf9`; PIPE2 = shift + NON_US_BACKSLASH (`0x64`); CLEAR2 = shift + KP_NUMLOCK (`0x53`); INTn /
-  INTERNATIONAL_n and LANGn / LANGUAGE_n alias families <span class="tag static">STATIC</span>; also
-  reported by naya-create-kb[^kb-maps].
+  INTERNATIONAL_n and LANGn / LANGUAGE_n alias families <span class="tag static">STATIC</span>.
 - **CLEAR is `0x9c`** (HID Keyboard Clear) and `SINGLE_QUOTE` is `0x34`, in both macOS builds (arm64
   computes `0x70090 + 0xc`; x86_64 stores the immediate `0x7009c`) <span class="tag static">STATIC</span>[^nc-mac].
-  naya-create-kb reads CLEAR as `0x34`, the quote key[^kb-maps]; that is not what NayaCore's map holds.
 - **Modifier bits** (`MODF_CODE_TO_MASK`, 26 names; the Windows u32 table at `0x77a9b8`): LCTRL 1,
   LSHIFT 2, LALT 4, LGUI 8, RCTRL 16, RSHIFT 32, RALT 64, RGUI 128. Accepted names: the eight HID
   modifiers plus CTRL, LEFT_CTRL, SHIFT, LEFT_SHIFT, ALT, LEFT_ALT, GUI, META, CMD, LEFT_GUI, LEFT_META,
   LMETA, LCMD, LWIN, LEFT_WIN, LEFT_COMMAND, RIGHT_CTRL, RIGHT_SHIFT. There is no RIGHT_ALT, RIGHT_GUI,
   RIGHT_META, RIGHT_WIN, RIGHT_COMMAND, RMETA, RCMD or RWIN <span class="tag static">STATIC</span>[^nc][^nc-mac].
-  naya-create-kb says 27 names; its own list has 26.
 - Composite codes are split on `" + "`: each extra part ORs its modifier bit into the top byte, so
   `Shift + A` = `0x02070004`. Bracketed modifiers in NayaFlow shortcuts (`[LALT] + TAB`) mean "already
   held" and are not set in the record (`2b 00 07 00`). Module axis codes are written `kind - NEG - POS`
@@ -401,11 +385,11 @@ board, 3.41.0, 2026-09-08).
 
 | Map | Values | Evidence |
 |---|---|---|
-| Bluetooth (8) | BT_CLEAR `0`, BT_NEXT `0x100000000`, BT_PREV `0x200000000`, BT_SELECT_SL `0x300000000`, BT_DEVICE_1..4 `0x300000000 + n`. On the wire BT_DEVICE_n is `[KK] 00 08 03000000 0n000000` (one-based; device 1 = profile slot 1 in the `be/100c` numbering; slot 0 only through SELECT_SL, which the catalog does not offer); BT_CLEAR is a real (0, 0) record. The catalog offers BT_DEVICE_1-4 and BT_CLEAR only. naya-create-kb writes DEVICE_n as `0x30000000 + n` (one zero short). | <span class="tag static">STATIC</span>[^nc-mac][^nc] <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-08/10) |
+| Bluetooth (8) | BT_CLEAR `0`, BT_NEXT `0x100000000`, BT_PREV `0x200000000`, BT_SELECT_SL `0x300000000`, BT_DEVICE_1..4 `0x300000000 + n`. On the wire BT_DEVICE_n is `[KK] 00 08 03000000 0n000000` (one-based; device 1 = profile slot 1 in the `be/100c` numbering; slot 0 only through SELECT_SL, which the catalog does not offer); BT_CLEAR is a real (0, 0) record. The catalog offers BT_DEVICE_1-4 and BT_CLEAR only. | <span class="tag static">STATIC</span>[^nc-mac][^nc] <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-08/10) |
 | Outputs (2) | USB_DEVICE = 1, BT_OUT = 2; on the wire `08 04 01000000` / `08 04 02000000` (record type `08`, outputs, not a layer switch) | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> (2026-09-08) |
-| LED (19) | EFFECT_ON_OFF `0`, BRIGHTNESS_UP/DOWN `0x7`/`0x8` << 32, SPEED_UP/DOWN `0x9`/`0xa` << 32, EFFECT (cycle) `0xb` << 32, effect select `0xd` << 32 with SOLID 0, BREATHE 1, SWIRL 2, SPEC(trum) 3; colors `0xf` << 32 with the low word `(h << 16) + (s << 8) + b`: RED 25700 (h0 s100 b100), ORANGE 1991780 (h30), YELLOW 3957860 (h60), GREEN 7890020 (h120), CYAN 11822180 (h180), BLUE 15754340 (h240), MAGENTA 17720420 (h270), PINK 19686500 (h300), WHITE 100 (h0 s0 b100). This is ZMK's `RGB_COLOR_HSB` packing, every color at brightness 100, and WHITE is regular. In the initializer ORANGE's value is built first and RED, GREEN, YELLOW, CYAN and BLUE are derived from it by hue arithmetic (a compiler detail). naya-create-kb's packing `S + (B << 8) + (H << 16)` with B = 70 and a "raw" WHITE do not hold: its own RED value 25700 = `0x6464` gives B = 100. | <span class="tag static">STATIC</span>[^nc-mac][^nc] <span class="tag measured">MEASURED</span> (the stock System layer read back 2026-09-08: WHITE `64 00 00 00`, RED `64 64 00 00`, GREEN `64 64 78 00`, BLUE `64 64 f0 00`) |
+| LED (19) | EFFECT_ON_OFF `0`, BRIGHTNESS_UP/DOWN `0x7`/`0x8` << 32, SPEED_UP/DOWN `0x9`/`0xa` << 32, EFFECT (cycle) `0xb` << 32, effect select `0xd` << 32 with SOLID 0, BREATHE 1, SWIRL 2, SPEC(trum) 3; colors `0xf` << 32 with the low word `(h << 16) + (s << 8) + b`: RED 25700 (h0 s100 b100), ORANGE 1991780 (h30), YELLOW 3957860 (h60), GREEN 7890020 (h120), CYAN 11822180 (h180), BLUE 15754340 (h240), MAGENTA 17720420 (h270), PINK 19686500 (h300), WHITE 100 (h0 s0 b100). This is ZMK's `RGB_COLOR_HSB` packing, with every color, WHITE included, at brightness 100. In the initializer ORANGE's value is built first and RED, GREEN, YELLOW, CYAN and BLUE are derived from it by hue arithmetic (a compiler detail). | <span class="tag static">STATIC</span>[^nc-mac][^nc] <span class="tag measured">MEASURED</span> (the stock System layer read back 2026-09-08: WHITE `64 00 00 00`, RED `64 64 00 00`, GREEN `64 64 78 00`, BLUE `64 64 f0 00`) |
 | Mouse (15) | (function, signed value): MOUSE_LEFT (0, -1), RIGHT (0, 1), UP (1, -1), DOWN (1, 1), SCROLL_UP (4, 1), SCROLL_DOWN (4, -1), SCROLL_LEFT (6, -1), SCROLL_RIGHT (6, 1), ZOOM_IN (8, 1), ZOOM_OUT (8, -1), M1-M5 = (3, 1/2/4/8/16). On a key: M1 = `[KK] 0f 08 03000000 01000000` (a real left click); mask 16 = X-button 2 (browser Forward); a short `0f 04 01000000` is stored and does nothing; a `(4, -1)` record scrolled a Windows page down. The motion codes are offered only in the module editor, never on keys. | <span class="tag static">STATIC</span>[^nc-mac][^nc] <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-06/07, 2026-09-16) |
-| Mouse pairs (13) | `MOUSE_CODE_TO_PARAM_PAIR`: the same pairs without ZOOM_IN/OUT, with the two halves swapped (MOUSE_LEFT = `0xffffffff00000000`); filled and never read in 6.11.0. naya-create-kb guessed a read-back index. | <span class="tag static">STATIC</span>[^nc-mac] |
+| Mouse pairs (13) | `MOUSE_CODE_TO_PARAM_PAIR`: the same pairs without ZOOM_IN/OUT, with the two halves swapped (MOUSE_LEFT = `0xffffffff00000000`); filled and never read in 6.11.0. | <span class="tag static">STATIC</span>[^nc-mac] |
 
 ### Naya integrations and motion categories
 
@@ -415,7 +399,7 @@ board, 3.41.0, 2026-09-08).
   `0x77ae60`). Only 401 is in the 1.25.1 catalog and only 401 has a wire sample: `3e 06 04 91 01 00 00`
   (position 62 of the stock System layer) <span class="tag static">STATIC</span>
   <span class="tag measured">MEASURED</span> (2026-09-08). TUNE_MODE_L would be `[KK] 06 04 96 00 00 00`
-  <span class="tag inferred">INFERRED</span>. naya-create-kb says type 6 has no genuine wire sample; it has.
+  <span class="tag inferred">INFERRED</span>.
 - NayaCore also knows app action types `configuration_rude_toggle`, `_l`, `_r`, `core`,
   `core_toggle_hold_morph` that no catalog record uses <span class="tag static">STATIC</span>
   ([details](../open-questions.md#oq-s07)).
@@ -429,8 +413,8 @@ board, 3.41.0, 2026-09-08).
   MOUSE_STATIC 2, MOUSE_BUTTONS 3, MOUSE_SCROLL_VERTICAL 4, STATIC_SCROLL_VERTICAL 5,
   MOUSE_SCROLL_HORIZONTAL 6, STATIC_SCROLL_HORIZONTAL 7, STATIC_ZOOM 8. Measured: 0 pointer X, 1 pointer
   Y, 3 buttons, 4 vertical scroll, 6 horizontal scroll, 8 zoom (-1 pinch, +1 spread); 2, 5 and 7 are
-  accepted but give no useful motion; the category is not tied to the field. They are values, not
-  "behavior slots" as naya-create-kb calls them <span class="tag static">STATIC</span>
+  accepted but give no useful motion; the category is not tied to the field
+  <span class="tag static">STATIC</span>
   <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-02 to 09-18). See
   [Module fields](../protocol/module-fields.md).
 
@@ -441,9 +425,8 @@ C_FAST_FORWARD, C_JIS, C_MUTE, C_NEXT, C_PLAY_PAUSE, C_POWER, C_PREVIOUS, C_REWI
 MB1-MB12, 20 KP_ icons, layer families MO_LAYER / TO_LAYER / TOGGLE_LAYER / HOLD_LAYER for ids 0-35
 (with zero-padded aliases 00-09 and `$ID` templates), BT_DEVICE_1-5 (5 has no map entry), LED_GEN,
 LED_GEN_2 and LED_BRIGHTNESS beyond the 19-name LED map, modifier variants LOPT/ROPT, LSHFT/RSHFT, RGUI,
-`_JIS` and `_MAC` forms. Icon names are not wire actions <span class="tag static">STATIC</span>[^rend].
-naya-create-kb counts 854 names; every family it lists is there[^kb-maps]. Many icon actions are proven
-on the wire, not only MO: layer switches (`05` MO, `0b` sticky layer, `0c` TO, `0d` TOG), Bluetooth keys
+`_JIS` and `_MAC` forms. Icon names are not wire actions <span class="tag static">STATIC</span>[^rend]. Many icon actions are proven
+on the wire: layer switches (`05` MO, `0b` sticky layer, `0c` TO, `0d` TOG), Bluetooth keys
 (`00`), LED keys (`09`), output keys (`08`), mouse buttons (`0f`), MODULE_FORCE_CHARGING (`06`)
 <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-06 to 09-10).
 
@@ -453,7 +436,7 @@ the host <span class="tag static">STATIC</span>[^nc]. See [ZMK](../firmware/zmk.
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> Whether `30/10ca` with `00 00` (NayaCore, STATIC) and `01` (naya-create-kb's tool) behave the same: a donor-board test ([details](../open-questions.md#oq-f16)).
+- <span class="tag open">OPEN</span> Whether `30/10ca` with `00 00` (NayaCore, STATIC) and with `01` behave the same: a donor-board test ([details](../open-questions.md#oq-f16)).
 - <span class="tag open">OPEN</span> How NayaCore acts on a failed version gate beyond the returned value ([details](../open-questions.md#oq-f17)).
 - <span class="tag open">OPEN</span> What the MCUboot worker's "connection test" sends to tell the data port from the log port ([details](../open-questions.md#oq-s06)).
 - <span class="tag open">OPEN</span> The naya-integration ids other than 401, and what `configuration_rude_toggle*`, `core` and `core_toggle_hold_morph` do ([details](../open-questions.md#oq-s07)).
@@ -471,7 +454,5 @@ the host <span class="tag static">STATIC</span>[^nc]. See [ZMK](../firmware/zmk.
 [^nh-fp]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids" and "Product ids"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L248) (the MCUboot worker and PID functions in both macOS builds).
 [^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`, `docs/cdc-wire-format.md`, `bluetooth.py`).
-[^kb-dis]: naya-create-kb, [disassembly](https://nemezzizz.github.io/naya-create-kb/disassembly/).
 [^kb-functions]: naya-create-kb, [disassembly/functions](https://nemezzizz.github.io/naya-create-kb/disassembly/functions/).
-[^kb-maps]: naya-create-kb, [disassembly/host-maps](https://nemezzizz.github.io/naya-create-kb/disassembly/host-maps/).
-[^kb-rpc]: naya-create-kb, [software/rpc-zmq](https://nemezzizz.github.io/naya-create-kb/software/rpc-zmq/).
+[^fp-modules]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Module firmware update, captured from NayaFlow (2026-09-23)"](https://github.com/create-collective/create-legacy-firmware/blob/db9a07c/FLASHING-PROCEDURE.md#module-firmware-update-captured-from-nayaflow-2026-09-23).

@@ -27,8 +27,7 @@ NayaFlow 1.25.1 uses the same 74 labels as the manual <span class="tag static">S
 
 <!-- layout facts 5-13 -->
 Position numbers for the keys are `0x00`-`0x49` (0-73), covering both halves in one layer; the left half
-stores and serves the whole table <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, layer reads and writes, 2026-09) (also
-described by naya-create-kb[^kb-keymap]). The mapping below comes from NayaFlow's label map, and the
+stores and serves the whole table <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, layer reads and writes, 2026-09). The mapping below comes from NayaFlow's label map, and the
 database position equals the firmware position <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^nc]:
 
 - Row 1: 0 `LA1`, 1 `LB1`, 2 `LC1`, 3 `LD1`, 4 `LE1`, 5 `LF1`, 6 `LG1`, 7 `LH1`, 8 `RH1`, 9 `RG1`,
@@ -58,7 +57,7 @@ number (or inherit, or empty) <span class="tag measured">MEASURED</span> <span c
 
 The primary table is therefore `0x00`-`0x51` (82 positions). Double-tap and tap-then-hold behaviors live
 in a second bank at key position + `0x52` (`0x52`-`0x9B`, keys only) <span class="tag measured">MEASURED</span> (owner's board, 3.41.0,
-2026-09-03 and 2026-09-21); naya-create-kb calls it a "shadow slot"[^kb-glossary]. Detail on
+2026-09-03 and 2026-09-21). Detail on
 [Keymap](../protocol/keymap.md). A 2024 vendor answer described the module configuration as 9 sublayers
 per layer, 1 for the keyboard and 4 for each dock (one per module type: Touch, Track, Tune, Float), which
 matches the 8 bay positions <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^ks-11].
@@ -157,9 +156,7 @@ equals the position (next section).
 In the v1.0.6 base layer `LA5` and `RA5` (positions 62 and 73) hold Layer 2 and `LH4` and `RH4` (67 and
 68) hold Layer 1; v1.1.0 keeps these four and adds a Layer 2 hold on the tall inner keys (`LH1` Enter and
 `RH1` Backspace, each with "Hold: Layer 2") <span class="tag doc">DOC</span>[^um106][^man-c]. NayaFlow 1.25.1's stock profile binds 62
-and 73 to the System layer and 67 and 68 to Layer 1 as "polite" holds <span class="tag static">STATIC</span>[^nc] (also read on the wire by
-naya-create-kb[^kb-keymap]). naya-create-kb notes that the corner keys' printed legend does not describe
-that action <span class="tag reported">REPORTED</span>[^kb-keymap].
+and 73 to the System layer and 67 and 68 to Layer 1 as "polite" holds <span class="tag static">STATIC</span>[^nc].
 
 The thumb and inner defaults changed between manuals: v1.0.6 has `LH1` Backspace, `LH2` Space, `LH3`
 Enter (the right side mirrored, with Enter on `RH1` and Backspace on `RH3`); v1.1.0 (Windows) has `LH1`
@@ -174,7 +171,7 @@ wing columns (A and B) of the left half, and Shift on both on the right <span cl
 The LED map has 136 entries per layer, the same on 3.28.7 and 3.41.0: 0-73 the keys, 74-80 and 81-87 the
 two light bars (7 each), 88-111 the left module-bay block (24), 112-135 the right module-bay block (24)
 <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, band painting 2026-09-08; a second board, 3.28.7, highest index 135,
-2026-09-19) (also described by naya-create-kb[^kb-led]). For keys, the LED index equals the key's position
+2026-09-19). For keys, the LED index equals the key's position
 number: a single-key LED write to index `0x49` recolored that key, and NayaFlow's one-key writes use the
 position as the index <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01 captures and 2026-09-03 write test). The
 count fits the hardware: per half 24 + 10 + 3 key LEDs plus a 7-LED light bar = 44, two halves = 88 =
@@ -194,7 +191,7 @@ indices 0-87 <span class="tag inferred">INFERRED</span>[^fcc-crl]. Details on [L
 - **Bay blocks belong to the bay.** Swapping a Tune and a Track between halves kept each side's color
   <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-08).
 - **Touch.** A Touch lights through the first index of its block only (88 left, 112 right) <span class="tag measured">MEASURED</span>
-  (2026-09-10) (also noted by naya-create-kb[^kb-led]).
+  (owner's board, 3.41.0, 2026-09-10).
 - **Tune and Track.** For a Tune the number of indices it follows is unsettled (88-96 lit in a band test;
   88 alone lit it in a single-index test; on module 2.1.2 only 88-93 took color); the Tune board carries
   24 LEDs. For a Track (one LED on the board) no single-index test exists; an early 112-126 reading was a
@@ -251,9 +248,6 @@ became about 3 mm taller when they moved to PG1232 switches (2024-09) <span clas
 [^man-c]: Naya Create User Manual Version 1.1.0 (vendor PDF, 2025-11-10), p6, p18; see [Manuals](../product/manuals.md).
 [^nc]: NayaFlow 1.25.1: renderer label map and key geometry, stock profile database and drawing model (static reading).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (constants for keyscan events).
-[^kb-keymap]: naya-create-kb, [keymap](https://nemezzizz.github.io/naya-create-kb/protocol/keymap/) (third party).
-[^kb-led]: naya-create-kb, [LED](https://nemezzizz.github.io/naya-create-kb/protocol/led/) (third party).
-[^kb-glossary]: naya-create-kb, [glossary](https://nemezzizz.github.io/naya-create-kb/glossary/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-11]: Kickstarter update 11, [2024-02-15](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4029736).
 [^ks-15]: Kickstarter update 15, [2024-09-03](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4095301).

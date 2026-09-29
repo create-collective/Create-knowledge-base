@@ -93,9 +93,7 @@ primary source we hold <span class="tag reported">REPORTED</span>[^cfd]. See [Sp
 The two halves are bonded to each other over Bluetooth Low Energy (the "split link"): each half's
 pair table holds the other half's address, and the left half's Bluetooth status reports a live link
 to the right half at a 7.5 ms connection interval, latency 0 and a 4 s supervision timeout
-<span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01 and 2026-09-08, cross-checked both ways). This contradicts
-naya-create-kb's statement that there is no radio link between the halves and that the host merges
-two streams[^kb-device][^kb-hardware].
+<span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-01 and 2026-09-08, cross-checked both ways).
 
 Vendor text describes the same link: the BLE v2 firmware (3.35.4) promised "higher bandwidth between
 halves", 3.39.4 onward (its beta note says 3.39.3) "reduced BLE traffic between halves", the v1.1.0
@@ -118,8 +116,7 @@ Whether any shipped setup has a wired data path between the halves is open <span
 ([details](../open-questions.md#oq-c15)). See [Split link](../connectivity/split-link.md) and
 [Transport](../protocol/transport.md).
 
-Which sender byte a reply relayed from the right half carries is not established: naya-create-kb's
-device overview says `0x50`, while its transport page implies `0x51`; this site does not state it
+Which sender byte a reply relayed from the right half carries is not recorded
 <span class="tag open">OPEN</span> ([details](../open-questions.md#oq-c12)). Direct replies carry the answering half's own address
 in the sender position; NayaCore's port probe names `aa 50 00 00 fe ...` "ProtocolCDC Left detected"
 and `aa 51 00 00 fe ...` Right <span class="tag static">STATIC</span>[^nc].
@@ -152,18 +149,19 @@ Configuration and firmware updates are USB only on 3.41.0. The vendor tool has n
 all: NayaCore links only Qt Core, SerialPort, Sql and ZeroMQ, and every device worker in it is a
 serial one <span class="tag static">STATIC</span>[^nc] (also reported by createflow-dongle). Over Bluetooth, a third party found HID, one
 battery level, device information and an idle vendor service that answers no configuration frame,
-with no DFU, SMP or UART service <span class="tag reported">REPORTED</span>[^cfd]. The HID report map the naya-create-kb maintainer read over
-Bluetooth is byte-identical to the left half's USB HID report descriptor in our own capture (keyboard
-with LED output, consumer control, mouse) <span class="tag reported">REPORTED</span> (raw data checked; USB side measured on the owner's
-board, 3.41.0, 2026-09-11).
+with no DFU, SMP or UART service <span class="tag reported">REPORTED</span>[^cfd]. The HID report map createflow-dongle reads over Bluetooth (its
+firmware carries a verbatim copy) is byte-identical to the left half's USB HID report descriptor in our
+own capture (keyboard with LED output, consumer control, mouse) <span class="tag reported">REPORTED</span>[^cfd]
+<span class="tag measured">MEASURED</span> (USB side: owner's board, 3.41.0, 2026-09-11).
 
 The keyboard would not start Bluetooth pairing while powered over USB <span class="tag measured">MEASURED</span> (owner's board, 3.41.0,
 2026-09-11); a third-party guide likewise says to keep it unplugged while pairing[^cfd].
 
-A half that is asleep does not answer on its USB serial port until it is woken by a key press, and
-the first frame after waking is often lost <span class="tag reported">REPORTED</span>[^kb-device]. Tools retry their first request (nayactl's
-connect handshake makes three attempts)[^nx], but no capture shows a sleeping half; see
-[Transport](../protocol/transport.md).
+A freshly opened port often loses its first frame: in 23 of 30 nayactl connections the first
+`fe/1001` got no reply and the retry did, with both halves awake on USB <span class="tag measured">MEASURED</span> (3.41.0,
+2026-09-01). Tools retry their first request (nayactl's connect handshake makes three attempts)
+<span class="tag static">STATIC</span>[^nx]. Whether a sleeping half answers at all has not been captured
+([open question](../open-questions.md#oq-p27)); see [Transport](../protocol/transport.md).
 
 Every power-on passes through the MCUboot bootloader: each half first appears at its bootloader USB
 PID for about 1 to 1.7 s, then at its application PID; when one half comes up and re-links, the
@@ -243,8 +241,7 @@ The 2023 campaign spec sheet described the pre-production design as 205 x 120 mm
 Tune 1000 mAh, Touch 700 mAh and Track 600 mAh (two 300 mAh cells in parallel); the vendor's website
 and the 2023 campaign spec sheet said 1500 / 800 / 800 mAh (1500 mAh for the Float), and the v1.1.0
 module manuals 1500 / 1500 / 700 mAh; retail capacities are not confirmed <span class="tag doc">DOC</span> <span class="tag open">OPEN</span>
-[^fcc-crl][^man-tu][^man-to][^man-tr][^ks-camp] ([details](../open-questions.md#oq-h21)). This
-corrects naya-create-kb's attributions of the module packs[^kb-hardware]. The full reading of the
+[^fcc-crl][^man-tu][^man-to][^man-tr][^ks-camp] ([details](../open-questions.md#oq-h21)). The full reading of the
 manual is on [Manuals](manuals.md).
 
 ## What is in the box
@@ -270,8 +267,6 @@ macOS Ventura and newer, tested on Ubuntu 24.04 LTS <span class="tag doc">DOC</s
 | Bluetooth layer version | `be/100f` replies `00 02` on 3.41.0 on both halves (status, then `02`, which fits the vendor's "BLE v2"); not implemented on 3.28.7 (no frame at all) | <span class="tag measured">MEASURED</span> owner's board, 3.41.0, 2026-09-11; a second board, 3.28.7, 2026-09-19 |
 | Dongle | the only version-like value is its USB `bcdDevice 0x0307`; the halves' bootloader identities report the same value, so it most likely reflects the USB stack's default (Zephyr 3.7) rather than a dongle firmware version | <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span> owner's dongle and boards, 2026-09-11 |
 
-naya-create-kb's "BLE FW v0.2.29" read the frame checksum `1d` as a third version byte[^kb-device];
-its own capture frames (`aa 50 00 00 be 04 10 0f 00 02 1d 04`) carry one data byte after the status.
 Every release is listed on [Firmware versions](../firmware/versions.md) and
 [History](../software/history.md).
 
@@ -329,16 +324,16 @@ Every release is listed on [Firmware versions](../firmware/versions.md) and
   TypeOne; module types TOUCH, TRACK, TUNE, FLOAT <span class="tag static">STATIC</span>[^nc].
 - **Five module apps.** Every module firmware bundle, inside NayaCore in every stable release from
   1.11.0 to 1.25.1, contains five encrypted apps: Touch, Track, Tune, Float and Query
-  (`*_UserApp.sfb` with `_HASH` sidecars); only Touch, Track and Tune shipped <span class="tag static">STATIC</span> <span class="tag doc">DOC</span>[^nc]
-  (also listed by naya-create-kb). See [Module firmware](../firmware/modules.md).
+  (`*_UserApp.sfb` with `_HASH` sidecars); only Touch, Track and Tune shipped <span class="tag static">STATIC</span> <span class="tag doc">DOC</span>[^nc].
+  See [Module firmware](../firmware/modules.md).
 - **Float.** A six-axis ("3D") input puck with a dial ring: marketing showed X/Y/Z, pitch, roll and yaw
   and a dial, the v1.1.0 manual lists the same inputs, and a vendor update of 2025-12-23 described 6DOF
   plus a base dial and put shipping at "Q3" 2026; a Naya patent family (WO2025188184A1) covers it; no
   Float was seen by us <span class="tag doc">DOC</span> <span class="tag static">STATIC</span>[^ks-24][^ks-26][^man-c][^wo]. By the other modules' address pattern it
   would dock at `0x80` (left) / `0x81` (right); nobody has one to confirm <span class="tag inferred">INFERRED</span>.
 - **Query.** It has a firmware app (41 088 bytes in the 1.25.x bundle) but no entry in NayaCore's
-  module-type list and no marketing trace <span class="tag static">STATIC</span>. What it is stays unknown; naya-create-kb suggests an
-  output-only device such as a display <span class="tag reported">REPORTED</span>[^kb-hardware] ([details](../open-questions.md#oq-h30)).
+  module-type list and no marketing trace <span class="tag static">STATIC</span>. What it is stays unknown
+  ([details](../open-questions.md#oq-h30)).
 - **Naya Connect.** Naya announced a second product family: a 75 % keyboard (Naya Type) with a Dock and
   magnetic attachments, crowdfunded in January and February 2026 with delivery estimated from February
   2027; press reports say its Touch, Track, Tune and Float modules also work on the Create. There is no
@@ -394,8 +389,6 @@ them, as the manual says <span class="tag doc">DOC</span>[^um106]. The general s
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) (module type detection; maintainer's board on 3.30.1).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5) (maintainer's board on 3.30.1 with modules on 2.2.2).
 [^cfd]: createflow-dongle, [github.com/mediaandmerch/createflow-dongle](https://github.com/mediaandmerch/createflow-dongle): `docs/findings.md`, `firmware/src/battery.c` and README (third party, keyboard 3.41.0; read at e95b679, 2026-09-23).
-[^kb-device]: naya-create-kb, [device overview](https://nemezzizz.github.io/naya-create-kb/device/) (third party).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet and FAQ, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-04]: Kickstarter update 4, [2023-08-10](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3881566).
 [^ks-09]: Kickstarter update 9, [2023-12-07](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3982337) ("based on a customized ZMK base").

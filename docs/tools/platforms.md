@@ -3,8 +3,8 @@
 The operating-system behavior that trips up anyone scripting the Create: port names and
 exclusivity, dead and ghost ports, the boot pass through the bootloader, bootloader-port quirks,
 USB capture, Linux permissions and browsers. The one thing to know: our hardware work ran on
-Windows 11 (keyboard firmware 3.28.7, 3.35.4 and 3.41.0); macOS rows come from the community KB and
-the vendor, and Linux rows from nayactl, createflow-dongle and OpenFlow's packaging. Nobody in this
+Windows 11 (keyboard firmware 3.28.7, 3.35.4 and 3.41.0); macOS rows come from the vendor's software and
+documents or are inferred from our Windows work, and Linux rows from nayactl, createflow-dongle and OpenFlow's packaging. Nobody in this
 research has used a Create on Linux or macOS with our own tools.
 
 !!! note "At a glance"
@@ -60,9 +60,9 @@ VID, PIDs and interfaces are on [USB](../connectivity/usb.md).
 
 | Fact | Evidence |
 |---|---|
-| The halves appear as `/dev/cu.usbmodem*`: `1101`-style names for the left and `21101`-style for the right, an extra node (for example `1103` beside `1101`) while a half is in its bootloader, and "Resource busy" when NayaFlow or its background server holds the port. | <span class="tag reported">REPORTED</span> by naya-create-kb[^kb-recovery][^kb-python]; not checked by us on a Mac |
-| NayaFlow's data folder is `~/Library/Application Support/NayaFlow/`; NayaCore sits inside `NayaFlow.app/Contents/core/NayaCore.app/`. | <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span> (the release zip's layout; the app name `NayaFlow` and Electron's `userData` convention); also reported by naya-create-kb[^kb-appdata] |
-| Instrumenting NayaCore with `DYLD_INSERT_LIBRARIES` needs a re-signed copy: NayaCore is signed with the hardened runtime (CodeDirectory flag `0x10000`), and its entitlements (`allow-jit`, `allow-unsigned-executable-memory`, `disable-library-validation`) do not allow DYLD environment variables. | <span class="tag static">STATIC</span>[^nc-mac]; also reported by naya-create-kb[^kb-toolkit] |
+| Each half's port appears as a `/dev/cu.usbmodem*` node (how macOS names a USB CDC serial port). A half in its bootloader has two CDC ports, the SMP data port and a log port, so expect two nodes for it. While NayaFlow runs, opening a half's port fails with "Resource busy" (`EBUSY`): NayaCore opens its ports through Qt's serial-port module, which opens them exclusively. | <span class="tag inferred">INFERRED</span> <span class="tag static">STATIC</span> (macOS naming of USB CDC ports; the two bootloader ports measured on Windows, 2026-09-16 and 2026-09-20, see [Bootloader](../firmware/bootloader.md); the exclusive open, see [Troubleshooting](../troubleshooting.md#host-and-port-problems)); not checked by us on a Mac |
+| NayaFlow's data folder is `~/Library/Application Support/NayaFlow/`; NayaCore sits inside `NayaFlow.app/Contents/core/NayaCore.app/`. | <span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span> (the release zip's layout; the app name `NayaFlow` and Electron's `userData` convention) |
+| Instrumenting NayaCore with `DYLD_INSERT_LIBRARIES` needs a re-signed copy: NayaCore is signed with the hardened runtime (CodeDirectory flag `0x10000`), and its entitlements (`allow-jit`, `allow-unsigned-executable-memory`, `disable-library-validation`) do not allow DYLD environment variables. | <span class="tag static">STATIC</span>[^nc-mac] |
 | macOS has no F21-F24 key codes, so function-key schemes (Create Companion) use F14-F20 there. | <span class="tag doc">DOC</span>[^cc] |
 | Apple platforms hold non-Apple Bluetooth devices to a 15 ms minimum connection interval (the vendor's BLE v2 reaches 7.5 ms elsewhere). | <span class="tag doc">DOC</span> (NayaFlow 1.19.1 release notes[^rel]) |
 | Vendor-noted macOS issues: Cmd+Return created an empty window on macOS Tahoe 26.2 (disabled in 1.17.2); diagnostics failed on macOS 26 (fixed in 1.25.0); arm64 Macs auto-updated to the Intel build (fixed in beta 1.17.2). | <span class="tag doc">DOC</span> (release notes[^rel][^beta]) |
@@ -100,7 +100,7 @@ then replug the halves. Do not run tools as root when a udev rule will do.
   lists Windows, macOS, Debian Linux, iPadOS, iOS and Android as tested hosts for BLE v2; each host
   slot advertises as "NayaCreate BLE n" from BLE v2 on, and some hosts need Bluetooth restarted to
   see the new name <span class="tag doc">DOC</span> (1.19.1 notes[^rel])
-  <span class="tag measured">MEASURED</span> (third party: no configuration channel over Bluetooth[^cfd]).
+  <span class="tag reported">REPORTED</span> (createflow-dongle: no configuration channel over Bluetooth[^cfd]).
 
 ## Open questions
 
@@ -121,7 +121,3 @@ then replug the halves. Do not run tools as root when a udev rule will do.
 [^cc]: Create Companion, [github.com/create-collective/create-companion](https://github.com/create-collective/create-companion) (README).
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md).
 [^cfd-rel]: createflow-dongle, [release 0.1.3](https://github.com/mediaandmerch/createflow-dongle/releases) notes.
-[^kb-recovery]: naya-create-kb, [recovery](https://nemezzizz.github.io/naya-create-kb/recovery/) and [firmware/bootloader](https://nemezzizz.github.io/naya-create-kb/firmware/bootloader/).
-[^kb-python]: naya-create-kb, [toolkit/python](https://nemezzizz.github.io/naya-create-kb/toolkit/python/).
-[^kb-appdata]: naya-create-kb, [software/app-data](https://nemezzizz.github.io/naya-create-kb/software/app-data/).
-[^kb-toolkit]: naya-create-kb, [toolkit](https://nemezzizz.github.io/naya-create-kb/toolkit/).

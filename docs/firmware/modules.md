@@ -3,14 +3,16 @@
 The Touch, Track and Tune modules run their own firmware on their own microcontroller. This page
 covers what runs in a module, how its firmware ships (the `FlashMemory.bin` bundle), where the
 keyboard stores it, how NayaCore updates a module, the module recovery mode, the versions and what
-they changed, and what is untested. The thing to know first: a module firmware update has never been
-run outside the vendor as far as we know; the module recovery key, on the other hand, is measured and
-revived two dead modules.
+they changed, and what is untested. The thing to know first: an update must name the module that is
+physically docked (`de/1005` takes `01` for a Touch, `02` for a Tune, `03` for a Track), because the
+wrong byte programs the wrong app into the module, which then stays dark until a forced update with
+the right one. The module recovery key, measured on 3.28.7, revived two dead modules.
 
 !!! note "At a glance"
     - Each module has an STM32F411 and no radio; its firmware is not an MCUboot image.
     - Module firmware ships as `FlashMemory.bin`: a 1 MiB LittleFS image of encrypted `.sfb` apps.
     - The keyboard stores the bundle on the **left** half and programs a docked module from it.
+    - `de/1005` names the docked module: `01` Touch, `02` Tune, `03` Track (not nayactl's numbering).
     - `de/100a` reads the stored bundle's version (left half only); `de/1008` reads a docked module's own version.
     - The System-layer recovery key force-charges a drained module and brought two back (3.28.7, module 2.1.2).
 
@@ -42,8 +44,7 @@ at offset `0x08`). It is not an MCUboot image: no MCUboot magic, no TLVs, no swa
 It contains one encrypted app per module type (`Touch_UserApp.sfb`, `Track_UserApp.sfb`,
 `Tune_UserApp.sfb`, `Float_UserApp.sfb`, `Query_UserApp.sfb`); from 1.15.0 a `<App>_HASH` file beside
 each app (the SHA-256 of the `.sfb`, described as the value the Create reports for the app); and
-from 1.14.3 a `VERSION` file of four bytes, `00 MM mm pp` <span class="tag static">STATIC</span>[^fh]. naya-create-kb also lists the
-`.sfb` apps and their HASH files.
+from 1.14.3 a `VERSION` file of four bytes, `00 MM mm pp` <span class="tag static">STATIC</span>[^fh].
 
 The `.sfb` payloads are encrypted (entropy about 7.98, no Cortex-M vector table): their
 names and hashes are readable, their code is not <span class="tag static">STATIC</span>[^fh].
@@ -82,32 +83,44 @@ answers it <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 20
 
 `de/1008` GET_MODULE_FW_VERSION reads a docked module's own running firmware on the half
 it is docked on, either half. The reply is `00 <addr> <flag> 00 <major> <minor> <patch>`: status
-`00`, the dock address, a flag byte, then the version with the vendor's leading zero. A right-docked
-Touch at address `0x11` reported 2.1.2 on a 3.41.0 board <span class="tag measured">MEASURED</span> (owner's board, 2026-09). Third-party
-captures show `00 11 00 00 02 03 03` (a Touch on the right, 2.3.3) and, while a module has not reported
-yet, the flag `01` with an all-zero version (`00 11 01 00 00 00 00`) <span class="tag reported">REPORTED</span> (raw data checked: the
-naya-create-kb maintainer's published captures; the nayactl maintainer reports the same layout[^nx-pr5]).
-Details on [Modules](../protocol/modules.md).
+`00`, the dock address, a flag byte, then the version with the vendor's leading zero. The right half
+has answered `00 21 00 00 02 03 03` (a Track on 2.3.3) and `00 11 00 00 02 01 02` (a Touch on 2.1.2),
+and while a module had not reported yet the flag read `01` with an all-zero version
+(`00 21 01 00 00 00 00`) <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09). The nayactl maintainer
+reports the same layout <span class="tag reported">REPORTED</span>[^nx-pr5]. Details on [Modules](../protocol/modules.md).
 
 ## How NayaCore updates a module
 
-!!! danger "Untested: never run outside the vendor as far as we know"
+!!! danger "Module updates: tested by us, and two ways they went wrong"
     Safety level HIGH (it rewrites the left half's module store and then reprograms a module).
-    UNTESTED by us and, as far as we know, by anyone outside the vendor. First attempts belong on a
-    donor board with the module docked on the left half. Do not send `de/1005`, `de/1006` or
-    `fe/1003` by hand: their payloads are not known with certainty.
+    TESTED by us on the left half, 3.41.0, from 2026-09-23: NayaFlow's update and forced update, and
+    OpenFlow's. The `de/1005` byte must match the module that is physically docked: `03` sent to a
+    Tune programmed it with the Track's app and left it dark until a forced update with `02` put the
+    Tune's app back. One Track update never finished: the keyboard hung until it was power cycled, and
+    from then on that Track answered like an empty bay, cause unknown
+    <span class="tag measured">MEASURED</span>[^fp-modules]. Do not send `de/1006` by hand: its payload is not known with certainty.
+    `fe/1003` takes only `00` (off) or `01` (on) as its data byte and is NayaCore's rescue for a
+    critically drained module <span class="tag static">STATIC</span>[^nc] ([SYSTEM commands](../protocol/commands.md#fe-system)).
 
 NayaCore's module update sequence, from the strings of `Naya_DeviceManager_ModuleFwUpdate.cpp`
-<span class="tag static">STATIC</span>[^nc][^fp-slots]:
+and our capture of NayaFlow 1.25.1 updating a Touch (left half, 3.41.0, 2026-09-23)
+<span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^nc][^fp-slots][^fp-modules]:
 
-1. verify the file;
-2. put the **left** half into its bootloader;
+1. verify the file and read the stored bundle's version (`de/100a`); if it already matches, skip
+   the upload (steps 2 to 4);
+2. put the **left** half into its bootloader (`ee/10ae`);
 3. upload `FlashMemory.bin` to the modules target, id 4 (`uploadImageToModulesSlot` =
-   `uploadImageToSlot(path, 4)`);
-4. reset the half (no mark step and no swap: it is a filesystem);
-5. send `de/1005` MODULE_FWUP with one byte naming the docked module type, so that the keyboard
-   programs the module from its own store;
+   `uploadImageToSlot(path, 4)`), in 512-byte chunks;
+4. let the half restart by itself about a second after the last chunk: NayaCore sends no `os reset`,
+   and there is no mark step and no swap (it is a filesystem);
+5. send `de/1005` MODULE_FWUP with one byte naming the docked module type (`01` Touch, `02` Tune,
+   `03` Track); the keyboard acknowledges at once, programs the module from its own store (the
+   module's LEDs go out for 10 to 15 s) and restarts about 32 to 40 s after the command;
 6. compare the module's reported version (`de/1008`) with the bundle's `VERSION`.
+
+On the owner's board the half came back on USB after each of those self-restarts only once its cable
+was unplugged and plugged in again (2 of 2 runs); NayaCore checks its step timeout only on a device
+event, so a run can sit until the replug <span class="tag measured">MEASURED</span>[^fp-modules].
 
 NayaCore's step names for it are ModuleFW_FileVerification, ModuleFW_FileVerificationPostUpload,
 ModuleFW_Update, ModuleFW_VersionCheck, ModuleFW_Touch_Upload, ModuleFW_Track_Upload,
@@ -116,17 +129,20 @@ the docked type ("Unknown, waiting for timeout" when none is docked); on a misma
 firmware version image does not match stored module firmware version for device ..." <span class="tag static">STATIC</span>[^nc].
 
 `de/1005` MODULE_FWUP takes one byte: NayaCore's validation requires a size of 1, and an
-invalid type falls back to AUTO_DETECT <span class="tag static">STATIC</span>. The value table is uncertain: nayactl's module types give
-1 Touch, 2 Track, 3 Tune, while the keyboard's module-configuration list uses 0 Touch, 1 Track,
-2 Tune <span class="tag inferred">INFERRED</span>[^nx]. We have never sent it.
+invalid type falls back to AUTO_DETECT <span class="tag static">STATIC</span>[^nc]. The byte is `01` for a Touch, `02` for a
+Tune and `03` for a Track: NayaCore builds it as a one-byte array in each forced branch, and all three
+were captured on the wire from NayaFlow on 2026-09-23 <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^fp-modules].
+It is neither the dock address nor nayactl's module-type numbering (1 Touch, 2 Track, 3 Tune)[^nx]:
+`03` sent to a Tune programmed it with the Track's app, and the Tune came back dark, reporting dock
+address `0x4A`, until a forced `02` restored it <span class="tag measured">MEASURED</span>[^fp-modules].
 
 Host events: NayaFlow sends the ZMQ event `update_module_fw`, and NayaCore also accepts
 `force_touch_start`, `force_track_start` and `force_tune_start` <span class="tag static">STATIC</span>[^nc]. The old text commands
 `manual_fw_update_touch`, `_track` and `_tune` and `force_touch_start` belonged to the engineering
 text channel, retired in 3.31.1; every text command returns nothing on 3.41.0 <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span>[^nx-pr2].
-Whether a forced module update from NayaFlow works on 3.41.0 has not been tested
-([open question](../open-questions.md#oq-f24)). naya-create-kb also lists `update_module_fw` among
-NayaCore's ZMQ events.
+NayaFlow's forced update works on 3.41.0: Force Update to Tune restored the Tune above, and
+Force Update to Track was captured on the wire <span class="tag measured">MEASURED</span> (left half,
+2026-09-23)[^fp-modules].
 
 An interrupted bundle upload would leave the modules partition partly erased and the
 keyboard firmware untouched, because the keyboard's image slots are not involved <span class="tag inferred">INFERRED</span>.
@@ -180,8 +196,9 @@ mode for drained modules (Kickstarter update 21, 2025-06-16); NayaFlow 1.3.8 shi
 support for battery Zero" <span class="tag doc">DOC</span>[^ks-21][^cl-421].
 
 A dead-module rescue command exists in the configuration protocol: SYSTEM `fe/1003`
-MODULE_BATTERY_RECOVERY (NayaCore's `MODULE_BAT_RECOVERY`). Its payload is unknown and we have never
-sent it; the same holds for RESET_MODULE `de/1006` <span class="tag static">STATIC</span>[^nx][^nc].
+MODULE_BATTERY_RECOVERY (NayaCore's `MODULE_BAT_RECOVERY`). It takes one data byte, `00` (off) or `01`
+(on), and NayaCore refuses anything else; we have never sent it. RESET_MODULE `de/1006`'s payload is
+unknown and never sent <span class="tag static">STATIC</span>[^nx][^nc] ([SYSTEM commands](../protocol/commands.md#fe-system)).
 
 ## Known module-firmware problems
 
@@ -204,9 +221,8 @@ corrected battery reporting; 6.6.1 re-enabled module battery reading; NayaFlow 1
 battery percentages, with "fluctuations between 5 and 10 percent"; module 2.3.3 disabled the battery
 blink <span class="tag doc">DOC</span>[^cl][^beta]. The percentage NayaFlow shows is
 `(clamp(mV, 3300, 4200) - 3300) * 100 / 900`, truncated, then clamped to 1-100 %, from the `de/100b`
-millivolts <span class="tag static">STATIC</span> (NayaCore 6.11.0, `Naya_Device::getModuleBatteryPercentage`)[^nc];
-naya-create-kb's slope estimate of about 9.3 mV per percent is close, but the exact slope is 9 mV.
-Readings and calibration points: [Power and batteries](../hardware/power.md#percentages).
+millivolts <span class="tag static">STATIC</span> (NayaCore 6.11.0, `Naya_Device::getModuleBatteryPercentage`)[^nc]:
+9 mV per point. Readings and calibration points: [Power and batteries](../hardware/power.md#percentages).
 
 ## Before the bundle: `d_fw.bin`
 
@@ -230,24 +246,15 @@ module update, now part of the app, has flashed modules on the owner's boards si
 Track downgrade that read back as a correct Track <span class="tag measured">MEASURED</span>[^fp-modules]. Tested: the recovery key (3.28.7 with modules on 2.1.2), the
 version reads (`de/100a`, `de/1008`).
 
-## Where this differs from naya-create-kb
-
-| naya-create-kb says | What the evidence shows |
-|---|---|
-| Module firmware ships only up to NayaFlow 1.6.10, and releases from 1.15 on carry none (versions page) | `FlashMemory.bin` ships in every stable release from 1.11.0, with modules 2.1.1 to 2.3.3 |
-| The 175 136-byte image is the module firmware (versions, signing) | That is `d_fw.bin`, dial or dongle firmware |
-| One signing key covers the Track, Tune and Touch modules (signing) | Module apps are `.sfb` files, not MCUboot images; their signing is open |
-| The module bundle and its HASH files sit on each half (littlefs) | Only the left half stores the bundle |
-
 ## Open questions
 
-- <span class="tag open">OPEN</span> The `de/1005` module-type byte table, and the payloads of MODULE_BATTERY_RECOVERY (`fe/1003`) and RESET_MODULE (`de/1006`).
+- <span class="tag open">OPEN</span> RESET_MODULE's (`de/1006`) payload as NayaCore sends it; MODULE_BATTERY_RECOVERY (`fe/1003`) has never been captured.
 - <span class="tag open">OPEN</span> The module microcontroller's bootloader, and whether any key signs the `.sfb` apps ([details](../open-questions.md#oq-f09)).
 - <span class="tag open">OPEN</span> Whether recovery mode behaves the same on 3.41.0 with modules on 2.3.3, and how long it runs before it ends ([details](../open-questions.md#oq-f22)).
 - <span class="tag open">OPEN</span> Whether a Tune on 2.3.3 drives more than 6 of its 24 bay LED indices.
 - <span class="tag open">OPEN</span> The module version of the 1.11.x bundle ([details](../open-questions.md#oq-f12)).
 - <span class="tag open">OPEN</span> Whether `d_fw.bin` is dial or dongle firmware ([details](../open-questions.md#oq-f08)).
-- <span class="tag open">OPEN</span> The module-bundle flash itself (`image: 4`, then `de/1005`) on a donor ([details](../open-questions.md#oq-f13)).
+- <span class="tag open">OPEN</span> Why one Track update hung the keyboard and left the Track answering like an empty bay, and whether every half needs a cable replug to come back after a module update's restarts ([details](../open-questions.md#oq-f13)).
 
 ## Sources
 

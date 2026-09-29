@@ -10,7 +10,7 @@ Unless another source is named, <span class="tag measured">MEASURED</span> means
 owner's board, with the keyboard firmware and date given beside the tag. Byte strings follow the
 [byte convention](../protocol/transport.md#byte-convention). No Bluetooth address is reproduced.
 Third-party Bluetooth measurements come from the public createflow-dongle project, which describes its
-subject as "a Naya Create running firmware 0.3.41 in September 2026"[^cfd], and from naya-create-kb.
+subject as "a Naya Create running firmware 0.3.41 in September 2026"[^cfd].
 
 !!! note "At a glance"
     - One host-facing keyboard: the left half is the central of a bonded pair and the host gets one set of HID reports and one battery level.
@@ -24,13 +24,12 @@ subject as "a Naya Create running firmware 0.3.41 in September 2026"[^cfd], and 
 <!--BT-01-->The two halves are bonded to each other over Bluetooth LE (the split link) and a host sees
 one Bluetooth keyboard <span class="tag measured">MEASURED</span> pair tables, 2026-09-01. A third-party
 central held a single connection and got the keys of the whole keyboard, the touchpad, the dials and
-the media keys, with one battery level <span class="tag reported">REPORTED</span>[^cfd]. So "each half
-is an independent peripheral and the host merges two streams, with no inter-half radio"[^kb-ble][^kb-device][^kb-hardware]
-does not match what is measured <span class="tag inferred">INFERRED</span>. Whether the right half
+the media keys, with one battery level <span class="tag reported">REPORTED</span>[^cfd]. So a host gets
+one stream of reports for the whole keyboard <span class="tag inferred">INFERRED</span>. Whether the right half
 advertises to hosts at all is not measured ([open questions](../open-questions.md#oq-c07)).
 
 <!--BT-02-->The SoC and radio belong to [The keyboard half](../hardware/half.md): our reading of the FCC
-exhibits is a Nordic nRF52840 (package code `CKAA`), not the nRF52811 naya-create-kb names[^kb-ble]
+exhibits is a Nordic nRF52840 (package code `CKAA`)
 <span class="tag doc">DOC</span>. The Bluetooth SIG listing 311198 ("NAYA TECH/NAYA CREATE", Naya
 B.V., qualified 2025-09-19) declares core specification 5.1, lists model NAYA-800-1 with "USB, 2.4G,
 BLE three working modes", and references a Zephyr host (QDID 151074) and a Zephyr controller for nRF52
@@ -85,10 +84,10 @@ stock profile agrees, with BT_CLEAR at positions 6 and 73 <span class="tag doc">
 <span class="tag measured">MEASURED</span> stock positions, 2026-09-10. A failed pairing attempt falls
 back to the previous connection <span class="tag doc">DOC</span>[^man-c].
 
-<!--BT-07-->naya-create-kb's "Layer 2 + Esc = pairing"[^kb-manual] is the v1.0.6 manual (the FCC
-exhibit): its Layer 2 table puts BT Clear on LA1 (the Esc position), "Speedlink" on LA4 and "Connect to
-Bluetooth" on LB4, while its text says keys 1-5. The later manual and the stock profile moved Clear to
-LG1. Both are right for their version; the stock default today is Layer 2 + 5
+<!--BT-07-->The v1.0.6 manual (the FCC exhibit) pairs differently: its Layer 2 table puts BT Clear on
+LA1 (the Esc position), "Speedlink" on LA4 and "Connect to Bluetooth" on LB4, while its text says keys
+1-5, so pairing there is Layer 2 + Esc. The later manual and the stock profile moved Clear to LG1.
+Each manual is right for its version; the stock default today is Layer 2 + 5
 <span class="tag doc">DOC</span>[^um106][^man-c].
 
 | Action | Manual v1.1.x and stock profile | Manual v1.0.6 (FCC exhibit) | Evidence |
@@ -146,8 +145,8 @@ operation.") <span class="tag static">STATIC</span>[^nc][^nf].
 
 <!--BT-14-->`be/100f` GET BLE FW VERSION answers `00 02` on 3.41.0 on both halves: one data byte, 2 =
 BLE v2 <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-07 to 2026-09-17. The whole reply
-frame is `aa 50 00 00 be 04 10 0f 00 02 1d 04`, so naya-create-kb's `00 02 1d` includes the frame
-checksum `1d`, and its "BLE FW v0.2.29"[^kb-ble][^kb-commands] is a misreading. On 3.28.7 `be/100f`
+frame is `aa 50 00 00 be 04 10 0f 00 02 1d 04`: the `1d` after the data byte is the frame checksum,
+not a third version byte. On 3.28.7 `be/100f`
 returns no frame at all (the firmware predates it) <span class="tag measured">MEASURED</span> 3.28.7,
 2026-09-19. See [Command map](../protocol/commands.md).
 
@@ -161,41 +160,45 @@ by createflow-dongle). The blob is decoded on [Split link](split-link.md).
 
 ## GATT: what the keyboard exposes
 
-All of this section comes from third-party reads; no Bluetooth central of ours has read the table, and
-NayaFlow has no Bluetooth transport. A read-only check from a host that is already bonded settles it
+All of this section comes from third-party reads, with the report map also matched against our own USB
+capture; no Bluetooth central of ours has read the table, and NayaFlow has no Bluetooth transport. A read-only check from a host that is already bonded settles it
 ([open questions](../open-questions.md#oq-c08)).
 
-<!--BT-16-->GATT services and handles, listed after encryption on 3.41 by createflow-dongle and without
-handles by naya-create-kb (nRF Connect) <span class="tag reported">REPORTED</span>[^cfd][^kb-ble]:
+<!--BT-16-->GATT services and handles, listed after encryption on 3.41 by createflow-dongle
+<span class="tag reported">REPORTED</span>[^cfd]:
 
 | Service | Handles | Characteristics | Evidence |
 |---|---|---|---|
 | `0x1801` Generic Attribute | `0x0001`-`0x0008` | standard | <span class="tag reported">REPORTED</span> |
 | `0x1800` Generic Access | `0x0009`-`0x000f` | standard | <span class="tag reported">REPORTED</span> |
 | `0x180f` Battery | `0x0010`-`0x0013` | Battery Level `0x2a19`, value handle `0x0012`, notify | <span class="tag reported">REPORTED</span> |
-| `0x180a` Device Information | `0x0014`-`0x001a` | three: Model, Manufacturer, PnP | <span class="tag reported">REPORTED</span> |
+| `0x180a` Device Information | `0x0014`-`0x001a` | not listed by the source | <span class="tag reported">REPORTED</span> |
 | `0x1812` HID over GATT | `0x001b`-`0x0030` | report map and reports (below) | <span class="tag reported">REPORTED</span> |
 | `0x1234` vendor | `0x0031`-`0x0034` | one characteristic `0x5678` (read, write, notify) and its CCCD | <span class="tag reported">REPORTED</span> |
 
 <!--BT-17-->There is one Battery Level characteristic for the whole keyboard, with no second one for the
 other half <span class="tag reported">REPORTED</span>[^cfd]; per-half charge is available only over
-USB (`fe/1006`, see [Command map](../protocol/commands.md)). naya-create-kb saw its notifications tick
-between 89 and 92 % <span class="tag reported">REPORTED</span>[^kb-ble].
+USB (`fe/1006`, see [Command map](../protocol/commands.md)). Over USB a half reports only its cell
+voltage, and the voltage a full half rests at depends on its firmware: flat on USB for 30 minutes,
+3.41.0 halves held about 4.07 to 4.09 V and 3.28.7 halves about 4.19 to 4.21 V
+<span class="tag measured">MEASURED</span> owner's boards, 2026-09-26. Which cell and which scale the firmware uses for the
+Bluetooth percentage is not known ([Power and batteries](../hardware/power.md#percentages)).
 
 <!--BT-18-->The HID service carries report protocol only: 22 handles leave no room for a Protocol Mode
 or boot-report characteristic <span class="tag inferred">INFERRED</span> (handle arithmetic), and the
 third-party client finds no boot keyboard report <span class="tag reported">REPORTED</span>[^cfd]. The
-212-byte report map is byte-identical in two independent third-party reads, createflow-dongle's and the
-naya-create-kb maintainer's research files <span class="tag reported">REPORTED</span> (raw data checked:
-we decoded the maintainer's published map)[^cfd][^kb-raw]. Trackball and touch input reach a host as
-report 3.
+212-byte report map that createflow-dongle reads over Bluetooth (its firmware carries a verbatim copy)
+is byte-identical to the left half's USB HID report descriptor in our own capture
+<span class="tag reported">REPORTED</span>[^cfd] <span class="tag measured">MEASURED</span> (USB side: owner's board, 3.41.0, 2026-09-11). Trackball and touch input reach a host as
+report 3. The table decodes that map; each row is in createflow-dongle's copy[^cfd] and in our USB
+descriptor capture of the same date.
 
 | Report id | Kind | Contents | Evidence |
 |---|---|---|---|
-| 1 | keyboard (input) | 8 modifier bits, 1 reserved byte, 6-key array (0-255) | <span class="tag reported">REPORTED</span> (raw data checked) |
-| 1 | keyboard (output) | 5 LED bits + 3 padding bits | <span class="tag reported">REPORTED</span> (raw data checked) |
-| 2 | consumer control | six 16-bit usages, 0-4095 | <span class="tag reported">REPORTED</span> (raw data checked) |
-| 3 | mouse | 5 buttons, 8-bit relative X and Y, wheel, AC Pan (`0x238`), AC Zoom (`0x22f`) | <span class="tag reported">REPORTED</span> (raw data checked) |
+| 1 | keyboard (input) | 8 modifier bits, 1 reserved byte, 6-key array (0-255) | <span class="tag reported">REPORTED</span> <span class="tag measured">MEASURED</span> (USB descriptor) |
+| 1 | keyboard (output) | 5 LED bits + 3 padding bits | <span class="tag reported">REPORTED</span> <span class="tag measured">MEASURED</span> (USB descriptor) |
+| 2 | consumer control | six 16-bit usages, 0-4095 | <span class="tag reported">REPORTED</span> <span class="tag measured">MEASURED</span> (USB descriptor) |
+| 3 | mouse | 5 buttons, 8-bit relative X and Y, wheel, AC Pan (`0x238`), AC Zoom (`0x22f`) | <span class="tag reported">REPORTED</span> <span class="tag measured">MEASURED</span> (USB descriptor) |
 
 Whether the keyboard acts on the host's lock-key LED output report is not known.
 
@@ -207,16 +210,9 @@ service <span class="tag reported">REPORTED</span>[^cfd]. So configuration and f
 USB-only on 3.41.0 <span class="tag inferred">INFERRED</span>; "no reply to a configuration frame, no
 known use" is safer wording than "dead". NayaFlow 1.25.1 has no Bluetooth transport at all: NayaCore
 links Qt SerialPort and no Bluetooth module <span class="tag static">STATIC</span>[^nc].
-naya-create-kb's guess that the pipe is a host-initiated command channel for pairing, configuration or
-module DFU[^kb-ble] is not supported by any of this.
 
-<!--BT-22-->naya-create-kb saw notifications only for the battery during a 16 s window of trackball
-use; a subscription to the pipe succeeded and stayed silent
-<span class="tag reported">REPORTED</span>[^kb-ble] ([open questions](../open-questions.md#oq-p25)).
-
-<!--BT-27-->Which half the naya-create-kb GATT map and the third-party central connected to is not
-stated in either source <span class="tag reported">REPORTED</span>[^kb-ble][^cfd]; the maintainer's
-report-map file is named after the left half, which is a hint only.
+<!--BT-27-->Which half the createflow-dongle central connected to is not stated in its findings
+<span class="tag reported">REPORTED</span>[^cfd].
 
 ## Link behavior
 
@@ -318,12 +314,10 @@ The `be` family (pair address, unpair, slots, dongle address, status, clear spli
 - <span class="tag open">OPEN</span> What USB_DEVICE does after a Bluetooth slot was selected with no host ([details](../open-questions.md#oq-c11)).
 - <span class="tag open">OPEN</span> Whether the stock dongle bridges anything, and its protocol address ([details](../open-questions.md#oq-c04)); whether shipping firmware ever uses the "2.4G SRD" mode, on the dongle or the halves ([details](../open-questions.md#oq-c14)); what the SIG listing's "2.4G" mode refers to ([details](../open-questions.md#oq-h37)).
 - <span class="tag open">OPEN</span> USB-side HID boot protocol ([details](../open-questions.md#oq-c05)).
-- <span class="tag open">OPEN</span> naya-create-kb observations nobody else has measured, including the 16 s notification window ([details](../open-questions.md#oq-p25)).
 
 ## Sources
 
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md) and its firmware sources (third party, Apache-2.0): GATT table, report map, pairing, security level, link behavior, the original dongle.
-[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (a BLE read of the left half's HID report map); raw data decoded by us, never copied.
 [^sig]: Bluetooth SIG qualification listing 311198, "NAYA TECH/NAYA CREATE" (Naya B.V., 2025-09-19), with its referenced Zephyr host (QDID 151074) and controller (QDID 150092) listings.
 [^fcc-eas]: FCC Equipment Authorization Search, [grantee 2BQ4V](https://apps.fcc.gov/oetcf/eas/reports/GenericSearch.cfm), and the ISED Radio Equipment List, company 34320 (both checked 2026-09-23).
 [^fcc-crl]: FCC ID 2BQ4V0825CRL (left half), BLE and "2.4G SRD" test reports, [fccid.io/2BQ4V0825CRL](https://fccid.io/2BQ4V0825CRL).
@@ -340,8 +334,3 @@ The `be` family (pair address, unpair, slots, dongle address, status, clear spli
 [^ks-15]: Kickstarter update 15, [2024-09-03](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4095301).
 [^man-c]: Naya Create User Manual v1.1.x (pages 7 and 20, key combos; internal cell); see [Manuals](../product/manuals.md).
 [^um106]: Naya Create User Manual v1.0.6, FCC ID 2BQ4V0825CRR user manual exhibits ([fccid.io/2BQ4V0825CRR](https://fccid.io/2BQ4V0825CRR)).
-[^kb-ble]: naya-create-kb, [connectivity/ble](https://nemezzizz.github.io/naya-create-kb/connectivity/ble/) (commit 7668067).
-[^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
-[^kb-device]: naya-create-kb, [device/index](https://nemezzizz.github.io/naya-create-kb/device/) (commit 7668067).
-[^kb-hardware]: naya-create-kb, [device/hardware](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (commit 7668067).
-[^kb-manual]: naya-create-kb, [device/manual](https://nemezzizz.github.io/naya-create-kb/device/manual/) (commit 7668067).

@@ -15,7 +15,7 @@ run on the boards we measure.
 !!! note "At a glance"
     - `30/10ca` is CLEAR_ALL_DATA; NayaCore sends it to the left half with params `00 00`, then resets the board.
     - NayaFlow's Danger Zone "Clear all keymap data" (`clear_data`) runs it.
-    - naya-create-kb fired it with params `01`; whether both forms act the same is open.
+    - Whether params `01`, the form used in the one reported firing, acts like NayaCore's `00 00` is open.
     - A restore must include the **layer list**, or hold-to-layer keys type their base letter.
     - What it spares (split-link pairing, bonds, timeouts, the module bundle) is open.
 
@@ -23,9 +23,8 @@ run on the boards we measure.
 
 REMAP `30/10ca` is CLEAR_ALL_DATA: nayactl names it, and NayaCore has a matching
 ClearAllData operation. It is destructive, and nayactl does not gate it: it goes out through `raw`
-without `--force` <span class="tag static">STATIC</span>[^nx][^nc]. naya-create-kb describes it as a hidden device-side format of the
-LittleFS data partition <span class="tag reported">REPORTED</span>[^kb-fr]; the device side is encrypted firmware, so how it clears the data
-is unknown.
+without `--force` <span class="tag static">STATIC</span>[^nx][^nc]. How the device clears the data is unknown: that side
+is encrypted firmware.
 
 The vendor's help center had a "Clearing Keymap Data" troubleshooting page; its body is
 lost, and only its first line ("Symptoms") is archived <span class="tag doc">DOC</span>[^wb-help].
@@ -37,20 +36,17 @@ vendor's text says the board "will perform a clear operation, then restart", and
 cause of a failing FLASH CREATE is a corrupted keymap, fixed by clearing and reflashing <span class="tag static">STATIC</span>[^nc-flow].
 In NayaCore, `clear_data` is event 5 of its command table; it leads through `si_clearAllData_req_source`
 and the ClearAllData operation (`doClearAllDataOperations`) to `_remapClearFlash`, which queues
-`30/10ca` <span class="tag static">STATIC</span>[^nc-disasm]. So the stock interface does send `30/10ca`, and it does so without a
-confirmation dialog. naya-create-kb says direct wire access is the only path; the static route above
-shows otherwise.
+`30/10ca` <span class="tag static">STATIC</span>[^nc-disasm]. `_handleSpiflashFormatPartition` is not part of that chain: it
+handles the replies of the `fa` flash commands <span class="tag static">STATIC</span>[^nc-disasm]. So the stock interface does send `30/10ca`, and it does so without a
+confirmation dialog. This differs from naya-create-kb, which says direct wire access is the only path
+to this command[^kb-fr].
 
 NayaCore's ClearAllData steps are Clearing, ReadData and VerifyDataCleared, with the log
 lines "Reconnected to device %1 after clear all data" and "Data is cleared for device %1". After the
 command it requests a reset of the board and rechecks the Bluetooth status of the linked halves.
 Its "Data is cleared" check compares what it reads back with an **empty** profile: the profile it
 builds for that comparison (`Profile(ADD_DEFAULT_DATA)`) is constructed with its default-data flag
-off, so nothing default is written to the board <span class="tag static">STATIC</span>[^nc][^nc-disasm]. naya-create-kb gives the same
-function chain from `si_clearAllData_req_source` to `_remapClearFlash` and
-`_handleRemapClearAllDataResponse` <span class="tag reported">REPORTED</span>; two of its details do not hold: `_handleSpiflashFormatPartition`
-is not part of this chain (it handles `fa` replies), and no default profile is queued
-([corrections](#where-this-differs-from-naya-create-kb)).
+off, so nothing default is written to the board <span class="tag static">STATIC</span>[^nc][^nc-disasm].
 
 NayaCore's ZMQ dispatcher knows 15 command events plus `quit`: `flash_keymap`,
 `update_keymap`, `start_device_manager`, `close_device_manager`, `force_touch_start`,
@@ -58,13 +54,11 @@ NayaCore's ZMQ dispatcher knows 15 command events plus `quit`: `flash_keymap`,
 `update_create_fw`, `update_fw_files`, `repair_flash`, `clear_data`, `clear_ble_devices` and
 `set_handshake_frequency`. A `clear_all_data` event is not among them, and NayaCore answers an unknown
 event with "Unknown command event:" and an invalid-event code (its two reply sites use error codes 4
-and 5) <span class="tag static">STATIC</span>[^nc][^nc-disasm]. Also reported by naya-create-kb, which saw the reply
-"invalid_command_event" with error 4. More: [NayaFlow and NayaCore](../software/nayaflow.md).
+and 5) <span class="tag static">STATIC</span>[^nc][^nc-disasm]. More: [NayaFlow and NayaCore](../software/nayaflow.md).
 
 NayaCore gates the ClearAllData operation, and `30/10ca` itself, at keyboard firmware 3.30.0, left
 half only: `naya_fw::create::ClearAllData_MinVersion` is a copy of the ProtocolCDC minimum, set at
-start-up from the literal `0.3.30.0` <span class="tag static">STATIC</span>[^nc-gates]. naya-create-kb
-names the symbol but calls its value unrecoverable[^kb-functions]. Every gate is listed on
+start-up from the literal `0.3.30.0` <span class="tag static">STATIC</span>[^nc-gates]. Every gate is listed on
 [Differences by firmware](../protocol/firmware-differences.md#minimum-firmware-per-command).
 
 ## The command and its parameters
@@ -78,16 +72,16 @@ and passes it to `_constructRemapMessages` with `0x10ca`; that function queues r
 `30/1001` read. The only other callers of `_constructRemapMessages` are `1001` to `1004`, `1009` and
 `100a` to `100e` <span class="tag static">STATIC</span>.
 
-**What naya-create-kb sent.** This differs from naya-create-kb, which read the byte array's size argument as its
-value, so its own tool sends `01` (`aa 00 50 00 30 03 10 ca 01 db 04`: in this site's convention a flag
-byte `01` and no data) <span class="tag reported">REPORTED</span>[^kb-fr]. Whether `00 00` and `01`
+**The `01` form.** This differs from naya-create-kb, whose tool sends params `01`
+(`aa 00 50 00 30 03 10 ca 01 db 04`: in this site's convention a flag byte `01` and no data), having
+read the byte array's size argument as its value <span class="tag reported">REPORTED</span>[^kb-fr]. Whether `00 00` and `01`
 behave the same stays a donor-board test <span class="tag open">OPEN</span>
 ([open question](../open-questions.md#oq-f16)). (An earlier inference of ours, `00 01`, was wrong
 too.)
 
-**Firing it, as the third party did** (2026-09-18, 3.41.0, macOS): the left port,
-`dst 0x50`, params `01`; the reply had status `00` (observed bytes `aa 50 00 00 30 04 10 ca 00 80 ...`);
-no reboot was needed to keep talking over CDC <span class="tag reported">REPORTED</span>[^kb-fr]. The left half holds every store
+**Firing it.** The one reported firing (2026-09-18, 3.41.0, macOS) went to the left port,
+`dst 0x50`, with params `01`; the reply had status `00` (observed bytes `aa 50 00 00 30 04 10 ca 00 80 ...`),
+and the port kept answering without a reboot <span class="tag reported">REPORTED</span>[^kb-fr]. The left half holds every store
 ([Flash layout](flash-layout.md#what-each-half-stores)), and NayaCore also sends every remap command
 to `0x50` <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. Safety HIGH (data loss). TESTED (third party, 3.41.0, macOS); UNTESTED by us. When
 NayaFlow sends it, NayaCore resets the board afterwards.
@@ -98,7 +92,7 @@ unknown <span class="tag measured">MEASURED</span> <span class="tag inferred">IN
 
 ## What it wipes and what it may spare
 
-What the third party observed afterwards: `30/1001` and `30/1003` answer `16 00`; ED
+After `30/10ca` the third party found that `30/1001` and `30/1003` answer `16 00`; ED
 commands still acknowledge; `fe/1002` still answers and the firmware is unchanged; the keymap, LED maps
 and settings are default or empty; and the layer list is wiped as well (seen twice, 2026-09-19 and
 2026-09-22), so a keymap and LED restore alone leaves hold-to-layer broken (a held momentary-layer key
@@ -108,14 +102,13 @@ that: after its clear it compares the board with an empty profile <span class="t
 The first reply byte is a status: `0x16` means nothing is stored for that read (a
 header-only reply), and `0x18` the same on a continuation. Measured on 3.28.7 for LED-map reads of
 layers that never had a map (writing a map made them read `01` and then `00`) <span class="tag measured">MEASURED</span> (owner's board,
-2026-09-19); a third party's stock NayaFlow session on 3.41.0 shows `30/100d` answering `16 00`,
-`16 01` and `16 02` for layers 0 to 2 <span class="tag reported">REPORTED</span> (raw data checked). The vendor's name for `0x16` is **open**
+2026-09-19). The vendor's name for `0x16` is **open**
 (NayaCore's status names include "No Data") ([Transport](../protocol/transport.md);
-[open question](../open-questions.md#oq-f17)). naya-create-kb calls it an empty-store error.
+[open question](../open-questions.md#oq-f17)).
 
-What `30/10ca` spares is **open**. naya-create-kb says the split-link pairing most likely
-survives (clearing split links is a separate operation), and its post-format sessions show the halves
-still linked <span class="tag reported">REPORTED</span>. NayaCore's rechecking of the linked halves after the clear presumes the same <span class="tag inferred">INFERRED</span>.
+What `30/10ca` spares is **open**. In the third party's sessions after the format the halves
+were still linked <span class="tag reported">REPORTED</span>[^kb-fr]; NayaCore clears split links with a separate command
+(`be/1010`) and rechecks the linked halves after its clear, which presumes the same <span class="tag inferred">INFERRED</span>.
 Whether timeouts, bonds and the module bundle survive is also open ([open question](../open-questions.md#oq-f16)).
 
 ## Before you send it: a complete snapshot
@@ -134,10 +127,6 @@ Boards can have more than three layers: NayaFlow added layers 3 and 4 in a captu
 and a new layer is 156 records, a 136-entry LED map and all eight bays pointing at slot 0. A
 three-layer snapshot is not always complete <span class="tag measured">MEASURED</span> (2026-09-01 and 2026-09-03).
 
-naya-create-kb's snapshot holds three layers of keymap, three LED maps and an information block
-(firmware, Bluetooth, timeouts, battery, modules) but no layer list <span class="tag reported">REPORTED</span> (raw data checked), which is
-why its restore missed the layer list.
-
 ## Restoring afterwards
 
 **The third party's restore**: per-record `30/1004` writes (`00 <layer>` plus the record)
@@ -146,14 +135,12 @@ and per-entry `30/100e` writes, each section read back and compared ("IDENTICAL"
 entries: the full two-bank layers and the full LED maps <span class="tag reported">REPORTED</span> <span class="tag inferred">INFERRED</span> (raw data checked: its snapshots hold
 exactly those counts). Safety MEDIUM. TESTED (third party); UNTESTED by us.
 
-**The third party's cure for the missing layer list** is a stock NayaFlow flash, which
-writes it again. That flash's "Failed verify written data" error is reproducible after `30/10ca`
-(2 of 2) and harmless (check by switching layers, not by the dialog), and it reverts four layer-0
-records to NayaFlow's stale profile, which it then rewrites with single-record `30/1004` writes
-<span class="tag reported">REPORTED</span>[^kb-fr]. Raw data checked: comparing its pre-wipe snapshot with NayaFlow's factory profile gives
-seven layer-0 differences, the four it names plus a key set through NayaFlow itself, a module bay
-record, and a second-bank record that NayaFlow never clears (see below). Safety MEDIUM. TESTED (third
-party, twice); UNTESTED by us.
+**Restoring the layer list with a stock NayaFlow flash.** The third party restored the lost
+layer list twice with a stock NayaFlow flash, which writes it again. After `30/10ca` that flash's
+"Failed verify written data" error appeared both times and was harmless (check by switching layers, not
+by the dialog), and the flash put back NayaFlow's own stored profile, reverting keys that had changed on
+the board since (four layer-0 records, then rewritten with single-record `30/1004` writes)
+<span class="tag reported">REPORTED</span>[^kb-fr]. Safety MEDIUM. TESTED (third party, twice); UNTESTED by us.
 
 Why the stock flash behaves that way: NayaFlow does not import the device's keymap (it shows
 its own profile), and it writes the layer list only when layers are added or removed; after a wipe the
@@ -183,9 +170,6 @@ It would replace the stock-flash step and avoid its reverted records and verify 
 After a format, set the LED settings again. The ceiling (`ed/1013`) has no read command, so re-send the value you want (100) <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-13 and 2026-09-16). Never "probe" an ED setting with an empty payload: it is
 zero-filled, so it writes 0 <span class="tag measured">MEASURED</span> ([Flash layout](flash-layout.md#persistent-settings)).
 
-The third party's closing steps after a successful format: re-read the device, restore the
-profile, check that the LEDs come back, and re-apply its LED recovery ladder <span class="tag reported">REPORTED</span>[^kb-fr].
-
 ## "Failed to verify written data"
 
 NayaFlow's verify error has other causes too <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span>:
@@ -202,21 +186,12 @@ write[^beta].
 ## Tested and untested
 
 On the owner's hardware (status 2026-09-23), `30/10ca` has never been sent, and restoring
-layers after a wipe has not been done. Every step on this page is either third-party measured or
-untested <span class="tag measured">MEASURED</span>.
-
-## Where this differs from naya-create-kb
-
-| naya-create-kb says (factory-reset page) | What the evidence shows |
-|---|---|
-| `_remapClearFlash` builds the byte `01`, so the frame's payload is `[01]` | It builds one byte `00`; NayaCore sends params `00 00`. The third party's tools sent params `01` |
-| Direct wire access is the only path in this build | NayaFlow's "Clear all keymap data" sends `30/10ca` through ClearAllData |
-| The ClearAllData chain includes `_handleSpiflashFormatPartition` | That handler serves `fa` replies; it is not part of the clear |
-| `doClearAllDataOperations` queues a default profile (`ADD_DEFAULT_DATA`) that a stock flash then writes | The default-data flag is off: the profile is an empty baseline for the "Data is cleared" check; the layer list comes back through NayaFlow's own flash path |
+layers after a wipe has not been done. Every step on this page is either tested only by a third party
+or untested <span class="tag measured">MEASURED</span>.
 
 ## Open questions
 
-- <span class="tag open">OPEN</span> Whether `00 00` (NayaCore's params) and `01` (naya-create-kb's tool) behave the same: a donor-board test ([details](../open-questions.md#oq-f16)).
+- <span class="tag open">OPEN</span> Whether `00 00` (NayaCore's params) and `01` (the form used in the one reported firing) behave the same: a donor-board test ([details](../open-questions.md#oq-f16)).
 - <span class="tag open">OPEN</span> Which stores `30/10ca` spares: split-link pairing, bonds, timeouts, the module bundle ([details](../open-questions.md#oq-f16)).
 - <span class="tag open">OPEN</span> Whether writing the saved layer list back restores hold-to-layer after a format ([details](../open-questions.md#oq-p18)).
 - <span class="tag open">OPEN</span> The vendor's name for status `0x16` ([details](../open-questions.md#oq-f17)).
@@ -224,7 +199,6 @@ untested <span class="tag measured">MEASURED</span>.
 ## Sources
 
 [^kb-fr]: naya-create-kb, [storage/factory-reset](https://nemezzizz.github.io/naya-create-kb/storage/factory-reset/).
-[^kb-functions]: naya-create-kb, [disassembly/functions](https://nemezzizz.github.io/naya-create-kb/disassembly/functions/).
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`constants.py`: CLEAR_ALL_DATA and the `--force` list).
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings and macOS symbols (ClearAllData steps and messages, ZMQ events, status names, `ClearAllData_MinVersion`).
 [^nc-flow]: NayaFlow 1.25.1, renderer strings (Danger Zone texts).

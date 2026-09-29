@@ -74,7 +74,7 @@ frame, not that it applied it**: read back what you write
 
 From live work over USB on the owner's boards (reads, writes, captures of NayaFlow, firmware
 flashing), static reading of every NayaFlow release, the FCC filings, the vendor's manuals and release
-notes, and the public work of nayactl, naya-create-kb, createflow-dongle and Create Companion. Every
+notes, and the public work of nayactl, createflow-dongle and Create Companion. Every
 fact first reported by another project was then checked against our own material where that was
 possible. [About](about.md) describes the methods, the sources, the credits, the license (pages
 CC BY 4.0, code snippets MIT) and how to send a correction.

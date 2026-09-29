@@ -37,8 +37,11 @@ listing and patents <span class="tag doc">DOC</span>.
 **A verification pass** (2026-09-23) took every fact that another source reported and we had not yet
 checked, and tried to confirm it from our own material: the public NayaFlow installers (including the
 macOS arm64 and x86_64 NayaCore builds), the stock NayaFlow databases, our own USB captures, and the
-published code and raw data of the community KB. Most such facts are now tagged with our own evidence;
-the rest stay REPORTED with the check they need listed on [Open questions](open-questions.md).
+published raw data of other community projects. Most such facts are now tagged with our own evidence;
+the rest stay REPORTED with the check they need listed on [Open questions](open-questions.md). A second
+pass (2026-09-29) re-sourced every fact that came to this site through naya-create-kb: facts it took from
+another public source now cite that source, facts our later work covers rest on our own evidence, and
+only the few that nobody else reports stay credited to it.
 
 ## Evidence rules
 
@@ -67,7 +70,7 @@ firmware and setup; later evidence replaces earlier notes, and replaced claims a
 | Bluetooth SIG listing 311198; patent WO2025188184A1; Canadian industrial designs 229065-229069 | identity and design records | by number |
 | create-legacy-firmware (github.com/create-collective/create-legacy-firmware) | the release archive, firmware library and flashing procedure | file and commit |
 | nayactl (github.com/Qonfused/nayactl) | the first public protocol decoding | file, pull request or issue number |
-| naya-create-kb (nemezzizz.github.io/naya-create-kb) | live macOS findings and a NayaCore disassembly | page name, for REPORTED facts and credit |
+| naya-create-kb (nemezzizz.github.io/naya-create-kb) | a few facts only it reports, from its maintainer's own boards and captures | page name, tagged REPORTED |
 | createflow-dongle (github.com/mediaandmerch/createflow-dongle) | third-party Bluetooth measurements | file |
 | Create Companion (github.com/create-collective/create-companion) | measurements of what modules send | file |
 | OpenFlow (github.com/create-collective/openflow) | the tool most measurements were made with | file and release |
@@ -100,16 +103,17 @@ GitHub release repositories stay live sources.
 
 | Project | License | What this site owes it |
 |---|---|---|
-| nayactl, by Cory Bennett (Qonfused) | Apache-2.0 | the first public decoding of the frame, the XOR checksum, and the category and opcode map; the module address map (with pull request #2) and the module battery units (pull request #5); a pull request #6 contributor's measurements of the LED brightness ceiling |
-| naya-create-kb, by Aleksei Ilin (NemeZZiZZ) | no license file | live macOS findings and an arm64 disassembly of NayaCore (the ZMQ event list, the clear-all-data chain, the host maps, the factory format, LED recovery sequences, never-send lists); credited wherever it states a fact first |
+| nayactl, by Cory Bennett (Qonfused) | Apache-2.0 | the first public decoding of the frame, the XOR checksum, and the category and opcode map; the module address map (with pull request #2) and the module battery units (pull request #5); a pull request #6 contributor's measurements (the LED brightness ceiling, the dark-board tell, the write sizes that wedged the parser) |
+| naya-create-kb, by Aleksei Ilin (NemeZZiZZ) | no license file | the few facts only it reports, credited where they appear |
 | createflow-dongle, by mediaandmerch | Apache-2.0 | third-party Bluetooth measurements on 3.41 (the GATT table, the `0x1234` pipe, the 212-byte HID report map, the security level) and the stock dongle's behavior |
 | Create Companion | MIT | measurements of what modules send to the host, and the per-application host engine |
 
 Also used: ShortcutMapper data (MIT, inside OpenFlow's reference data) and the Wayback Machine.
 
 **Relationship to naya-create-kb.** This site is independent of naya-create-kb and copies none of its
-text or code. Facts both sites state are credited to it where it stated them first, and where our
-evidence differs both observations are shown with firmware, host and date.
+text or code. A fact appears here on its authority only when no other source has it and we have not
+measured it ourselves; it is then tagged REPORTED and credited. Where one of its claims differs from
+our evidence in a way that could cost a reader a board or real effort, the page says so.
 
 **Dating a board.** Which firmware a board shipped with depends on its batch and on the last NayaFlow
 that updated it; the release history and the beta-only firmware are on [History](software/history.md)

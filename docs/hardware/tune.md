@@ -34,9 +34,7 @@ plus an electromagnet), not a motor, driven by the crown's outer gear at 2:1 (th
 per crown turn). The crown is held on by magnets and pulls off to expose the bearing bracket and gear
 teeth. A separate LRA vibration motor gives feedback for touch and press. Marketing named it "Hapticore
 Driver by Xeeltech" with nine haptic modes and the feature "Naya Pulse"; no part number is known
-<span class="tag doc">DOC</span>[^ks-08][^ks-10][^reddit-13jydnp][^wb-naya]. naya-create-kb lists a coin vibration motor among the
-module extras without attributing it to a module[^kb-hardware]; the coin motor is the Track's (see
-[Track](track.md)).
+<span class="tag doc">DOC</span>[^ks-08][^ks-10][^reddit-13jydnp][^wb-naya].
 
 ## Main board (the ring)
 
@@ -61,13 +59,12 @@ module extras without attributing it to a module[^kb-hardware]; the coin motor i
 
 The main board is `Tune_MB_20250227_V09`, part number `408-06032-000`, 0.8 mm, stamp `25 12`, about
 58-60 mm across with a C-shaped inner island <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP2 p18; CRL IP3 p19, p21[^fcc-crl].
-naya-create-kb names `Tune_Touch_20240926_V00` as the ring; that is the touch disc[^kb-exhibits].
 
 | Part | Identity and marking | Evidence |
 |---|---|---|
 | MCU | ST STM32F411CEU6 (UFQFPN48, 7 x 7 mm; Cortex-M4F, 100 MHz, 512 KB flash, 128 KB RAM), marked `STM32F` / `411CEU6` / `GQ2CU179R` / `CHN GQ 320`. The modules moved from a Holtek MCU to the STM32F411 in May 2024 | <span class="tag doc">DOC</span> CRL IP3 p19-p20[^fcc-crl][^ks-13][^ks-14] |
 | Qi receiver | Maxic MT5705 (`U15`), a 5 W WPC receiver SoC with an I2C interface, lot `240801`; pads `QI_?X_SCL` / `QI_?X_SDA` give the MCU an I2C link to it (so "charging only, no data" holds for the host, not for the MCU) | <span class="tag doc">DOC</span> CRL IP3 p19-p20 |
-| Charger | SG Micro SGM41523 (`U8`, marking `SGM` / `41523DF` / `S2A3C`), a standalone switch-mode single-cell Li-ion charger with an NTC input (`RT1`/`RT2` divider beside it); naya-create-kb read the same marking as a "Touch frontend `4T523DF`"[^kb-hardware] | <span class="tag doc">DOC</span> CRL IP3 p20-p21 |
+| Charger | SG Micro SGM41523 (`U8`, marking `SGM` / `41523DF` / `S2A3C`), a standalone switch-mode single-cell Li-ion charger with an NTC input (`RT1`/`RT2` divider beside it) | <span class="tag doc">DOC</span> CRL IP3 p20-p21 |
 | Buck-boost | SG Micro SGM62117 (`U6`, marking `01KGH`), next to a 0.47 uH inductor; its role (3.3 V from the cell, or 5 V toward the dock) is not established | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP3 p19-p20 |
 | Other parts | 16 MHz crystal `YC16.0` (`Y1`); `1AM` NPN (`Q3`); two `SL` Schottky diodes (`D2`, `D3`) that OR the Qi and dock inputs (inferred); two `T4` switching diodes; a 100 uF tantalum (`J107`); a 1.0 uH charger inductor (`L14`); one unpopulated IC footprint; many unmarked ESD parts | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP3 p19-p21 |
 | Connectors | an FPC of about 10 contacts to the touch disc, two flip-lock ZIFs on the inner island, `J1` (about 6-8 contacts) toward the haptic assembly, and a white 4-contact header `J6` | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP2 p18; CRL IP3 p19 |
@@ -102,8 +99,8 @@ haptic knob) <span class="tag inferred">INFERRED</span>. The dial ring is a silv
 The disc is `Tune_touch 20240926 V00`, about 45 mm, bonded under a black glass disc of about 45 mm. It
 carries the touch controller and a ring of 24 side-view RGB LEDs (`LED1`-`LED24`, one data line
 `PAD_LED_IN`, no driver IC). The vendor raised the ring from 8 to 24 LEDs in 2023, with a diffuser
-laminated under the glass <span class="tag doc">DOC</span> CRL IP3 p22; CRL IP4 p23[^fcc-crl][^ks-08]. naya-create-kb's "halo LED
-rings" apply to the Tune only; the Touch and Track have one LED each[^kb-hardware].
+laminated under the glass <span class="tag doc">DOC</span> CRL IP3 p22; CRL IP4 p23[^fcc-crl][^ks-08]. The Touch and Track carry one LED each, so the
+ring is the Tune's alone <span class="tag doc">DOC</span>[^fcc-crl].
 
 The disc's touch controller is marked `CST3` plus a digit hidden under an ink dot; the Touch module's
 controller is a Hynitron CST3640, so the same part is likely (a candidate only) <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> CRL IP4 p23.
@@ -132,8 +129,7 @@ IP2 p18; CRL IP4 p24 ([details](../open-questions.md#oq-h15)).
 <!-- tune facts 22-24 -->
 The battery is an `FH 202030` block pack, 3.7 V 1000 mAh 3.7 Wh, in blue PVC (about 20 x 20 x 30 mm by
 its size code, inferred), dated `20250603`, with three wires (red, white, black) to a white
-3-position plug <span class="tag doc">DOC</span> CRL IP4 p25-p26; CRL IP2 p18[^fcc-crl]. naya-create-kb calls this the Touch
-pack[^kb-hardware]; its exhibit page attributes it correctly[^kb-exhibits].
+3-position plug <span class="tag doc">DOC</span> CRL IP4 p25-p26; CRL IP2 p18[^fcc-crl].
 
 The capacity figures disagree: the filed sample has 1000 mAh; the website and the 2023 campaign spec
 sheet said 1500 mAh; the v1.1.0 manual says 1500 mAh; a 2024 update says the Tune got a new assembly
@@ -176,8 +172,8 @@ serial-number field (value not reproduced) <span class="tag doc">DOC</span> CRL 
   3.41.0, module 2.3.3, 2026-09-16). See [Module fields](../protocol/module-fields.md).
 - **Gesture vocabulary.** NayaCore 6.11.0 names for the Tune: dial `rotate`, `clockwise_rotate`,
   `counter_clockwise_rotate`; touch `vertical`, `horizontal`, `tap`, `double_tap` and four `swipe_*`
-  directions at 1-4 fingers; `pinch`, `spread` and `pinch&spread` at 2 fingers <span class="tag static">STATIC</span>[^nc] (also listed by
-  naya-create-kb[^kb-hardware]). NayaCore refuses double-tap bindings for the Tune ("unsupported double
+  directions at 1-4 fingers; `pinch`, `spread` and `pinch&spread` at 2 fingers <span class="tag static">STATIC</span>[^nc].
+  NayaCore refuses double-tap bindings for the Tune ("unsupported double
   tap behaviour for Tune module type"), so the double-tap names are not usable <span class="tag static">STATIC</span>[^nc].
 - **What the host receives.** Each dial detent sends one key; two-finger swipes stream a run of events
   quantized on finger motion (11-20 per swipe in the first capture); one- and three-finger gestures fire
@@ -223,8 +219,6 @@ never to bridge <span class="tag doc">DOC</span>[^um106].
 [^nf-rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases) (1.17.2, 1.25.0).
 [^nf-beta]: Vendor beta release notes, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases) (1.16.0, 1.23.0).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
 [^ks-camp]: Kickstarter campaign page with its Specs Sheet, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-08]: Kickstarter update 8, [2023-11-28](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3964585).
 [^ks-10]: Kickstarter update 10, [2024-01-06](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4000229).

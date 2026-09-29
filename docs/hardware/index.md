@@ -1,10 +1,9 @@
 # Board inventory
 
 This is the entry page of the hardware section: what the FCC filings show and do not show, how the
-parts were read, a block diagram in words for each device, every board with its silkscreen, the
-confirmed part numbers, and the earlier public readings that the photos correct. The one thing to
-know: each half carries a single Nordic nRF52840 (not an nRF52811 with a separate USB chip), and the
-full parts list with every reading is on [Parts list](parts.md).
+parts were read, a block diagram in words for each device, every board with its silkscreen, and the
+confirmed part numbers. The one thing to know: each half carries a single Nordic nRF52840 with native
+USB and no separate USB chip, and the full parts list with every reading is on [Parts list](parts.md).
 
 !!! note "At a glance"
     - Source: 54 of the 71 public FCC exhibits under grantee 2BQ4V (every one with hardware content); schematics, block diagrams and operational descriptions are permanently confidential.
@@ -27,8 +26,7 @@ report's appendices A to C (calibration data) <span class="tag doc">DOC</span>[^
 The block diagram, schematics and operational description are the only confidential exhibits, for all
 three IDs. Naya's confidentiality letters (2025-08-06 for CRL, 2025-08-04 for CRR and DG) ask for
 exactly these three with no short-term hold on anything else, so they are permanent and will not
-become public; no schematic exists in public <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fcc-crl][^fcc-crr][^fcc-dg] (also noted by
-naya-create-kb[^kb-hardware]).
+become public; no schematic exists in public <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fcc-crl][^fcc-crr][^fcc-dg].
 
 Every unit in the photos is a pre-production sample the lab received on 2025-06-20; no firmware
 version is printed anywhere in the filings, and retail boards may carry later revisions
@@ -56,8 +54,7 @@ attachment page 20 ("Page 20 of 48"); report pages use the report's own numberin
 exhibits obtained on 2026-09-23: `CRL LLOC` (left label location: p1 left sheet, p2 right sheet),
 `CRL MPE`, `CRL SETUP`, `DG EP`, `DG LBL`, `DG SAR` (and its appendix D), `DG SETUP`, `CL`
 (confidentiality letters). The key table that maps each code to its exhibit is on
-[Regulatory records](regulatory.md#how-to-cite-an-fcc-photo) <span class="tag doc">DOC</span>. naya-create-kb's coordinates (such as
-`fullres p6-Im1` or `CRL-view-4`) point into its author's research repository, not to the FCC record.
+[Regulatory records](regulatory.md#how-to-cite-an-fcc-photo) <span class="tag doc">DOC</span>.
 
 ## Block diagram in words
 
@@ -113,8 +110,7 @@ Board photos are scrubbed crops of the FCC exhibits (public records); [Parts lis
 | Track dock interposer | [![Track dock interposer](../assets/images/fcc/boards/track-pogo-interposer.jpg){ width="120" loading=lazy }](../assets/images/fcc/boards/track-pogo-interposer.jpg){ .glightbox data-title="Track dock interposer: FCC ID 2BQ4V0825CRL, Internal Photos 6, page 40" } | no name | - | CRL IP6 p40 | <span class="tag doc">DOC</span>[^fcc-crl] |
 
 Every test report declares the two V13 mainboard strings as the hardware version (text layers
-verified 2026-09-23), so the filed mainboard is V13; V11 is the wing's revision <span class="tag doc">DOC</span>[^fcc-crl]. This
-corrects naya-create-kb's exhibit page, which calls the mainboard V11[^kb-exhibits]. The
+verified 2026-09-23), so the filed mainboard is V13; V11 is the wing's revision <span class="tag doc">DOC</span>[^fcc-crl]. The
 `408-060xx-000` numbers of the three module main boards look like one series <span class="tag inferred">INFERRED</span>. The `25 NN` stamps
 on several boards read as fabrication year and week <span class="tag inferred">INFERRED</span>; no board house is named.
 
@@ -146,49 +142,8 @@ The biggest identification gaps are the half's power-management ICs, every LED p
 optical sensors, the Tune's haptic driver and actuator, the wing slide switch and the USB-C receptacle
 class <span class="tag doc">DOC</span>. There is no second microcontroller in a half: no second MCU-class part appears on either
 face of either mainboard; a few small power parts are unidentified, and the nRF52840's native USB makes
-a separate USB chip unnecessary <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fcc-crl][^fcc-crr]. This contradicts naya-create-kb's "unknown
-USB MCU" and its note that the component side appears in no filing[^kb-hardware]. See
+a separate USB chip unnecessary <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^fcc-crl][^fcc-crr]. See
 [Parts list](parts.md#unconfirmed-readings).
-
-## Earlier public readings the photos correct
-
-<!-- index facts 38-41; errata R-01..R-16 -->
-naya-create-kb (commit 7668067) published several readings that the photos and report text layers
-correct. They are listed neutrally here and on [Parts list](parts.md#earlier-public-readings-the-photos-correct).
-
-| Earlier reading | What the filings show | Evidence |
-|---|---|---|
-| Half SoC is an nRF52811 (`N5281?`, `N52811`) | nRF52840, package CKAA; CKAA is not an nRF52811 code | <span class="tag doc">DOC</span> see [The keyboard half](half.md#the-soc-is-an-nrf52840) |
-| A second, unknown USB chip; the nRF has no USB; images exceed its 192 KB flash | no second MCU-class IC on either face; the nRF52840 has native USB 2.0 full speed and 1 MB flash | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> |
-| Half mainboard `Create_L_KB 20250220_V11` | V13 on both faces; V11 is the wing | <span class="tag doc">DOC</span> |
-| Dongle `BOK17_Dongle` (letter O) | `B0K17`, digit zero in the text layer | <span class="tag doc">DOC</span> |
-| Tune module ring `Tune_Touch_20240926_V00` | the ring is `Tune_MB_20250227_V09`; `Tune_touch` is the disc | <span class="tag doc">DOC</span> |
-| Track module ring `Y08_06025_20250227_V00` | `Track_MB_20250305_V13`; `06025` is the Touch board's number with `408` misread | <span class="tag doc">DOC</span> |
-| Touch front end "SGMicro 4T523DF" | `41523DF` is the SGM41523 charger on all three modules; the Touch's controller is a CST3640 | <span class="tag doc">DOC</span> |
-| Dock "VBUS/USB on test pads" | UART, boot and power contacts; no `D+`/`D-` on any dock contact | <span class="tag doc">DOC</span> |
-| Touch pack `FH202030` 1000 mAh | that pack is the Tune's | <span class="tag doc">DOC</span> |
-| Track pack `FH364046` 700 mAh | that cell is the Touch's; the Track has a 600 mAh 1S2P pack | <span class="tag doc">DOC</span> |
-| A separate cylindrical "ICR" 300 mAh cell | a pouch cell inside the Track pack; no fourth module battery | <span class="tag doc">DOC</span> |
-| One grant date, 2025-08-29, for all filings | 2025-08-26 (CRL), 2025-08-29 (CRR), 2025-09-03 (DG) | <span class="tag doc">DOC</span> |
-| The SRD report is a second grant | the same FCC ID: a second report inside the same grant | <span class="tag doc">DOC</span> |
-| "nRF Connect SDK 5.1.0" | `nrfconnect-setup-5.1.0-x64`, the nRF Connect for Desktop installer | <span class="tag doc">DOC</span> |
-| "Clicky" switches | the manual states no switch type | <span class="tag doc">DOC</span> |
-| "Aluminum + polycarbonate" body | body, dock and wing aluminum; keycaps polycarbonate | <span class="tag doc">DOC</span> |
-
-naya-create-kb's own photos agree with these readings once read closely:
-
-- Its `mainboard-v13.jpg` is itself a V13 board, which agrees with the V13 reading, and its file name
-  already says so <span class="tag doc">DOC</span>[^kb-hardware].
-- Its `nrf52811.jpg` shows a package marking (not a die marking) beginning `N528`, with the rest of
-  line 1 hidden by the foam edge, then `CKAAD0` and `2301ME`; CKAA is an nRF52840 package code
-  <span class="tag doc">DOC</span>[^kb-hardware]. Reading `2301` as January 2023 assumes the year-week convention; that is plausible
-  but not confirmed from Nordic's marking document <span class="tag inferred">INFERRED</span>.
-- Its captions agree in outline: `half-matrix.jpg` shows the body switch plate with red low-profile
-  switches plus the bay bracket and a ring frame with rectangular blocks; by the owner's paper-clip test
-  the magnets are the 2 features beside the contacts and 4 blocks around the bay, while the 5 blocks on
-  the metal bay bracket did not attract a clip <span class="tag measured">MEASURED</span> (2026-09-23). `module-ring-pcb.jpg` is most likely
-  the Tune main board and its touch/LED disc; `module-teardown.jpg` shows the half's cell, the half's
-  pogo board and dock (thumb-key) board, and an opened Tune with its blue `FH 202030` pack <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span>[^kb-hardware][^kb-power].
 
 ## Safety
 
@@ -209,6 +164,3 @@ Opening a half or a module exposes Li-ion cells: do not puncture or short them, 
 [^fcc-crr]: FCC ID 2BQ4V0825CRR (right half): mirror [fccid.io/2BQ4V0825CRR](https://fccid.io/2BQ4V0825CRR).
 [^fcc-dg]: FCC ID 2BQ4V0825DG (Speedlink dongle): mirror [fccid.io/2BQ4V0825DG](https://fccid.io/2BQ4V0825DG).
 [^um106]: Naya Create User Manual Version 1.0.6, FCC ID 2BQ4V0825CRR user manual exhibits ([fccid.io](https://fccid.io/2BQ4V0825CRR)).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) with its photo captions (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
-[^kb-power]: naya-create-kb, [power architecture](https://nemezzizz.github.io/naya-create-kb/device/power/) (third party).

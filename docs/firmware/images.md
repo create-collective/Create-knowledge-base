@@ -7,15 +7,13 @@ encrypted, the two flash generations, and how to name the image a half is runnin
 needing an image's bytes. The one thing to know before anything else: every stock upload is a
 **permanent** swap. There is no trial boot and no automatic revert.
 
-!!! warning "Correction: stock images do not boot on trial and do not revert automatically"
-    naya-create-kb's signing page says that a newly uploaded image boots on trial, that the
-    bootloader reverts to the old image automatically if the new one fails or crashes before
-    confirming itself, and that firmware experiments are therefore safe on a daily driver. That
-    does not hold on the Create. Every stock resource carries a pre-written MCUboot swap trailer, so
-    the upload itself arms a **permanent** swap, and the bootloader refuses `image state` writes
-    (rc 8, not supported), so a test swap cannot be requested at all
+!!! warning "Stock images do not boot on trial and do not revert automatically"
+    Every stock resource carries a pre-written MCUboot swap trailer, so the upload itself arms a
+    **permanent** swap, and the bootloader refuses `image state` writes (rc 8, not supported), so a
+    test swap cannot be requested at all
     <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>[^fp-trailer][^fp-measured]. A signed image that boots badly stays in the primary slot;
-    the way back is another serial-recovery upload, not a reboot. See
+    the way back is another serial-recovery upload, not a reboot, so firmware experiments are not safe
+    on a daily driver. See
     [Flashing](flashing.md#there-is-no-test-mode) and [Bootloader](bootloader.md#what-the-bootloader-does-not-offer).
 
 !!! note "At a glance"
@@ -137,7 +135,7 @@ One signing key signs every MCUboot image of the 25 stable releases (the 26 keyb
 images of both flash generations and the `d_fw.bin` image) and the 6 beta-only keyboard images. Its
 KEYHASH is `de8b07187913e6e788306618e4166e38a8c2eda99b68970d17fd00e75fd5b972`. The KEYHASH is the hash
 of the signing **public** key: a public identifier, not a secret and not a decryption key
-<span class="tag static">STATIC</span>[^fh][^fhb]. naya-create-kb reports the same value for the 15 images its maintainer carved.
+<span class="tag static">STATIC</span>[^fh][^fhb].
 
 The keys are Naya's own: we checked the images with imgtool against the published sample
 keys of MCUboot, Nordic and Zephyr, and none matches <span class="tag static">STATIC</span>.
@@ -151,7 +149,7 @@ Scale: across the 25 stable releases there are 63 distinct firmware files: 26 ke
 MCUboot images (both generations), 1 `d_fw.bin` MCUboot image, 6 distinct LittleFS module bundles
 and 30 `.sfb` module apps. The beta channel adds 6 keyboard images (three beta-only left and right
 pairs); its other 41 carried images are byte-identical copies of stable images (39) or repeats of an
-earlier beta (2) <span class="tag static">STATIC</span>[^fh][^fhb]. naya-create-kb's "15 stock images" is one carve of six releases.
+earlier beta (2) <span class="tag static">STATIC</span>[^fh][^fhb].
 
 ## Encryption
 
@@ -165,13 +163,11 @@ verifies the signature and decrypts the payload on the device, during the swap
 
 In MCUboot, encryption is a per-image header flag, so the format itself allows a signed
 but unencrypted image <span class="tag doc">DOC</span>[^mcuboot]. Whether this bootloader would boot one is unknown and cannot
-be tested without Naya's signing key <span class="tag inferred">INFERRED</span>. naya-create-kb states that such an image would boot;
-that stays its report <span class="tag reported">REPORTED</span>[^kb-signing] ([open question](../open-questions.md#oq-f10)).
+be tested without Naya's signing key <span class="tag inferred">INFERRED</span> ([open question](../open-questions.md#oq-f10)).
 
 With MCUboot's RSA key wrapping, the **private** key that unwraps each image's AES key
 lives inside the bootloader, and an image builder needs only the matching public key <span class="tag inferred">INFERRED</span>[^mcuboot].
-naya-create-kb says the encryption public key would have to be recovered from a bootloader dump;
-that wording mixes up which half of the pair is where. Recovery methods are out of scope for this site.
+Recovery methods are out of scope for this site.
 
 ## Flash generations A and B
 
@@ -275,17 +271,6 @@ data is preceded by a big-endian 32-bit length). create-legacy-firmware's `tools
 create-legacy-firmware, whose Apache-2.0 license covers its own documents, manifests and tools, not the vendor
 firmware images or installers it archives. This page publishes structure, sizes and hashes only.
 
-## Where this differs from naya-create-kb
-
-| naya-create-kb says | What the evidence shows |
-|---|---|
-| New images boot on trial and revert automatically if they fail; experiments are safe on a daily driver; the worst case of a bad build is one extra reboot (signing page) | Stock uploads arm a permanent swap and a test swap cannot be requested; a bad signed image stays until another upload (warning above) |
-| The 175 136-byte image is the module image, signed with the keyboard key (signing, versions) | It is `d_fw.bin`, dial or dongle firmware; module firmware ships as `.sfb` files in a LittleFS bundle, not as MCUboot images |
-| One key signs the halves and the Track, Tune and Touch modules (signing) | True for every MCUboot image; whether any key signs the module `.sfb` files is open |
-| `_64` images are dual-bank slots introduced in 1.25.1; 328 880 pairs with `fwr_64` (versions) | `_64` is flash generation B, first in 1.25.0; `kb_fwl_64.bin` (328 880) is the left image |
-| The encryption public key must be recovered from a bootloader dump (signing) | The bootloader holds the private unwrap key; a builder needs the public half |
-| All 15 stock images carry one KEYHASH (signing) | The same KEYHASH is in all 27 stable MCUboot images and all 6 beta-only images |
-
 ## Open questions
 
 - <span class="tag open">OPEN</span> What physically distinguishes generation B, and how a generation-B half behaves ([details](../open-questions.md#oq-f06)).
@@ -302,7 +287,6 @@ firmware images or installers it archives. This page publishes structure, sizes 
 [^fhb]: create-legacy-firmware, [`firmware-history-beta/MANIFEST.json`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/firmware-history-beta/MANIFEST.json) (commit 7b511ca): every beta release and every image it carried, with `img_size`, plaintext SHA-256, KEYHASH, header version and trailer.
 [^carve]: create-legacy-firmware, [`tools/carve_fw.py`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/tools/carve_fw.py) and [`tools/extract_history.py`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/tools/extract_history.py).
 [^fp-bundle]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Firmware bundle layout"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L124-L138).
-[^fp-transport]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Transport to the device"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L82-L95).
 [^fp-binary]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Native service binary"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L107-L120).
 [^fp-bottom]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Bottom line"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L16-L32) and "Command vocabulary by era" (L140-L154).
 [^fp-slots]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Slot ids, vendor-exact"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L158-L195).
@@ -315,4 +299,3 @@ firmware images or installers it archives. This page publishes structure, sizes 
 [^cl-453]: create-legacy-firmware, [`CHANGELOG.md` L453-L455](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md#L453-L455) (vendor release notes: dongle support preparation, slot reservation).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases), v1.25.0.
 [^mcuboot]: MCUboot source: image format and encryption design, [`bootutil_public.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/bootutil/src/bootutil_public.c) (swap table) and [`boot_serial.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/boot_serial/src/boot_serial.c).
-[^kb-signing]: naya-create-kb, [firmware/signing](https://nemezzizz.github.io/naya-create-kb/firmware/signing/).

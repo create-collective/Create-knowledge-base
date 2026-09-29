@@ -25,7 +25,6 @@ start with the flag or status byte. Layer ids are shown as `<uuid16>`; no real i
 NayaFlow's random layer id (a UUID, written as the plain hex of its dashed form), not a content
 hash: they change only when a layer is created or deleted. There is no layer name anywhere in the
 protocol; names live in the host app. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
-naya-create-kb calls the entries UUIDs[^kb-transport].
 
 <!--LY-19-->NayaFlow's template layer names ("Typing", "Keypad + Arrow Keys", "System") exist only
 in its host database. <span class="tag static">STATIC</span>[^nf]
@@ -44,9 +43,7 @@ and resolves the index at flash time; NayaCore flashes only the profile marked O
 <!--LY-01-->`30/1001` READ LAYER LIST takes params `00 00` (NayaCore; OpenFlow sends `00` and gets
 the same list). The reply is status `00`, the index echo (`00`), then one 20-byte entry per layer:
 `[idx][id][animation][10][uuid16]`. For three layers that is 62 reply bytes and a 72-byte frame.
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01; the naya-create-kb maintainer's
-captures show the same 72-byte frames (raw data checked[^kb-raw]). naya-create-kb describes this read
-as a handshake returning "`00 00 00 10` plus three UUIDs"[^kb-transport][^kb-commands].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
 
 A three-layer reply, as params:
 
@@ -67,7 +64,7 @@ A three-layer reply, as params:
 
 <!--LY-02-->The byte after the status is the index echo that every REMAP read reply carries (`00`
 for the list, because NayaCore sends params `00 00`). It read `00` in every NayaFlow read on the
-owner's board and in the third-party captures. The `81` and `02` once seen on the owner's board came
+owner's board. The `81` and `02` once seen on the owner's board came
 from reads sent with the flag byte only, right after reads of index `81` and `02`, so the device
 echoed a stale index. It is not a layer count. <span class="tag measured">MEASURED</span> 3.41.0,
 2026-09-01 to 2026-09-17
@@ -81,8 +78,7 @@ echoed a stale index. It is not a layer count. <span class="tag measured">MEASUR
 1 breathe, 2 spectrum, 3 swirl. Two NayaFlow flashes settled it: layers set to breathe, swirl and
 spectrum read back 1, 3 and 2. It read 0 on early boards because every layer was solid. The
 animation also plays on the module bay LEDs. <span class="tag measured">MEASURED</span> 3.41.0,
-2026-09-08/09. naya-create-kb reports a per-layer animation registry with no sender[^kb-index];
-NayaFlow does send it, in this byte.
+2026-09-08/09.
 
 <!--LY-06-->The animation byte uses a different order from the effect command `ed/1011` and the LED
 effect keys (0 solid, 1 breathe, 2 swirl, 3 spectrum). A writer that uses one table for both swaps
@@ -109,8 +105,7 @@ changed, in read format. Two new layers: `00 00 03 03 00 10 <uuid16> 04 04 00 10
 params bytes). The ack is `00 00`. The write is incremental: entries not sent are untouched, and
 writing an index that already holds a different id replaces it.
 <span class="tag measured">MEASURED</span> NayaFlow 1.25.1 on 3.41.0, 2026-09-01, 2026-09-03,
-2026-09-08. naya-create-kb lists this command as never observed on the wire[^kb-commands]; it was
-captured from NayaFlow in two flashes.
+2026-09-08.
 
 <!--LY-08-->A delete is an entry with an empty id, `[idx] 00 00 00`. NayaCore sent the pair twice in
 one frame (params `00 00 03 00 00 00 04 00 00 00 03 00 00 00 04 00 00 00`); a single entry
@@ -151,8 +146,7 @@ reads and the activity timeouts. <span class="tag measured">MEASURED</span> Naya
 
 <!--LY-18-->NayaCore names a `MAX_LAYERS` constant whose value we have not recovered. Boards have
 carried five layers (0-4) through NayaFlow. <span class="tag static">STATIC</span>[^nc] +
-<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01. naya-create-kb assumes three
-layers[^kb-keymap].
+<span class="tag measured">MEASURED</span> 3.41.0, 2026-09-01.
 
 <!--LY-20-->Layer ids stayed unchanged across two keyboard firmware flashes (3.35.4 to 3.41.0 and
 back): the list lives in the data partition, not in the firmware image.
@@ -203,10 +197,8 @@ runtime effect. <span class="tag measured">MEASURED</span> 3.41.0, 2026-09-10; 2
 
 <!--LY-16-->naya-create-kb reports that `30/10ca` also wipes the layer list: after a format,
 `30/1001` and `30/1003` answer status `16` (nothing stored), and a keymap and LED restore alone
-leaves hold-to-layer keys broken until a stock NayaFlow flash re-adds the list, whose "Failed to
-verify written data" message is then reproducible and harmless (3.41.0, 2026-09-19 and
-2026-09-22)[^kb-fr]. <span class="tag reported">REPORTED</span> (We found no step named
-`ADD_DEFAULT_DATA`, the name the report gives, in NayaCore 6.11.0's or NayaFlow 1.25.1's strings.)
+leaves hold-to-layer keys broken until a stock NayaFlow flash writes the list again (3.41.0,
+2026-09-19 and 2026-09-22) <span class="tag reported">REPORTED</span>[^kb-fr].
 
 <!--LY-17-->A candidate that avoids the stock flash: read and save `30/1001` before `30/10ca`, then
 write the saved entries back first with `30/1002`, before the layers and LED maps. The write form is
@@ -225,12 +217,7 @@ measured; the procedure is untested after a format. <span class="tag measured">M
 
 ## Sources
 
-[^kb-transport]: naya-create-kb, [protocol/transport](https://nemezzizz.github.io/naya-create-kb/protocol/transport/) (commit 7668067).
-[^kb-commands]: naya-create-kb, [protocol/commands](https://nemezzizz.github.io/naya-create-kb/protocol/commands/) (commit 7668067).
-[^kb-keymap]: naya-create-kb, [protocol/keymap](https://nemezzizz.github.io/naya-create-kb/protocol/keymap/) (commit 7668067).
-[^kb-index]: naya-create-kb, [index](https://nemezzizz.github.io/naya-create-kb/) (commit 7668067).
 [^kb-fr]: naya-create-kb, [storage/factory-reset](https://nemezzizz.github.io/naya-create-kb/storage/factory-reset/) (commit 7668067).
-[^kb-raw]: The naya-create-kb maintainer's published captures and dumps (USB CDC capture logs); raw data decoded by us, never copied.
 [^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (static reading).
 [^nf]: NayaFlow 1.25.1 renderer and flow-bg-server strings, and its default templates (static reading).
 [^man-c]: Naya Create User Manual v1.1.x, pp. 16-17 (layers) and p. 25 (troubleshooting), see [Manuals](../product/manuals.md).

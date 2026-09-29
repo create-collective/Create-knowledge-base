@@ -35,26 +35,23 @@ Download: [`naya-cdc.ts`](../assets/code/naya-cdc.ts) and
 | Fact | Evidence |
 |---|---|
 | Every frame fact of the Python page applies: layout, size = 3 + payload, checksum from the subcommand high byte to the end of the payload, status byte, 242-byte payload limit. | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> ([Python recipes](recipes-python.md#the-frame)) |
-| naya-create-kb's `buildFrame` XORs `body.slice(1)`, which starts at the size byte, so its frames carry a wrong checksum; the web client it was adapted from XORs the subcommand and params only (correct). Fix: start the XOR at the subcommand. | <span class="tag static">STATIC</span> (arithmetic on NayaCore's probe `... 10 01 00 11 04`[^nc]); naya-create-kb[^kb-js] |
-| naya-create-kb's `parseFrame` (XOR over bytes 6 to length - 2; sender at byte 1, category at 4, subcommand at 6-7, payload from 8) is right; the first payload byte is the status. Every reply starts `aa 50 00` (left) or `aa 51 00` (right), and byte 3 of a chunked read reply counts down the chunks still to come. | <span class="tag static">STATIC</span> (vendor reply `aa 50 00 00 fe 03 10 01 00 11 04`[^nc]) <span class="tag measured">MEASURED</span> (header and countdown: owner's board, 3.41.0, our captures of 2026-09-01 to 2026-09-17; [Transport](../protocol/transport.md#the-frame)) |
-| A write ack is status `00` (or `01` on a non-final chunk) followed by the echoed layer index; naya-create-kb's `isWriteAck` matches single-frame writes. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-07); also reported by naya-create-kb[^kb-js] |
+| A reply parses the same way: sender at byte 1, category at byte 4, subcommand at bytes 6-7, status at byte 8 and the payload after it, with the XOR over bytes 6 up to the checksum byte. Every reply starts `aa 50 00` (left) or `aa 51 00` (right), and byte 3 of a chunked read reply counts down the chunks still to come. | <span class="tag static">STATIC</span> (vendor reply `aa 50 00 00 fe 03 10 01 00 11 04`[^nc]) <span class="tag measured">MEASURED</span> (header and countdown: owner's board, 3.41.0, our captures of 2026-09-01 to 2026-09-17; [Transport](../protocol/transport.md#the-frame)) |
+| A write ack is status `00` (or `01` on a non-final chunk) followed by the echoed layer index. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-07) |
 | `fe/1002` returns `00 00 <major> <minor> <patch>` (3.41.0 = `00 00 03 29 00`). | <span class="tag measured">MEASURED</span> (owner's board) |
-| `fa/1001` is SPIFLASH_TEST, the read-only SPI-flash self-test, not "device info". | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span>; differs from naya-create-kb[^kb-js] |
+| `fa/1001` is SPIFLASH_TEST, the read-only SPI-flash self-test. | <span class="tag static">STATIC</span> <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-10) |
 | A key write is `30/1004` with `00 <layer>` + records and a layer-echo ack; a single LED entry is `30/100e` with `00 <layer> <KK> <hue lo> <hue hi> <sat>`. | <span class="tag measured">MEASURED</span> (NayaFlow captures, 2026-09-01) |
-| `30/100b` is read per module-config slot, not per layer: the index byte selects a slot (slot 0 is a blank template), and layers point at slots through the bay records at positions `0x4a`-`0x51` of each layer. Reading "per layer 0-2" misses profiles in slots above 2. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-02/03); differs from naya-create-kb's `readModuleConfig(layer)`[^kb-js] |
-| `fe/100b` returns three u32 little-endian milliseconds and `fe/100a` writes them (params `00` + 12 bytes). NayaCore names the fields `idle_time_ms`, `sleep_time_ms`, `sleep_battery_time_ms`; the first is the LED idle timeout (it ran on battery in our test), the third is never changed by NayaFlow and its effect is unidentified. Values under 30 s are refused with status `ea`: report it as "value refused", not as a transport error. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-11) <span class="tag static">STATIC</span>[^nc]; naya-create-kb names them idle, sleep, deep[^kb-js] |
+| `30/100b` is read per module-config slot, not per layer: the index byte selects a slot (slot 0 is a blank template), and layers point at slots through the bay records at positions `0x4a`-`0x51` of each layer. Reading "per layer 0-2" misses profiles in slots above 2. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-02/03) |
+| `fe/100b` returns three u32 little-endian milliseconds and `fe/100a` writes them (params `00` + 12 bytes). NayaCore names the fields `idle_time_ms`, `sleep_time_ms`, `sleep_battery_time_ms`; the first is the LED idle timeout (it ran on battery in our test), the third is never changed by NayaFlow and its effect is unidentified. Values under 30 s are refused with status `ea`: report it as "value refused", not as a transport error. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-11) <span class="tag static">STATIC</span>[^nc] |
 | `fe/100a` acks with a status byte and no layer echo; it is SET ACTIVITY TIMEOUTS, not a "commit", and NayaFlow sends it on every flash with the current values. | <span class="tag measured">MEASURED</span> (captures, 2026-09-01) <span class="tag static">STATIC</span>[^nc] |
 | ED params are `00 <target> <value...>` (target and value after the flags byte); short payloads are zero-filled. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0, 2026-09-09/10) |
 | The right half has no keymap, LED-map, layer-list or module-config store, so it has nothing to answer `30/10xx` with; on its own port it answers the opener and the system, Bluetooth and module reads. While the halves run different firmware its own port answers the opener and then returns empty payloads; its version can still be read through the left port at `dst 0x51` (Bluetooth reads sent that way answer for the left half). Address REMAP reads and writes to the left only. | <span class="tag measured">MEASURED</span> (owner's board, 3.41.0; create-legacy-firmware[^nh-hw]) |
-| naya-create-kb reports that the right half never answers `ed/1014`. | <span class="tag reported">REPORTED</span>[^kb-js]; untested by us |
 
 ## Bluetooth is not a configuration path
 
 Over Bluetooth on 3.41 the keyboard exposes HID (report protocol), one battery level, device
 information and a vendor `0x1234`/`0x5678` pipe that answers no configuration frame; there is no DFU,
-SMP or UART service <span class="tag measured">MEASURED</span> (third party: createflow-dongle's
-findings[^cfd]). naya-create-kb's page lists a Web Bluetooth transport, but the web client its sketches are adapted
-from has no Web Bluetooth code (Web Serial only; read 2026-09-23)[^kb-js]. Details on [Bluetooth](../connectivity/bluetooth.md).
+SMP or UART service <span class="tag reported">REPORTED</span> (createflow-dongle's
+findings[^cfd]). Details on [Bluetooth](../connectivity/bluetooth.md).
 
 ## The code
 
@@ -327,17 +324,10 @@ vendor opener and version frames, the 3.41.0 version reply, the read and key-wri
 resync case, the three-frame LED map write (byte 3 `02 01 00`, sizes `f5 f5 42`), the chunked read
 with the continue flag, and the `ed/1013` guard (run 2026-09-23 with Node 25.8, 7 of 7 pass).
 
-## The community KB's client
-
-naya-create-kb's JavaScript page describes calls of its own client (`ses.cmd`, `writeKey`, `writeLed`,
-`readModuleConfig`, `getTimeouts`, `setTimeouts`; `cmd()` returns the parsed frame)
-<span class="tag reported">REPORTED</span>[^kb-js]. Its sketches were adapted from its own web client.
-
 ## Open questions
 
 - <span class="tag open">OPEN</span> Whether any Bluetooth characteristic accepts configuration on firmware other than 3.41 (none found on 3.41).
 - <span class="tag open">OPEN</span> The browser list for Web Serial (re-check before relying on it).
-- <span class="tag open">OPEN</span> Whether the right half answers `ed/1014` (a donor-board test).
 
 ## Sources
 
@@ -345,4 +335,3 @@ naya-create-kb's JavaScript page describes calls of its own client (`ses.cmd`, `
 [^nx]: nayactl, [github.com/Qonfused/nayactl](https://github.com/Qonfused/nayactl) (`transport.py`).
 [^nh-hw]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#measured-on-hardware-both-halves-2026-09-20).
 [^cfd]: createflow-dongle, [`docs/findings.md`](https://github.com/mediaandmerch/createflow-dongle/blob/main/docs/findings.md) (Bluetooth measurements on 3.41, September 2026).
-[^kb-js]: naya-create-kb, [toolkit/javascript](https://nemezzizz.github.io/naya-create-kb/toolkit/javascript/).

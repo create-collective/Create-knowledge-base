@@ -62,12 +62,12 @@ receiver dongle" started in 2024-11. No vendor text says a working dongle mode s
 
 | Item | What the photos show | Evidence |
 |---|---|---|
-| Board | `B0K17_Dongle_20241106_V01` (the second character is the digit zero in the report's text layer), double-sided, about 16.5-18 x 10-11.6 mm (inferred); naya-create-kb spells it `BOK17` with a letter O[^kb-hardware] | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG test report p10; DG IP p4, p5 |
-| SoC | Nordic nRF52840 in the CKAA package (WLCSP), marked `N52840` / `CKAAD0` / `2301ME`, fully legible; its firmware lives in the SoC's internal 1 MB flash (no external flash on the board). The lot (`2301ME`) and build code (D0) match the halves' SoCs | <span class="tag doc">DOC</span> DG IP p5 (also read by naya-create-kb) |
+| Board | `B0K17_Dongle_20241106_V01` (the second character is the digit zero in the report's text layer), double-sided, about 16.5-18 x 10-11.6 mm (inferred) | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG test report p10; DG IP p4, p5 |
+| SoC | Nordic nRF52840 in the CKAA package (WLCSP), marked `N52840` / `CKAAD0` / `2301ME`, fully legible; its firmware lives in the SoC's internal 1 MB flash (no external flash on the board). The lot (`2301ME`) and build code (D0) match the halves' SoCs | <span class="tag doc">DOC</span> DG IP p5 |
 | Clocks | `Y1` 32 MHz crystal marked `YC32.0` (the same marking as on the halves); `Y2` a two-pad part with an illegible lid (32.768 kHz, inferred) | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG IP p5 |
 | Status LED | `LED1`, a 4-pad RGB LED with pads marked `G`, `B`, `R` (one common pad, inferred) | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG IP p4, p5 |
 | Antenna | Boen RF0401A, a 10 mm PCB antenna with no connector, at the end opposite the USB fingers under the plastic cap; matching network `L1`-`L3`, `C11`-`C13` | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG OTA report p2, p13; DG RF p10; DG IP p5 |
-| Test pads (back) | `TP1`, `TP2`, two `GND`, `5V`, `SWDIO`, and two more pads whose label is cut by the board edge (fragment `SW…`, SWDCLK expected, inferred) | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG IP p5 (naya-create-kb lists `SWDIO`, `TP1`, `TP2`) |
+| Test pads (back) | `TP1`, `TP2`, two `GND`, `5V`, `SWDIO`, and two more pads whose label is cut by the board edge (fragment `SW…`, SWDCLK expected, inferred) | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG IP p5 |
 | Other parts | two small ESD parts at the USB end, a 4-lead part labeled `ESD3` (an ESD array or a regulator, not determined), a 2-terminal part marked `CG4` on the 5 V pad (fuse, diode or TVS, not identified), passives | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> |
 | Not on the board | external flash, a USB bridge chip, a PA or LNA, a battery, a charger; the nRF52840 is the only IC-class part | <span class="tag doc">DOC</span> |
 | Enclosure | four gold USB-A fingers in a brushed metal USB-A shell (two latch windows and two dimples on one face) with a dark plastic cap, about 20-21 mm long (estimate); the photographed unit carries no product marking, FCC ID or model text, only a lab tag | <span class="tag doc">DOC</span> <span class="tag inferred">INFERRED</span> DG EP p2-p3; DG IP p4-p5; CRR IP7 p44-p45 |
@@ -77,7 +77,7 @@ All rows[^fcc-dg][^fcc-crr]. The RF0401A as tested by the lab: 0.91, 2.29 and 3.
 measured value at 2480 MHz (28.18 %); measurement uncertainty 1.17 dB. The source is a BTL over-the-air
 antenna test report (BTL-OTA-1-2506C290, tested 2025-07-14, EMQuest EMQ-100 software, ETS-Lindgren
 anechoic chamber), not a vendor spec sheet <span class="tag doc">DOC</span> DG OTA report p2, p6-p8, p11; DG RF p10[^fcc-dg].
-naya-create-kb quotes the same sweep as a "DG antenna spec"[^kb-exhibits]. The dongle has one antenna, at
+The dongle has one antenna, at
 the far end of the cap, and no simultaneous transmission; the internal-photo exhibit's "Antenna" arrow is
 misplaced <span class="tag doc">DOC</span> DG SAR p22, p27; DG IP p4.
 
@@ -124,9 +124,9 @@ or "Bluetooth" <span class="tag doc">DOC</span>[^fcc-dg]. That mode sits on the 
 p10-p11, p53. Both halves' FCC filings carry a separate "2.4G SRD" 2 Mbps test report besides BLE,
 in reports of the same format <span class="tag doc">DOC</span>[^fcc-crl][^fcc-crr]. The keyboard's SIG listing describes "USB, 2.4G, BLE three
 working modes", and the vendor explored Nordic's LLPM low-latency mode in 2023 <span class="tag doc">DOC</span>[^sig][^ks-07]. So
-naya-create-kb's "plain Bluetooth 5.4, not proprietary 2.4 GHz"[^kb-hardware] is not established
-either way <span class="tag inferred">INFERRED</span>: the signal cannot be told from LE 2M, but whether the link protocol is standard BLE or a
-vendor mode on the same radio cannot be decided from the filings, for the dongle or the halves.
+the filings do not settle whether the dongle speaks plain Bluetooth <span class="tag inferred">INFERRED</span>: the signal cannot be
+told from LE 2M, but whether the link protocol is standard BLE or a vendor mode on the same radio
+cannot be decided from them, for the dongle or the halves.
 Whether shipping firmware ever uses the SRD mode, on the halves or the dongle, is
 <span class="tag open">OPEN</span>; no shipped firmware activates the dongle, so there is nothing of
 the dongle's to sniff ([details](../open-questions.md#oq-c14)).
@@ -189,7 +189,7 @@ The USB identities of all Naya devices are on [USB](../connectivity/usb.md).
 - **No SIG listing.** No Bluetooth SIG listing exists for the dongle (searched 2026-09-23) <span class="tag doc">DOC</span>[^sig].
 - **`d_fw.bin`.** Early NayaFlow releases (0.1.0 to 1.6.10) shipped a separate MCUboot image `d_fw.bin`
   in a slot half the size of the keyboard's; whether it was dial or dongle firmware is unknown
-  <span class="tag static">STATIC</span>[^nh-fh] ([details](../open-questions.md#oq-f08)). naya-create-kb calls it the module blob[^kb-versions].
+  <span class="tag static">STATIC</span>[^nh-fh] ([details](../open-questions.md#oq-f08)).
 
 ## The community replacement: createflow-dongle
 
@@ -228,9 +228,6 @@ is easy to tell from the stock dongle <span class="tag doc">DOC</span>[^cfd]. Se
 [^nf-rel]: Vendor release notes, [NayaTech/NayaFlow-releases](https://github.com/NayaTech/NayaFlow-releases/releases) (0.1.0, 1.15.0, 1.25.0).
 [^nh-fh]: create-legacy-firmware, [`FIRMWARE-HISTORY.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FIRMWARE-HISTORY.md) (image catalog of the 25 stable releases).
 [^cfd]: createflow-dongle, [github.com/mediaandmerch/createflow-dongle](https://github.com/mediaandmerch/createflow-dongle): README and `docs/findings.md` (third party; read at e95b679, 2026-09-23).
-[^kb-hardware]: naya-create-kb, [hardware deep dive](https://nemezzizz.github.io/naya-create-kb/device/hardware/) (third party).
-[^kb-exhibits]: naya-create-kb, [exhibit inventory](https://nemezzizz.github.io/naya-create-kb/device/exhibits/) (third party).
-[^kb-versions]: naya-create-kb, [firmware versions](https://nemezzizz.github.io/naya-create-kb/firmware/versions/) (third party).
 [^ks-camp]: Kickstarter campaign page and FAQ, [naya-create/naya-create](https://www.kickstarter.com/projects/naya-create/naya-create) (2023).
 [^ks-02]: Kickstarter update 2, [2023-06-07](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3829558).
 [^ks-07]: Kickstarter update 7, [2023-11-07](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3957281).

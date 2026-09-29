@@ -46,9 +46,8 @@ on the beta channel.
 | 1.19.1-1.25.1 | `NayaCore` | `core/NayaCore/` (Windows); `Contents/core/NayaCore.app` (macOS) | in-process SMP | ZeroMQ |
 
 <span class="tag static">STATIC</span> (our scan of every stable installer; create-legacy-firmware[^nh-fp-binary];
-the macOS release zips). naya-create-kb puts the move out of the asar at 1.15.1[^kb-versions]; on
-Windows it came at 1.19.1, and on macOS the service has sat under `Contents/core` since at least
-1.11.11. The macOS asars of 1.14.5 to 1.17.3 also carry a leftover copy of the Windows `NayaCore.exe`.
+the macOS release zips). On Windows NayaCore left the asar at 1.19.1; on macOS the service has sat under
+`Contents/core` since at least 1.11.11. The macOS asars of 1.14.5 to 1.17.3 also carry a leftover copy of the Windows `NayaCore.exe`.
 
 - **Service sizes** (Windows): 14.0 MB (0.0.x), 14.4 MB (0.1.x), 14.3 MB (1.3.8-1.6.10), 3.34 MB
   (1.11.0-1.15.1, newtmgr gone), 6.5 MB (1.17.x), 8.5 MB (1.25.x). macOS NayaCore: 10.1 MB (1.19.1),
@@ -121,8 +120,7 @@ notes[^rel]; create-legacy-firmware manifests[^nh]). NayaCore versions come from
 "6.4.1 -> 6.6.1" in 1.20.0, "6.6.1 -> 6.11.0" in 1.25.0); 1.14.3, 1.15.1, 1.21.0 and 1.25.1 name none,
 so they carry the previous one (in parentheses) <span class="tag inferred">INFERRED</span>. The
 keyboard firmware of the 0.x-1.11.11 images is unknown: their MCUboot header carries the placeholder
-version `1.2.3+4` <span class="tag open">OPEN</span>. naya-create-kb's version page covers six of these
-releases[^kb-versions].
+version `1.2.3+4` <span class="tag open">OPEN</span>.
 
 Release-note oddities <span class="tag doc">DOC</span>[^rel]: v1.19.1's note says "NayaFlow (v1.17.1
 -> v1.19.0)" and v1.20.0's "v1.19.0 -> v1.20.0"; features shipped in 1.22.0 were announced only in
@@ -272,7 +270,6 @@ installers rather than the notes <span class="tag static">STATIC</span>
 [^nh-fp-binary]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Native service binary"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L107-L120).
 [^nx-pr2]: nayactl, [pull request #2](https://github.com/Qonfused/nayactl/pull/2) (text commands silent on 3.41.0).
 [^nx-pr5]: nayactl, [pull request #5](https://github.com/Qonfused/nayactl/pull/5).
-[^kb-versions]: naya-create-kb, [firmware/versions](https://nemezzizz.github.io/naya-create-kb/firmware/versions/).
 [^ks-page]: Kickstarter campaign page, [description and FAQ](https://www.kickstarter.com/projects/naya-create/naya-create/description), read 2026-09-23.
 [^ks-9]: Kickstarter update 9, [2023-12-07](https://www.kickstarter.com/projects/naya-create/naya-create/posts/3982337).
 [^ks-11]: Kickstarter update 11, [2024-02-15](https://www.kickstarter.com/projects/naya-create/naya-create/posts/4029736).

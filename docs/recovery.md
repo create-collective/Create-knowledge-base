@@ -30,7 +30,7 @@ Tested markers: **TESTED (us)** with firmware and date, meaning measured on the 
 | [R3](#r3-halves-on-different-firmware) | peripheral dark but typing, empty replies | HIGH | TESTED (us), 3.35.4 and 3.41.0 |
 | [R4](#r4-right-half-scans-but-its-keys-never-arrive) | right half's keys never arrive | SAFE (diagnosis), HIGH (repair) | TESTED (us), 3.35.4 |
 | [R5](#r5-lights-wrong-after-a-flash-or-a-bootloader-pass) | white, amber or dim after a flash | MEDIUM | TESTED (us), 3.35.4 and 3.41.0 |
-| [R6](#r6-board-dark-but-typing) | whole board dark, typing works | LOW to HIGH | our steps TESTED (us) one by one; the full ladder TESTED (third party) |
+| [R6](#r6-board-dark-but-typing) | whole board dark, typing works | LOW to MEDIUM | our steps TESTED (us) one by one, 3.41.0; the ceiling re-send TESTED (third party) |
 | [R7](#r7-right-half-dark-after-led-commands-sent-to-it) | right half and its module dark after LED writes | MEDIUM | hazard TESTED (third party); fixes UNTESTED |
 | [R8](#r8-a-3287-half-stops-answering-after-a-write) | 3.28.7 half frozen after a write | LOW | TESTED (us), 3.28.7 |
 | [R9](#r9-module-dead) | module not recognized, no light | LOW | TESTED (us), 3.28.7 with modules on 2.1.2 |
@@ -56,8 +56,6 @@ Before any recipe <span class="tag measured">MEASURED</span>:
 3. Look for a half at a bootloader PID (`0x006F` left, `0x00D3` right), twice, 3 s apart
    ([Bootloader](firmware/bootloader.md#passing-through-versus-parked)).
 
-naya-create-kb gives the same starting points (NayaFlow quit, halves awake, the right port).
-
 Then, for a dark half: a bootloader PID on the second look is R1 or R2; different firmware versions
 are R3; a right half whose keyscan events arrive but whose keys do not reach the computer is R4;
 lighting that is only wrong is R5, R6 or R7.
@@ -78,13 +76,14 @@ The half shows no lights and does not type. It enumerates as `0x006F` (left) or 
 
 Frames and details: [Bootloader](firmware/bootloader.md#getting-in-and-getting-out).
 
-Our first answers after entering the bootloader took time too: in the logged flash
-runs the first SMP answer came 60.8 to 69.0 s after entry on the left half and 24.4 to 26.1 s on the
-right (once only 3.8 s), while OpenFlow re-probed about every 2 s, without any idle period (owner's
-board, 2026-09-20 and 2026-09-22) <span class="tag measured">MEASURED</span>.
-naya-create-kb's recipe first lets the ports sit idle for 20 to 50 s, after which its console
-revives <span class="tag reported">REPORTED</span>[^kb-recovery][^kb-bootloader]. We have not needed the idle step; whether the two delays
-are the same effect is open.
+The first SMP answer after entering the bootloader can take a minute: in the logged flash runs it
+came 60.8 to 69.0 s after entry on the left half and 24.4 to 26.1 s on the right (once only 3.8 s),
+while OpenFlow re-probed about every 2 s, without any idle period (owner's board, 2026-09-20 and
+2026-09-22) <span class="tag measured">MEASURED</span>. Part of that wait was the host's: OpenFlow then
+reopened the answering port for every request and never read the half's second (log) port. Holding
+both ports open for the whole visit and reading the log port, as NayaCore does, cut identifying the
+running image from 63 s to 26 s in a module update (owner's board, left half, 3.41.0, 2026-09-23)
+<span class="tag measured">MEASURED</span> ([open question](open-questions.md#oq-f05)).
 
 ## R2 Bootloader device only, primary image not valid (untested)
 
@@ -136,7 +135,7 @@ See [Split link](connectivity/split-link.md).
 
 Clearing Bluetooth bonds on the computer does not fix this. The link between the halves
 lives in each half's own pair address and bond table, and the 2026-09-20 repair needed commands to
-the halves only <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>. Also reported by naya-create-kb.
+the halves only <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>.
 
 **Repair.**
 
@@ -158,9 +157,7 @@ The result was a clean mutual bond and both halves typing. UNPAIR_ALL also drops
 pair the computers again afterwards. The power cycle used that night to leave the bootloader was
 unnecessary: `os reset` on the port that answers SMP does it (R1). The repair sequence ends with a
 reset command (`ee/10ce` NORMAL_RESET); on 2026-09-20 a power cycle was also done afterwards. Whether
-the reset alone is enough is untested; a test on the donor board settles it. naya-create-kb's
-advice is to unplug, cold boot and re-pair from NayaFlow (its `create_pairing_start` event)
-<span class="tag reported">REPORTED</span>[^kb-troubleshooting].
+the reset alone is enough is untested; a test on the donor board settles it.
 
 NayaCore refuses its own pairing operation with "Pairing failed: missing device(s)
 (left=%1, right=%2)" or "Devices have different firmware versions". Its sibling ClearBLEDevices
@@ -192,9 +189,10 @@ layer-list rewrite or a power cycle clears it <span class="tag measured">MEASURE
 
 ## R6 Board dark but typing
 
-**Our non-destructive steps first** <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>:
+!!! warning "Safety LOW to MEDIUM (settings writes). Each step TESTED (us) on its own, 3.41.0; re-sending the ceiling to a board dark for weeks TESTED (third party: the nayactl PR #6 author, 3.41.0)."
 
-!!! warning "Safety LOW to MEDIUM (settings writes). Each step TESTED (us) on its own, 3.41.0; against naya-create-kb's dark-board state they are UNTESTED."
+The keys stay dark while both halves type. Work through these steps in order
+<span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>:
 
 1. Check `fe/1002` on both halves: a firmware mismatch darkens the peripheral (R3).
 2. Re-send the brightness ceiling `ed/1013` with value 100, params `00 00 64`. The ceiling scales the
@@ -204,57 +202,46 @@ layer-list rewrite or a power cycle clears it <span class="tag measured">MEASURE
    Module LEDs are outside the ceiling, per the same author <span class="tag reported">REPORTED</span>.
 3. Rewrite the layer list as in R5; it clears runtime LED effects.
 
-**naya-create-kb's ladder.** Its explanation is the one the nayactl PR #6 author gives: a stored ceiling of 0 keeps the keys dark while every LED command is still acknowledged, and the module LEDs, which the ceiling does not cover, stay lit (the tell) <span class="tag reported">REPORTED</span>[^nx-pr6]. naya-create-kb adds a zeroed scan mode as a second cause <span class="tag reported">REPORTED</span>[^kb-recovery].
-Its steps, in order (the ED values as its published scripts send them):
-
-!!! danger "Safety MEDIUM to HIGH (the third step wipes the keymap). TESTED (third party), 3.41.0, macOS; UNTESTED by us."
-
-1. Its `naya-undark.py --apply` script: the ceiling to 100, then RESUME, ON, scan mode 1, the LED
-   action override to 0, RGB white at 100, brightness 100, effect solid, ON (nine ED writes; the
-   page's own list leaves out the override) <span class="tag reported">REPORTED</span>.
-2. Its `naya-led-recover.py --phase ff --apply` <span class="tag reported">REPORTED</span>.
-3. `30/10ca` with its tool's params `01` on the left half, then a snapshot restore and the ladder
-   again <span class="tag reported">REPORTED</span>. NayaCore sends `30/10ca` with params `00 00` (frame
-   `aa 00 50 00 30 04 10 ca 00 00 da 04`); naya-create-kb's `01` read the byte array's size argument
-   as its value <span class="tag static">STATIC</span>. Whether `00 00` and `01` behave the same stays a
-   donor-board test <span class="tag open">OPEN</span>
-   ([Factory reset](storage/factory-reset.md#the-command-and-its-parameters)).
-4. A true cold boot (see [Resets and power](#resets-and-power)).
-
-naya-create-kb's snapshot files hold three layers of 156 records and three 136-entry LED maps, but
-no layer list (raw data checked), which fits its later finding that the layer list is wiped too
-([Factory reset](storage/factory-reset.md)).
+**If the keys stay dark.** Scan mode is not a likely cause: switching `ed/1012` off and on changed only
+a flicker that shows on camera <span class="tag measured">MEASURED</span> (owner's board, 3.41.0,
+2026-09-13), so a zeroed scan mode should not darken the keys <span class="tag inferred">INFERRED</span>.
+A cold boot ([Resets and power](#resets-and-power)) clears runtime lighting states but cannot
+clear a stored ceiling <span class="tag inferred">INFERRED</span>. Nothing beyond these steps has been
+tested by us, and `30/10ca`, which wipes the stored configuration, is on the
+[never-send list](troubleshooting.md#the-never-send-list). This differs from naya-create-kb, whose
+dark-board recipe goes on to that wipe (with params `01`, where NayaCore sends `00 00`) and a snapshot
+restore[^kb-recovery].
 
 ## R7 Right half dark after LED commands sent to it
 
 !!! warning "Safety MEDIUM. The hazard is TESTED (third party), 3.41.0; the suggested fixes are UNTESTED by anyone."
 
-naya-create-kb reports that ED writes sent to the right half's port (`dst 0x51`),
-especially its RESUME and RGB phases, can park the right half's LEDs dark with its module dark too,
-while it still types. A right-port run of its ladder (8 of 9 writes acknowledged) did exactly that on
-2026-09-22; its first note says a stock NayaFlow flash did not relight it, while its later note the
-same day leaves the right half's lighting after that flash unconfirmed. Earlier, the same ladder sent
-to the left port once relit the right half <span class="tag reported">REPORTED</span>[^kb-recovery]. It suggests a minimal ON plus
-brightness sent to the right, else a cold USB reset of that half, and treats right-side LED writes as
-risky; its own notes list that ladder as untried <span class="tag reported">REPORTED</span>. For contrast, a single ceiling write
-(`ed/1013` `00 00 64`) to the right half's own port was acknowledged and did not park it (owner's
-board, 3.35.4 and 3.41.0, 2026-09-20 and 2026-09-22) <span class="tag measured">MEASURED</span>.
+One third-party run of a nine-write LED recovery sequence sent to the right half's own port
+(`dst 0x51`), including RESUME (`ed/1010`) and an RGB override (`ed/1050`), left the right half's LEDs
+and its docked module dark while it still typed; eight of the nine writes were acknowledged (3.41.0,
+2026-09-22), and whether a stock NayaFlow flash relit it was left unconfirmed
+<span class="tag reported">REPORTED</span>[^kb-recovery]. Which write did it is unknown. A single
+ceiling write (`ed/1013` `00 00 64`) to the right half's own port was acknowledged and did not park it
+(owner's board, 3.35.4 and 3.41.0, 2026-09-20 and 2026-09-22) <span class="tag measured">MEASURED</span>.
+Commands sent to the left half do reach the right half's lighting: one layer-list rewrite on the left
+restores both halves (R5) <span class="tag measured">MEASURED</span>.
 
 Why the left port can relight the right: the central (left) drives both halves' LEDs from
 its own 136-entry map over the split link <span class="tag inferred">INFERRED</span> (from measured bay blocks and the layer-list restore of
 both halves, 2026-09-08 to 2026-09-10).
 
 The right half is not deaf by design: on its own port it answers the handshake
-(`fe/1001`, `fe/1002`) and system, Bluetooth, module and `fa/1001` reads <span class="tag measured">MEASURED</span>. What it lacks is the
-configuration stores: keymap, LED maps, layer list and module configurations are all on the left
-([Flash layout](storage/flash-layout.md#what-each-half-stores)). naya-create-kb reports that it
-never answers `ed/1014`, three times <span class="tag reported">REPORTED</span>[^kb-troubleshooting].
+(`fe/1001`, `fe/1002`) and system, Bluetooth, module and `fa/1001` reads <span class="tag measured">MEASURED</span>, and it acknowledges the ceiling
+write above. What it lacks is the configuration stores: keymap, LED maps, layer list and module
+configurations are all on the left ([Flash layout](storage/flash-layout.md#what-each-half-stores)).
 
-naya-create-kb's fallback: use the keyboard's own Layer 2 LED keys on the right half after
-a true cold boot <span class="tag reported">REPORTED</span>[^kb-recovery]. In the stock profile those keys are firmware `&rgb_ug` records,
-mostly on the right half: positions 9 to 12 select effects, 24 and 40 raise and lower brightness, 25
-and 41 change speed, and Layer 2 is held at position 73 <span class="tag measured">MEASURED</span> (NayaFlow's stock profile read back,
-2026-09-08). Whether they relight a dark right half is only the third party's report.
+Untested candidates for a right half parked this way, least invasive first <span class="tag inferred">INFERRED</span>: the R5
+layer-list rewrite sent to the left half, which restores both halves' stored lighting; the ceiling
+re-sent to the right half's own port (`ed/1013` `00 00 64`), which relit a dim right half after a
+flash; and the keyboard's own LED keys, which are firmware `&rgb_ug` records and need no host. In the
+stock profile they sit on the System layer (Layer 2, held at position 73), mostly on the right half:
+positions 9 to 12 select effects, 24 and 40 raise and lower brightness, 25 and 41 change speed, and 39
+turns the LEDs on and off <span class="tag measured">MEASURED</span> (NayaFlow's stock profile read back, 2026-09-08).
 
 ## R8 A 3.28.7 half stops answering after a write
 
@@ -337,14 +324,15 @@ charge from a computer, not a wall outlet <span class="tag doc">DOC</span>[^man-
 
 ## Resets and power
 
-**Reset commands** <span class="tag measured">MEASURED</span> <span class="tag reported">REPORTED</span> <span class="tag inferred">INFERRED</span>:
+**Reset commands** <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>:
 
-- `ee/10ce` NORMAL_RESET reboots. Sent to the left half on 3.35.4, it dropped that half's port at
-  once (a transport error after 7.7 ms; owner's board, 2026-09-20) <span class="tag measured">MEASURED</span>. naya-create-kb reports that
-  USB drops for about 0.13 s and the node is back after about 0.9 s <span class="tag reported">REPORTED</span>[^kb-troubleshooting]; its
-  maintainer's own published notes give 0.13 s as the delay before USB drops, not the length of the
-  outage, and that early node is most likely the bootloader pass <span class="tag inferred">INFERRED</span>. Whether `ee/10ce` passes
-  through the bootloader is open ([open question](open-questions.md#oq-f03)).
+- `ee/10ce` NORMAL_RESET reboots the half through its bootloader. Its port drops at once (a transport
+  error after 7.7 ms on 3.35.4, 2026-09-20); on 3.41.0 the bootloader identity (`0x006F`) showed 0.65
+  to 0.84 s after the command for about 1.3 s, and the application was back after about 3 s (owner's
+  board, left half, 2026-09-23) <span class="tag measured">MEASURED</span>
+  ([closed question](open-questions.md#oq-f03)). On Windows 11 the half came back by itself only after the first two
+  restarts in a row; from the third it stayed off USB until its cable was replugged
+  <span class="tag measured">MEASURED</span> ([open question](open-questions.md#oq-f27)).
 - `ee/10ae` MCU_BOOT_RESET parks the half in its bootloader until `os reset` (R1).
 - `ee/10be` DFU_RESET has never been observed by anyone we know of; do not send it.
 
@@ -352,42 +340,32 @@ charge from a computer, not a wall outlet <span class="tag doc">DOC</span>[^man-
 to 1.7 s, and powering one half reboots the other when the link comes back, so a one-half power cycle
 is a two-half reboot <span class="tag measured">MEASURED</span>. With USB plugged in, switching a half OFF shuts it off, and switching it
 back ON works as a reset (owner, 2026-09-23) <span class="tag measured">MEASURED</span>. That agrees with the manual, which says the Create
-respects the ON/OFF state even while connected over USB <span class="tag doc">DOC</span>[^man-create], and contradicts
-naya-create-kb's claim that a switch flip on USB is not a reset. So the switch is a usable reset for
+respects the ON/OFF state even while connected over USB <span class="tag doc">DOC</span>[^man-create]. So the switch is a usable reset for
 one half without unplugging. Safety SAFE. TESTED (owner, 2026-09-23).
 
-A **true cold boot** removes every power source: USB out, modules undocked (a docked module can
-power the keyboard) and both switches off <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span>. Also reported by naya-create-kb, which calls it
-the only real reset besides `ee/10ce`; the switch alone is already a reset.
+A **cold boot** removes every power source: USB out, modules undocked (a docked module can
+power the keyboard) and both switches off <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span>.
 
 | Action | What it does | Evidence |
 |---|---|---|
 | `os reset` (SMP, data port) | leaves the bootloader; about 8 s to the application | <span class="tag measured">MEASURED</span> |
-| `ee/10ce` NORMAL_RESET | reboots the half; its port drops at once | <span class="tag measured">MEASURED</span> |
+| `ee/10ce` NORMAL_RESET | reboots the half through its bootloader (about 1.3 s); its port drops at once and the application is back in about 3 s | <span class="tag measured">MEASURED</span> |
 | `ee/10ae` MCU_BOOT_RESET | parks the half in its bootloader until `os reset` | <span class="tag measured">MEASURED</span> |
 | `ee/10be` DFU_RESET | unknown; never observed | <span class="tag static">STATIC</span> |
 | Unplug and replug USB (battery half) | reboots through the bootloader (1 to 1.7 s) and reboots the other half at re-link | <span class="tag measured">MEASURED</span> |
 | Power switch OFF then ON, USB plugged in | shuts the half off, then resets it | <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span> |
-| True cold boot | removes every power source | <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span> |
+| Cold boot | removes every power source | <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span> |
 
-## Brightness and the OFF state: naya-create-kb's observations
+## Brightness 0 and the brightness keys
 
-naya-create-kb reports that stepping brightness down from 50 in steps of 10 reaches 0 on
-the fifth step, and that 0 is an OFF state that raising the brightness does not relight; that the OFF
-state survives `ee/10ce`, and that relighting it needs its LED ladder; and that the RGB override
-(`ed/1050`) also survives `ee/10ce`, while bulk `30/100e` writes drop the board back to its map
-<span class="tag reported">REPORTED</span>[^kb-recovery]. It also calls NayaFlow's apparent brightness wrap host-side arithmetic; that part
-does not hold. The stock brightness keys are firmware records (`&rgb_ug` with its brightness up and
-down commands and argument 0), so the host puts no step value on the wire; NayaCore's 15 ZMQ events
-include no LED command; and the third party's own NayaFlow captures contain no ED frame <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. Any
-wrap is firmware behavior of the brightness keys, which we have not measured.
-
-naya-create-kb's open item: after an LED-ladder recovery the left half went full white,
-then dimmer, then dimmer again with no writes, and its brightness keys were once inverted
-<span class="tag reported">REPORTED</span>[^kb-recovery]. A candidate from our measurements: a half returning from any bootloader pass comes
-back in a runtime lighting state (white or darker amber) until the layer list is rewritten, and a
-reset may pass through the bootloader <span class="tag inferred">INFERRED</span>. After the 3.41.0 upgrade both halves also came up so dim
-they looked off, until the ceiling was re-sent (owner's board, 2026-09-20) <span class="tag measured">MEASURED</span>.
+`ed/1008` with level 0 leaves the keys dark, and the next `ed/1008` with a level above 0 relights
+them: a two-byte write (params `00 00 64`) restored a half that a one-byte write had set to 0
+<span class="tag measured">MEASURED</span> (owner's board, left half, 3.41.0, 2026-09-09). The stock
+brightness keys are firmware records (`&rgb_ug` with its brightness up and down commands and argument
+0), so the firmware computes each step and the host puts no step value on the wire; NayaCore's 15 ZMQ
+events include no LED command, and none of our NayaFlow captures contains an ED frame
+<span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. How the keys behave
+at either end of the range has not been measured.
 
 ## The vendor's own recovery tools
 
@@ -397,8 +375,12 @@ a one-click diagnostics report (1.21.0) <span class="tag doc">DOC</span>[^cl][^b
 [Flash layout](storage/flash-layout.md#the-vendors-repair-and-clear-buttons).
 
 A firmware flash does not fix a stored-state problem, because the stores survive flashes,
-and NayaFlow's "Test and Format SPI Flash" does nothing on a healthy flash <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. naya-create-kb
-says the same.
+and NayaFlow's "Test and Format SPI Flash" does nothing on a healthy flash: it formats only the
+partitions that fail its self-test <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>.
+Its Danger Zone button "Clear all keymap data" (`clear_data`) does wipe the stored configuration:
+it sends `30/10ca` itself, with no confirmation dialog <span class="tag static">STATIC</span>[^nc]
+([Factory reset](storage/factory-reset.md)). This differs from naya-create-kb, which says nothing in
+the stock interface formats the data partition[^kb-recovery].
 
 ## "My right half stopped working"
 
@@ -411,38 +393,26 @@ diagnosis to tell them apart.
 
 Done on the owner's hardware (status 2026-09-23): R1; R3 (different firmware, then
 matched); R4 (3.35.4, and 3.41.0 per the owner); R5 (restoring layers and lighting after a flash);
-R8; R9; R10; R11; the power switch as a reset on USB. R12, the meaning of `16` in R13, and R14 are
-measured too. Not done: R2; the `30/10ca` restore (R6's third step and the R13 restore); and the
-other recipes that wait for a donor board. R15 and R16 are vendor documentation only <span class="tag measured">MEASURED</span>.
-
-## Where this differs from naya-create-kb
-
-| naya-create-kb says (recovery and troubleshooting pages) | What the evidence shows |
-|---|---|
-| The right half is deaf over CDC by design (ED acknowledged without effect, `ed/1014` never answers) | It answers the handshake and system, Bluetooth, module and `fa/1001` reads; it lacks the configuration stores |
-| A switch flip with USB plugged in is a fake reset | Switching OFF on USB shuts the half off and ON resets it (owner, 2026-09-23), as the manual says |
-| Only `30/10ca` formats the data partition | The vendor's flash test formats failing partitions, and NayaFlow's "Clear all keymap data" button sends `30/10ca` itself |
-| Never send `ee/10ae` | It is the first step of every firmware update; send it only with `os reset` at hand |
-| NayaFlow's brightness wrap is host-side arithmetic | The brightness keys are firmware records; the host sends no step value |
-| The same ladder via the left port once relit the right, "mechanism unclear" | The central drives both halves' LEDs from its map (inferred from measured facts) |
+R6's steps, each on its own; R8; R9; R10; R11; the power switch as a reset on USB; `ee/10ce` through
+the bootloader. R12, the meaning of `16` in R13, and R14 are measured too. Not done: R2; the
+`30/10ca` restore (R13); and the other recipes that wait for a donor board. R15 and R16 are vendor
+documentation only <span class="tag measured">MEASURED</span>.
 
 ## Open questions
 
 - <span class="tag open">OPEN</span> R2 on real hardware: a swap onto an invalid primary ([details](open-questions.md#oq-f14)).
-- <span class="tag open">OPEN</span> Whether the R5 layer-list rewrite also clears naya-create-kb's dark-board state and the `ed/1050` override ([details](open-questions.md#oq-f15)).
-- <span class="tag open">OPEN</span> Whether `ee/10ce` passes through the bootloader, and what `ee/10be` does ([details](open-questions.md#oq-f03)).
+- <span class="tag open">OPEN</span> Whether anything but re-sending the ceiling clears a board left dark by a stored ceiling of 0 (the R5 layer-list rewrite, a cold boot), and what relights a right half parked as in R7 ([details](open-questions.md#oq-f15)).
+- <span class="tag open">OPEN</span> Why a half stays off USB from the third `ee/10ce` restart in a row until its cable is replugged ([details](open-questions.md#oq-f27)).
+- <span class="tag open">OPEN</span> What `ee/10be` DFU_RESET does ([details](open-questions.md#oq-c01)).
 - <span class="tag open">OPEN</span> Recovery-mode behavior on 3.41.0 with modules on 2.3.3 ([details](open-questions.md#oq-f22)).
 - <span class="tag open">OPEN</span> Whether the reset command alone completes the pairing repair (on 2026-09-20 a power cycle was also done afterwards); a donor-board test settles it ([details](open-questions.md#oq-c17)).
-- <span class="tag open">OPEN</span> What naya-create-kb means by an "oversized" single `30/100e` frame, given that frames up to 253 bytes are accepted on 3.41.0.
+- <span class="tag open">OPEN</span> What wedged the parser in the nayactl PR #6 author's `30/100e` writes of 241 and 41 bytes, given that single frames up to 253 bytes are accepted on 3.41.0 ([details](open-questions.md#oq-f21)).
 
 ## Sources
 
 [^kb-recovery]: naya-create-kb, [recovery](https://nemezzizz.github.io/naya-create-kb/recovery/).
-[^kb-troubleshooting]: naya-create-kb, [troubleshooting](https://nemezzizz.github.io/naya-create-kb/troubleshooting/).
-[^kb-bootloader]: naya-create-kb, [firmware/bootloader](https://nemezzizz.github.io/naya-create-kb/firmware/bootloader/).
-[^mcuboot]: MCUboot, [`bootutil_public.c`](https://github.com/mcu-tools/mcuboot/blob/main/boot/bootutil/src/bootutil_public.c) (swap from the secondary slot) and its image encryption design.
 [^fp-measured]: create-legacy-firmware, [`FLASHING-PROCEDURE.md`, "Measured on hardware, both halves (2026-09-20)"](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/FLASHING-PROCEDURE.md#L317-L384).
-[^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (pairing and ClearBLEDevices steps and messages, ZMQ events, "one half connected" warnings).
+[^nc]: NayaFlow 1.25.1, NayaCore 6.11.0 strings (pairing and ClearBLEDevices steps and messages, the flash repair and ClearAllData steps, ZMQ events, "one half connected" warnings) and NayaFlow's Danger Zone texts.
 [^man-create]: Naya Create User Manual v1.1.0, pp. 4, 5, 11 and 25; see [Manuals](product/manuals.md).
 [^man-modules]: Naya Touch, Tune and Track User Manuals v1.1.0, pp. 5 and 7; see [Manuals](product/manuals.md).
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6), description by its author.

@@ -28,11 +28,9 @@ swap), and a few innocent-looking commands are writes that cannot be undone.
 ## Scope and first checks
 
 Entries here were observed on 3.28.7, 3.35.4 or 3.41.0 (Windows host), or, where marked
-REPORTED, by naya-create-kb on 3.41.0 (macOS). The beta-only firmware (3.39.4, 3.40.0, 3.40.4) is
+REPORTED, by the third party the entry names. The beta-only firmware (3.39.4, 3.40.0, 3.40.4) is
 unmeasured. Check `fe/1002` on both halves before applying any entry <span class="tag measured">MEASURED</span> <span class="tag doc">DOC</span>
-([Versions](firmware/versions.md#firmware-in-the-field)). naya-create-kb says every entry on its page
-was verified live on 3.41.0 <span class="tag reported">REPORTED</span>[^kb-troubleshooting] (raw data checked: its maintainer's board reads
-3.41.0 on both halves in the published captures; several of its entries are corrected below).
+([Versions](firmware/versions.md#firmware-in-the-field)).
 
 ## Host and port problems
 
@@ -40,7 +38,7 @@ was verified live on 3.41.0 <span class="tag reported">REPORTED</span>[^kb-troub
 flow-bg-server, OpenFlow, or a killed script's leftover Python process. Windows reports "Access is
 denied" (error 5) <span class="tag measured">MEASURED</span>. On macOS the error is "Resource busy": NayaCore opens its ports through Qt's
 serial-port module, which opens them exclusively, so a second open fails with `EBUSY` (errno 16)
-<span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span>[^nc]. Also reported by naya-create-kb. Quit the other program. OpenFlow can release its ports without the halves re-enumerating. Safety
+<span class="tag static">STATIC</span> <span class="tag inferred">INFERRED</span>[^nc]. Quit the other program. OpenFlow can release its ports without the halves re-enumerating. Safety
 SAFE. TESTED (us, Windows).
 
 **Windows serial specifics.** pyserial with `dsrdtr=True` can hang the first write
@@ -67,20 +65,17 @@ predictable. 3.41.0 exposes one <span class="tag measured">MEASURED</span> (owne
 data, not an error, so a matcher that accepts only `00 00` fails every write above layer 0.
 Non-final frames of a chunked write are acknowledged with status `01` plus the index; status `ea`
 means the firmware refused the value and stored nothing <span class="tag measured">MEASURED</span> (owner's board, 2026-09-07 and
-2026-09-11). naya-create-kb describes the same layer echo. Frame details:
-[Transport](protocol/transport.md).
+2026-09-11). Frame details: [Transport](protocol/transport.md).
 
 **An acknowledgement proves parsing, not effect.** The firmware acknowledges writes it
 discards (macro writes) and stores records it will not act on (short parameters). Read back, and for
-behavior, press the key <span class="tag measured">MEASURED</span> (2026-09-07). naya-create-kb makes the same point.
+behavior, press the key <span class="tag measured">MEASURED</span> (2026-09-07).
 
 **LED map writes need the layer byte.** A single-entry `30/100e` write is
 `00 <layer> <KK> <H_lo> <H_hi> <S>`: the second byte picks the layer, and the acknowledgement echoes
 it. NayaFlow's own writes to layers 0, 3 and 4 carry it (our capture, 2026-09-01), and OpenFlow's
 writes to layers 1 and 2 read back per layer (owner's board, 2026-09-16) <span class="tag measured">MEASURED</span>. So a writer that always
-sends `00` in that position writes layer 0, which is what naya-create-kb saw: it reports that without
-the layer byte every write lands on layer 0, and its earlier writer hard-coded `00` there. Also
-reported by naya-create-kb[^kb-troubleshooting]. See [LEDs](protocol/led.md).
+sends `00` in that position writes layer 0. See [LEDs](protocol/led.md).
 
 ## The right half
 
@@ -90,9 +85,8 @@ is READ LAYER LIST, not a handshake, and the right half has no layer list: every
 is on the left. To reach the right half from the left port, address `dst 0x51`: only the central
 routes. Not everything sent that way answers for the right half: the firmware-version read does
 (owner's board, 2026-09-22)[^fp-measured], but the Bluetooth identity reads sent to `0x51` through the
-left answer for the **left** half ([Split link](connectivity/split-link.md)). naya-create-kb reports
-that the right half never answers `ed/1014`, three times <span class="tag reported">REPORTED</span>[^kb-troubleshooting]; it does answer
-`ed/1013` on its own port (owner's board, 3.35.4 and 3.41.0, 2026-09-20 and 2026-09-22) <span class="tag measured">MEASURED</span>.
+left answer for the **left** half ([Split link](connectivity/split-link.md)). The right half also
+answers `ed/1013` on its own port (owner's board, 3.35.4 and 3.41.0, 2026-09-20 and 2026-09-22) <span class="tag measured">MEASURED</span>.
 
 While the halves run different firmware, the peripheral's own port answers the handshake
 and then returns empty payloads to every command. It still types, and its version stays readable
@@ -106,56 +100,51 @@ through that route; the route itself is measured. See [Recovery R3](recovery.md#
 the target byte's value is ignored (0, 1, 2, 3 and 200 behaved the same), and a payload that stops
 early is completed with zeros and acknowledged. A one-byte brightness write leaves the half dark; a
 one-byte effect write always selects effect 0. Always send the target byte and the value <span class="tag measured">MEASURED</span>
-(owner's board, 3.41.0, 2026-09-09 and 2026-09-10, one frame at a time). naya-create-kb suspected this
-mechanism; it is settled. See [LEDs](protocol/led.md).
+(owner's board, 3.41.0, 2026-09-09 and 2026-09-10, one frame at a time). This differs from
+naya-create-kb, which describes an empty `ed/1013` as a read returning a bare
+acknowledgement[^kb-troubleshooting]: by this rule that frame stores a ceiling of 0 and darkens the
+keys <span class="tag inferred">INFERRED</span>. See [LEDs](protocol/led.md).
 
 **There is no read command for the LED settings** (`ed/1012`, `1013`, `1014`), and an
 empty-payload "read" is not harmless: it is a zero-filled write, so it stores scan mode 0 or a ceiling
 of 0 <span class="tag inferred">INFERRED</span> (from the measured zero-fill).
 
-**Dim static light, bright animations, or inverted brightness keys.** naya-create-kb
-blames the stored ceiling (`ed/1013`) being out of step with the live brightness and fixes it by
-setting the ceiling to 100 <span class="tag reported">REPORTED</span>[^kb-troubleshooting]. The fix itself we have measured: after the
-3.41.0 upgrade both halves came up so dim they looked off until the ceiling was re-sent to each half's
-own port (`ed/1013` 100, params `00 00 64`), and both relit <span class="tag measured">MEASURED</span> (owner's board, 2026-09-20 and
-2026-09-22). Also reported by naya-create-kb. Whether the flash changed the stored ceiling or only
-the live level was not recorded, and the dim-static, bright-animation and inverted-key symptoms are
-its report. Re-sending the ceiling: Safety LOW, TESTED (us, 3.41.0); naya-create-kb's script: TESTED
-(third party).
+**Dim board after a firmware update.** After the 3.41.0 upgrade both halves came up so dim they
+looked off until the ceiling was re-sent to each half's own port (`ed/1013` 100, params `00 00 64`),
+and both relit <span class="tag measured">MEASURED</span> (owner's board, 2026-09-20 and 2026-09-22).
+Whether the flash changed the stored ceiling or only the live level was not recorded. Re-sending the
+ceiling: Safety LOW, TESTED (us, 3.41.0).
 
-**Board dark but typing.** See [Recovery R6](recovery.md#r6-board-dark-but-typing): our
-non-destructive steps first, then naya-create-kb's ladder. Its explanation is that the live LED state
-is wedged in the persistent store, not in the firmware, and that a reflash, NayaFlow's "clear keymap"
-and "Repair SPI flash" do not help <span class="tag reported">REPORTED</span>[^kb-troubleshooting]. A stored setting can do it: the ceiling
-scales the whole key array and persists, and short ED writes store zeros, so a zero ceiling would
-give a dark board that types <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>. It is not the only cause: a runtime lighting state after a
+**Board dark but typing.** See [Recovery R6](recovery.md#r6-board-dark-but-typing). A stored
+setting can do it: the ceiling scales the whole key array and persists, and short ED writes store
+zeros, so a zero ceiling would give a dark board that types <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>; the nayactl PR #6
+author revived a board that had been dark for weeks by re-sending the ceiling
+<span class="tag reported">REPORTED</span>[^nx-pr6]. It is not the only cause: a runtime lighting state after a
 bootloader pass or an LED effect also darkens a half until a layer-list rewrite or a power cycle
-(Recovery R5) <span class="tag measured">MEASURED</span>. Two of its "do not help" items hold on our evidence: the stores survive a flash,
-and the vendor's repair does nothing on a healthy flash <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. The third conflicts with its own
-report: NayaFlow's "Clear all keymap data" sends `clear_data`, which dispatches to ClearAllData and
-then `30/10ca`, the command it says does clear the state <span class="tag static">STATIC</span>[^nc].
-NayaCore sends `30/10ca` with params `00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`): in our
-disassembly of NayaCore 6.11.0 (macOS and Windows builds), `_remapClearFlash` passes one byte `00`
-<span class="tag static">STATIC</span>[^nc]. This differs from naya-create-kb, which read the byte array's size
-argument as its value <span class="tag static">STATIC</span>[^nc], so its own tool sends `01` <span class="tag reported">REPORTED</span>[^kb-troubleshooting]. Whether
-`00 00` and `01` behave the same stays a donor-board test <span class="tag open">OPEN</span>
-([Factory reset](storage/factory-reset.md#the-command-and-its-parameters)).
+(Recovery R5) <span class="tag measured">MEASURED</span>. A firmware flash does not help, because the stores survive it, and neither
+does the vendor's flash repair on a healthy flash <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. NayaFlow's "Clear all keymap
+data" is no light fix either: it sends `clear_data`, which runs ClearAllData and `30/10ca` with params
+`00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`) and wipes the stored configuration
+<span class="tag static">STATIC</span>[^nc] ([Factory reset](storage/factory-reset.md#the-command-and-its-parameters)).
+This differs from naya-create-kb, whose own tool sends params `01`, having read the byte array's size
+argument as its value <span class="tag reported">REPORTED</span>[^kb-troubleshooting].
 
 **A logged "success" in NayaFlow** means the command ran, not that anything changed:
 the flash test, for example, reports "No errors detected ... operation complete without reformatting"
-while changing nothing <span class="tag static">STATIC</span>[^nc]. Also reported by naya-create-kb. The reverse happens too: NayaFlow
+while changing nothing <span class="tag static">STATIC</span>[^nc]. The reverse happens too: NayaFlow
 once reported a failed flash that had in fact landed, and only NayaCore's log told the truth; and its
 verify fails on multi-binding keys whose writes did apply <span class="tag measured">MEASURED</span> (owner's board, 2026-09).
 
-**Right half dark on USB, its module lit, the sync key blinking red.** naya-create-kb blames
-split-link or pairing confusion on the right half: unplug USB, cold boot, and re-pair from NayaFlow
-(its `create_pairing_start` event); clearing the computer's Bluetooth bonds does not help
-<span class="tag reported">REPORTED</span>[^kb-troubleshooting]. Check first that both halves run the same firmware: a mismatch darkens the
-peripheral's LEDs <span class="tag inferred">INFERRED</span> ([Recovery R3](recovery.md#r3-halves-on-different-firmware)). The re-pair step
-itself is measured: NayaCore's pairing order, run by hand, fixed a dead link <span class="tag measured">MEASURED</span>
-([Recovery R4](recovery.md#r4-right-half-scans-but-its-keys-never-arrive)); the rest of the symptom
-and the relight on unplugging are its report. The firmware check is Safety SAFE; naya-create-kb's fix
-is TESTED (third party).
+**Right half dark while the board types.** Check first that both halves run the same firmware: a
+mismatch darkens the peripheral's LEDs until the halves match <span class="tag measured">MEASURED</span> (owner's board, 3.35.4 and
+3.41.0, 2026-09-20; [Recovery R3](recovery.md#r3-halves-on-different-firmware)). If they match and the
+right half's keys do not arrive either, the split link is the suspect: NayaCore's pairing order, run
+by hand, fixed a dead link <span class="tag measured">MEASURED</span>
+([Recovery R4](recovery.md#r4-right-half-scans-but-its-keys-never-arrive)), and clearing the
+computer's Bluetooth bonds does not help, because the link lives in the halves <span class="tag measured">MEASURED</span> <span class="tag inferred">INFERRED</span>. After LED
+writes sent to the right half's port, see
+[Recovery R7](recovery.md#r7-right-half-dark-after-led-commands-sent-to-it). The firmware check is
+Safety SAFE.
 
 ## Firmware update problems
 
@@ -191,19 +180,21 @@ after `30/10ca` <span class="tag reported">REPORTED</span>. Fixes: [Factory rese
 percentage is `(clamp(mV, 3300, 4200) - 3300) * 100 / 900`, truncated, then clamped to 1-100 %, from
 the `de/100b` millivolts <span class="tag static">STATIC</span> (NayaCore 6.11.0)[^nc]: 9 mV per
 point, 100 % from 4200 mV; it reports 0 (shown as "?") when there is no valid reading, and NayaFlow
-shows the keyboard's own cell only in millivolts. nayactl and OpenFlow use the same 3.3 to 4.2 V
-range[^nx-4]. naya-create-kb published NayaFlow's calibration points first (about 4222, 3910 and
-3709 mV, which the formula reproduces); its slope estimate of about 9.3 mV per percent is close, but
-the exact slope is 9 mV. NayaFlow's own notes admit a 5 to 10 %
+shows the keyboard's own cell only in millivolts. nayactl puts both cells on the same 3.3 to 4.2 V
+line[^nx-4]. That line reads a full half low on newer firmware: on USB, halves on 3.28.7 held about
+4193 and 4207 mV and halves on 3.41.0 about 4068 and 4091 mV, steady over 30 minutes, which the line
+shows as 85 and 87 % <span class="tag measured">MEASURED</span> (owner's boards, 2026-09-26). OpenFlow
+therefore scales the keyboard's cell so that the voltage its firmware holds reads 100 % (4060 mV from
+firmware 3.30 on), and keeps NayaCore's formula for modules. NayaFlow's own notes admit a 5 to 10 %
 fluctuation <span class="tag doc">DOC</span>[^beta]. Module firmware 2.1.2 does not implement `de/100b` (about 1.09 s timeout); use
 `de/1009`, in 0.1 mV units <span class="tag measured">MEASURED</span>. See [Power and batteries](hardware/power.md).
 
 **Empty dock readings.** With no module docked, the right half answers `de/100b` with
-zeros (`00 00 00 01`: 0 mV, last byte `01`) while the left floats (`00 10 60 00`: 4 192 mV, about
-`0x1060`, the unloaded charger rail, last byte `00`) <span class="tag reported">REPORTED</span> (raw data checked: the naya-create-kb
-maintainer's published dumps). Presence comes from the module handshake and detect commands and from
-the dock address (`0xF0` means nothing answered), not from the battery reading <span class="tag measured">MEASURED</span>. naya-create-kb
-suggests a presence byte in `de/1001`, which we frame differently ([Modules](protocol/modules.md)).
+zeros flagged invalid (`00 00 00 01`) while the left reports a phantom 4 192 mV flagged valid
+(`00 10 60 00`) <span class="tag reported">REPORTED</span> (raw data checked)[^kb-troubleshooting]. So a
+valid-looking battery reading does not prove a module is there: presence comes from the module
+handshake and detect commands and from the dock address (`0xF0` means nothing answered), not from the
+battery reading <span class="tag measured">MEASURED</span> ([Modules](protocol/modules.md)).
 
 **A Tune two-finger swipe bound to a one-shot action** (play or pause) fires it 11 to 20
 times: two-finger swipes stream events as the fingers move, while one- and three-finger gestures send
@@ -215,11 +206,10 @@ one event on release <span class="tag measured">MEASURED</span> (owner's board, 
 **`fe/100a` is not a "commit".** It is SET ACTIVITY TIMEOUTS (`00` followed by three
 32-bit little-endian millisecond values), and NayaFlow sends it on every flash, with `fe/100b` to read
 it back. Configuration writes apply live without any commit <span class="tag measured">MEASURED</span> <span class="tag static">STATIC</span>. Replaying another session's
-`fe/100a` writes that session's timeouts, nothing more. naya-create-kb reports that replaying sniffed
-`fe/100a` frames wedged its state machine <span class="tag reported">REPORTED</span>[^kb-troubleshooting], but the frame is not the cause:
-NayaFlow's captured frame, sent verbatim seven times on two boards at 3.41.0 (2026-09-16 to
-2026-09-21), wedged nothing, and NayaFlow itself sends `fe/100a` three to six times per session <span class="tag measured">MEASURED</span>.
-What wedged its board is unexplained. See [Settings and timing](protocol/settings.md).
+`fe/100a` writes that session's timeouts, nothing more: NayaFlow's captured frame, sent verbatim seven
+times on two boards at 3.41.0 (2026-09-16 to 2026-09-21), wedged nothing <span class="tag measured">MEASURED</span>. This differs from naya-create-kb, which reports that replaying sniffed
+`fe/100a` frames wedged its state machine <span class="tag reported">REPORTED</span>[^kb-troubleshooting].
+See [Settings and timing](protocol/settings.md).
 
 The keyboard would not enter Bluetooth pairing while on USB power <span class="tag measured">MEASURED</span> (owner's board,
 3.41.0, 2026-09-11).
@@ -231,14 +221,13 @@ output mode gates it is **open** <span class="tag measured">MEASURED</span> <spa
 **The power switch on USB is a reset.** Switching a half OFF while it is plugged in shuts
 it off, and switching it back ON works as a reset: the half reboots and re-links. Use it as a
 one-half reset without unplugging <span class="tag measured">MEASURED</span> (owner, 2026-09-23). It agrees with the manual, which says the
-Create respects the ON/OFF state even while connected over USB <span class="tag doc">DOC</span>[^man-create], and contradicts
-naya-create-kb, which says a switch flip on USB is not even an MCU reset. Safety SAFE. TESTED
+Create respects the ON/OFF state even while connected over USB <span class="tag doc">DOC</span>[^man-create]. Safety SAFE. TESTED
 (owner, 2026-09-23).
 
 ## The vendor's tools
 
 `clear_all_data` sent over NayaFlow's ZMQ bridge fails with an invalid-event answer,
-because NayaCore's event list does not contain it <span class="tag static">STATIC</span>[^nc]. Also reported by naya-create-kb.
+because NayaCore's event list does not contain it <span class="tag static">STATIC</span>[^nc].
 `clear_data` is on the list, and it runs NayaCore's ClearAllData operation, which sends `30/10ca`
 with params `00 00` <span class="tag static">STATIC</span> ([Factory reset](storage/factory-reset.md#how-the-vendor-software-reaches-it)).
 
@@ -257,20 +246,16 @@ updates and pairing, so use two direct USB-C cables <span class="tag doc">DOC</s
 
 ## Acknowledgement bytes and resets
 
-naya-create-kb reads the second byte of an ED acknowledgement as an internal slot id
-(constant `0x18` across two brightness values) and lists observed values: `1013` gives `03`, `1010`
-`00`, `1003` `13`, `1012` `02`, `1014` `04`, `1050` `40`, `1008` `18`, `1011` `01`
-[^kb-troubleshooting]. The values are right, but the byte is the reply's checksum: an ED
-acknowledgement is status `00` with no data, so its XOR is `10` XOR C1 XOR `00`, which gives exactly
-each value in that list. There is no slot id <span class="tag inferred">INFERRED</span> (from the checksum rule we measure on every frame;
+**An ED acknowledgement carries no data.** It is status `00` followed by the checksum, so the
+byte after the status is `10` XOR the command's low byte XOR `00`: `03` for `ed/1013`, `18` for
+`ed/1008`, `40` for `ed/1050`. It is neither the written value nor a slot id
+<span class="tag inferred">INFERRED</span> (from the checksum rule we measure on every frame;
 [Command map](protocol/commands.md)).
 
-naya-create-kb calls `ee/10ce` NORMAL_RESET the safe reset: acknowledged, USB dropping for
-about 0.13 s, and the node back after about 0.9 s <span class="tag reported">REPORTED</span>[^kb-troubleshooting]. Its maintainer's own
-published notes give 0.13 s as the delay before USB drops, not the length of the outage; the node
-that returns after about 0.9 s is most likely the bootloader pass, which every boot shows for about
-1-2 s before the application PID returns <span class="tag measured">MEASURED</span> (2026-09-19, 2026-09-22) <span class="tag inferred">INFERRED</span>. Sent to the left half on
-3.35.4, `ee/10ce` dropped that half's port at once (owner's board, 2026-09-20)
+`ee/10ce` NORMAL_RESET reboots a half through its bootloader: its port drops at once (7.7 ms on
+3.35.4, 2026-09-20), the bootloader identity shows for about 1.3 s, and the application is back about
+3 s after the command (owner's board, left half, 3.41.0, 2026-09-23) <span class="tag measured">MEASURED</span>. On Windows 11,
+restarts after the first two in a row left the half off USB until its cable was replugged
 <span class="tag measured">MEASURED</span>. See [Recovery](recovery.md#resets-and-power).
 
 ## Vendor-known bugs by firmware
@@ -306,7 +291,7 @@ pages link here.
 | `ee/10be` DFU_RESET | never observed by anyone we know of; the mode it enters and its PIDs are unknown | all | <span class="tag static">STATIC</span> |
 | `ee/10ae` MCU_BOOT_RESET | not "never": it is the first step of every firmware update, but the half stays dark in its bootloader until `os reset` on the data port ([Recovery R1](recovery.md#r1-half-dark-and-not-typing-shows-up-as-a-bootloader-device)); only with that recipe at hand | 3.35.4, 3.41.0 | <span class="tag measured">MEASURED</span> |
 | `fa/1002` FORMAT_PARTITION, `fa/1006` ERASE_CHIP | destroy stored data, and possibly a staged image | all | <span class="tag static">STATIC</span> |
-| `30/10ca` CLEAR_ALL_DATA | wipes the keymap, LED maps, settings and layer list; only with a complete snapshot ([Factory reset](storage/factory-reset.md)). NayaCore sends it with params `00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`), also from NayaFlow's "Clear all keymap data" button (`clear_data`), with no confirmation dialog; naya-create-kb's tool sends `01`; whether both behave the same is a donor-board test | 3.41.0 (third party) | <span class="tag reported">REPORTED</span> (effect) <span class="tag static">STATIC</span> (params, route) |
+| `30/10ca` CLEAR_ALL_DATA | formats the data partition: the one reported firing wiped the keymap, the LED maps, the settings and the layer list (3.41.0); only with a complete snapshot ([Factory reset](storage/factory-reset.md)). NayaCore sends it with params `00 00` (frame `aa 00 50 00 30 04 10 ca 00 00 da 04`), also from NayaFlow's "Clear all keymap data" button (`clear_data`), with no confirmation dialog | all | <span class="tag static">STATIC</span> (NayaCore's params, the button) <span class="tag reported">REPORTED</span> (the effect) |
 | `be/1004` UNPAIR_ALL | drops every bond, computers included; save the addresses first | 3.35.4 | <span class="tag measured">MEASURED</span> |
 | text commands `clear_bonds`, `mcuboot_reset` | the text channel was retired in 3.31.1 and is silent on 3.41.0; the danger applies to 3.30.1 and older | 3.30.1 and older | <span class="tag doc">DOC</span> <span class="tag measured">MEASURED</span> |
 | a replayed `fe/100a` | writes another session's timeouts (values under 30 s are refused with `ea` on 3.41.0); seven verbatim replays wedged nothing | 3.41.0 | <span class="tag measured">MEASURED</span> |
@@ -317,28 +302,15 @@ pages link here.
 | any configuration write of three frames | wedges the half until it is unplugged | 3.28.7 only | <span class="tag measured">MEASURED</span> |
 | `30/100e` writes of 241 or 41 bytes | the nayactl PR #6 author: they wedged the parser until a power cycle; frames up to 253 bytes were accepted on 3.41.0 | 3.41.0 | <span class="tag reported">REPORTED</span>[^nx-pr6] <span class="tag measured">MEASURED</span> (253 bytes) |
 | wireless output with no host, on battery | freezes the board until a power cycle | 3.41.0 | <span class="tag measured">MEASURED</span> |
-| naya-create-kb's LED ladder (RESUME and RGB phases) sent to the right half's port (`dst 0x51`) | once left the right half and its module dark; a single `ed/1013` sent there was answered and parked nothing (owner's board, 3.35.4 and 3.41.0) | 3.41.0 | <span class="tag reported">REPORTED</span> (ladder) <span class="tag measured">MEASURED</span> (single write) |
+| a burst of `ed` recovery writes (RESUME `ed/1010` and the RGB override `ed/1050` among them) sent to the right half's own port (`dst 0x51`) | one reported burst of nine such writes left the right half and its docked module dark while it still typed; a single `ed/1013` sent there was answered and parked nothing (owner's board, 3.35.4 and 3.41.0, 2026-09-20 and 2026-09-22); the LEDs of both halves are driven from the left half's stores ([Recovery R7](recovery.md#r7-right-half-dark-after-led-commands-sent-to-it)) | 3.41.0 | <span class="tag reported">REPORTED</span>[^kb-recovery] (the burst) <span class="tag measured">MEASURED</span> (the single write) |
 | SMP `image upload` to `image` 0 or 1 | writes the primary slot directly: the first chunk erases the running image, with no swap to fall back on | all | <span class="tag inferred">INFERRED</span> |
 | SMP `image state` write | not implemented (rc 8): no test swap, nothing is armed | 3.35.4, 3.41.0 | <span class="tag measured">MEASURED</span> |
 
-## Where this differs from naya-create-kb
-
-| naya-create-kb says (troubleshooting page) | What the evidence shows |
-|---|---|
-| The right half never answers the `30/1001` handshake; use raw frames, not a session | `30/1001` is READ LAYER LIST; the handshake is `fe/1001` and `fe/1002`, which the right half answers |
-| There is no GET for `ed/1013`, and an empty read returns a bare `00` acknowledgement | No read exists, but an empty payload is a zero-filled write: the "read" stores 0 |
-| The second byte of an ED acknowledgement is an internal slot id | It is the reply's checksum |
-| `fe/100a` is a commit, and replaying sniffed frames wedged the state machine | It is SET ACTIVITY TIMEOUTS; verbatim replays of NayaFlow's frame wedged nothing |
-| Battery 100 % is about 4 222 mV, about 9.3 mV per percent | NayaCore: `(clamp(mV, 3300, 4200) - 3300) * 100 / 900`, truncated, then clamped to 1-100 %: 100 % from 4200 mV, exactly 9 mV per percent (its calibration points fit the formula) |
-| Leaving out the layer byte makes LED writes land on layer 0 | The second byte picks the layer; a writer that always sends `00` there writes layer 0 |
-| A switch flip with USB plugged in is not a reset | It is a reset (owner, 2026-09-23), as the manual says |
-
 ## Open questions
 
-- <span class="tag open">OPEN</span> Whether `30/10ca` with params `00 00` (NayaCore, and so NayaFlow's "Clear all keymap data") and `01` (naya-create-kb's tool) behave the same: a donor-board test ([details](open-questions.md#oq-f16)).
+- <span class="tag open">OPEN</span> Which stores `30/10ca` spares (split-link pairing, bonds, timeouts, the module bundle), and the bytes NayaFlow's "Clear all keymap data" puts on the wire: a donor-board test ([details](open-questions.md#oq-f16)).
 - <span class="tag open">OPEN</span> What gates the LED idle timeout: the power source or the output mode.
-- <span class="tag open">OPEN</span> What wedged naya-create-kb's board after its `fe/100a` replay, given that verbatim replays wedge nothing on 3.41.0 ([details](open-questions.md#oq-f21)).
-- <span class="tag open">OPEN</span> Whether the right half answers `ed/1014` (a write; for a donor board).
+- <span class="tag open">OPEN</span> What wedged the parser in the nayactl PR #6 author's `30/100e` writes of 241 and 41 bytes, given that single frames up to 253 bytes are accepted on 3.41.0 ([details](open-questions.md#oq-f21)).
 - <span class="tag open">OPEN</span> Which firmware versions besides 3.28.7 fail on three-frame writes.
 
 ## Sources
@@ -355,3 +327,4 @@ pages link here.
 [^cl]: create-legacy-firmware, [`CHANGELOG.md`](https://github.com/create-collective/create-legacy-firmware/blob/79eeefb/CHANGELOG.md) (vendor release notes).
 [^beta]: Vendor release notes of the beta channel, [NayaTech/NayaFlow-beta-releases](https://github.com/NayaTech/NayaFlow-beta-releases/releases).
 [^nx-pr6]: nayactl, [pull request #6](https://github.com/Qonfused/nayactl/pull/6), description by its author.
+[^kb-recovery]: naya-create-kb, [recovery](https://nemezzizz.github.io/naya-create-kb/recovery/).
