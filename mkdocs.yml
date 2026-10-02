@@ -78,6 +78,8 @@ nav:
       - Layout and positions: hardware/layout.md
       - Regulatory records: hardware/regulatory.md
       - Parts list: hardware/parts.md
+  - Open source modules:
+      - Overview: open-source-modules/index.md
   - Connectivity:
       - USB: connectivity/usb.md
       - Bluetooth: connectivity/bluetooth.md
